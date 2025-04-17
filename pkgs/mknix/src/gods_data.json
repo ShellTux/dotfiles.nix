@@ -1,0 +1,302 @@
+{
+  "religions": [
+    {
+      "name": "Ancient Egyptian",
+      "gods": [
+        {
+          "name": "Ra",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Re-Horakhty.svg/800px-Re-Horakhty.svg.png"
+        },
+        {
+          "name": "Osiris",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Standing_Osiris.svg/800px-Standing_Osiris.svg.png"
+        },
+        {
+          "name": "Isis",
+          "image_url": "https://example.com/images/isis.jpg"
+        },
+        {
+          "name": "Horus",
+          "image_url": "https://example.com/images/horus.jpg"
+        },
+        {
+          "name": "Anubis",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Anubis_standing.svg/800px-Anubis_standing.svg.png"
+        },
+        {
+          "name": "Thoth",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Thoth.svg/800px-Thoth.svg.png"
+        },
+        {
+          "name": "Sekhmet",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Sekhmet.svg/800px-Sekhmet.svg.png"
+        }
+      ]
+    },
+    {
+      "name": "Greek",
+      "gods": [
+        {
+          "name": "Zeus",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Jupiter_Smyrna_Louvre_Ma13.jpg/330px-Jupiter_Smyrna_Louvre_Ma13.jpg"
+        },
+        {
+          "name": "Hera",
+          "image_url": "https://example.com/images/hera.jpg"
+        },
+        {
+          "name": "Poseidon",
+          "image_url": "https://example.com/images/poseidon.jpg"
+        },
+        {
+          "name": "Athena",
+          "image_url": "https://example.com/images/athena.jpg"
+        },
+        {
+          "name": "Ares",
+          "image_url": "https://example.com/images/ares.jpg"
+        },
+        {
+          "name": "Apollo",
+          "image_url": "https://example.com/images/apollo.jpg"
+        },
+        {
+          "name": "Artemis",
+          "image_url": "https://example.com/images/artemis.jpg"
+        },
+        {
+          "name": "Dionysus",
+          "image_url": "https://example.com/images/dionysus.jpg"
+        }
+      ]
+    },
+    {
+      "name": "Norse",
+      "gods": [
+        {
+          "name": "Odin",
+          "image_url": "https://example.com/images/odin.jpg"
+        },
+        {
+          "name": "Thor",
+          "image_url": "https://example.com/images/thor.jpg"
+        },
+        {
+          "name": "Freya",
+          "image_url": "https://example.com/images/freya.jpg"
+        },
+        {
+          "name": "Loki",
+          "image_url": "https://example.com/images/loki.jpg"
+        },
+        {
+          "name": "Baldur",
+          "image_url": "https://example.com/images/baldur.jpg"
+        },
+        {
+          "name": "Frigg",
+          "image_url": "https://example.com/images/frigg.jpg"
+        },
+        {
+          "name": "Tyr",
+          "image_url": "https://example.com/images/tyr.jpg"
+        }
+      ]
+    },
+    {
+      "name": "Hindu",
+      "gods": [
+        {
+          "name": "Brahma",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Brahma_on_hamsa.jpg/250px-Brahma_on_hamsa.jpg"
+        },
+        {
+          "name": "Vishnu",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Vishnu_from_Gita_Govinda.jpg/800px-Vishnu_from_Gita_Govinda.jpg"
+        },
+        {
+          "name": "Shiva",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Bangalore_Shiva.jpg/1024px-Bangalore_Shiva.jpg"
+        },
+        {
+          "name": "Lakshmi",
+          "image_url": "https://example.com/images/lakshmi.jpg"
+        },
+        {
+          "name": "Saraswati",
+          "image_url": "https://example.com/images/saraswati.jpg"
+        },
+        {
+          "name": "Karthikeya",
+          "image_url": "https://example.com/images/karthikeya.jpg"
+        },
+        {
+          "name": "Ganesha",
+          "image_url": "https://example.com/images/ganesha.jpg"
+        }
+      ]
+    },
+    {
+      "name": "Yoruba",
+      "gods": [
+        {
+          "name": "Ogun",
+          "image_url": "https://example.com/images/ogun.jpg"
+        },
+        {
+          "name": "Yemaya",
+          "image_url": "https://example.com/images/yemaya.jpg"
+        },
+        {
+          "name": "Shango",
+          "image_url": "https://example.com/images/shango.jpg"
+        },
+        {
+          "name": "Oshun",
+          "image_url": "https://example.com/images/oshun.jpg"
+        },
+        {
+          "name": "Esu",
+          "image_url": "https://example.com/images/esus.jpg"
+        },
+        {
+          "name": "Oya",
+          "image_url": "https://example.com/images/oya.jpg"
+        }
+      ]
+    },
+    {
+      "name": "Roman",
+      "gods": [
+        {
+          "name": "Jupiter",
+          "image_url": "https://example.com/images/jupiter.jpg"
+        },
+        {
+          "name": "Juno",
+          "image_url": "https://example.com/images/juno.jpg"
+        },
+        {
+          "name": "Neptune",
+          "image_url": "https://example.com/images/neptune.jpg"
+        },
+        {
+          "name": "Mars",
+          "image_url": "https://example.com/images/mars.jpg"
+        },
+        {
+          "name": "Venus",
+          "image_url": "https://example.com/images/venus.jpg"
+        },
+        {
+          "name": "Apollo",
+          "image_url": "https://example.com/images/apollo.jpg"
+        },
+        {
+          "name": "Diana",
+          "image_url": "https://example.com/images/diana.jpg"
+        }
+      ]
+    },
+    {
+      "name": "Celtic",
+      "gods": [
+        {
+          "name": "Cernunnos",
+          "image_url": "https://example.com/images/cernunnos.jpg"
+        },
+        {
+          "name": "Brigid",
+          "image_url": "https://example.com/images/brigid.jpg"
+        },
+        {
+          "name": "Lugh",
+          "image_url": "https://example.com/images/lugh.jpg"
+        },
+        {
+          "name": "Dagda",
+          "image_url": "https://example.com/images/dagda.jpg"
+        },
+        {
+          "name": "Manannán",
+          "image_url": "https://example.com/images/manannan.jpg"
+        },
+        {
+          "name": "Arawn",
+          "image_url": "https://example.com/images/arawn.jpg"
+        }
+      ]
+    },
+    {
+      "name": "Slavic",
+      "gods": [
+        {
+          "name": "Perun",
+          "image_url": "https://example.com/images/perun.jpg"
+        },
+        {
+          "name": "Veles",
+          "image_url": "https://example.com/images/veles.jpg"
+        },
+        {
+          "name": "Mokosh",
+          "image_url": "https://example.com/images/mokosh.jpg"
+        },
+        {
+          "name": "Svarog",
+          "image_url": "https://example.com/images/svarog.jpg"
+        },
+        {
+          "name": "Dazhbog",
+          "image_url": "https://example.com/images/dazhbog.jpg"
+        }
+      ]
+    },
+    {
+      "name": "Chinese Traditional",
+      "gods": [
+        {
+          "name": "Jade Emperor",
+          "image_url": "https://example.com/images/jade_emperor.jpg"
+        },
+        {
+          "name": "Guan Yu",
+          "image_url": "https://example.com/images/guan_yu.jpg"
+        },
+        {
+          "name": "Zao Jun",
+          "image_url": "https://example.com/images/zao_jun.jpg"
+        },
+        {
+          "name": "Mazu",
+          "image_url": "https://example.com/images/mazu.jpg"
+        },
+        {
+          "name": "Nezha",
+          "image_url": "https://example.com/images/nezha.jpg"
+        }
+      ]
+    },
+    {
+      "name": "Japanese Shinto",
+      "gods": [
+        {
+          "name": "Amaterasu",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Amaterasu_cave_crop.jpg/800px-Amaterasu_cave_crop.jpg"
+        },
+        {
+          "name": "Susanoo",
+          "image_url": "https://example.com/images/susanoo.jpg"
+        },
+        {
+          "name": "Inari",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/A_man_confronted_with_an_apparition_of_the_Fox_goddess.jpg/800px-A_man_confronted_with_an_apparition_of_the_Fox_goddess.jpg"
+        },
+        {
+          "name": "Tsukuyomi",
+          "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Shinto-Tsukuyomi-no-Mikoto-Old-Artwork.png/250px-Shinto-Tsukuyomi-no-Mikoto-Old-Artwork.png"
+        }
+      ]
+    }
+  ]
+}

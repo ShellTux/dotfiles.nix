@@ -1,0 +1,8 @@
+{ ... }:
+{
+  imports = [
+    ./top
+    ./bottom
+    ./left
+  ];
+}

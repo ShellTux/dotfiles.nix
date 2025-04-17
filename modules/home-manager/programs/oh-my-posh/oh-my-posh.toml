@@ -1,0 +1,227 @@
+"$schema" = "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json"
+version = 3
+
+[transient_prompt]
+background = "transparent"
+
+[palette]
+black = "#111111"
+blue = '#4B95E9'
+cyan = '#017a7a'
+green = '#27B23E'
+orange = '#F07623'
+red = "#FD1E5B"
+white = '#E0DEF4'
+yellow = '#F3AE35'
+
+[[blocks]]
+alignment = "left"
+type = "prompt"
+
+  [[blocks.segments]]
+  style = "diamond"
+  foreground = "#26C6DA"
+  background = "#546E7A"
+  leading_diamond = "╭─"
+  template = "{{ if .WSL }}WSL at {{ end }}{{.Icon}}"
+  type = "os"
+
+    [blocks.segments.properties]
+    macos = "mac"
+
+  [[blocks.segments]]
+  background = "#0077c2"
+  foreground = "#ffffff"
+  leading_diamond = " "
+  style = "diamond"
+  template = "{{ .Name }}"
+  type = "shell"
+
+  [[blocks.segments]]
+  foreground = "blue"
+  background = "transparent"
+  template = "{{if eq .Type \"unknown\" }}{{ else }} 󱄅 {{ .Type }} {{ end }}"
+  leading_diamond = " "
+  style = "diamond"
+  type = "nix-shell"
+
+  [[blocks.segments]]
+  background = "#ef5350"
+  foreground = "#FFFB38"
+  style = "diamond"
+  template = "<parentBackground></>  "
+  type = "root"
+
+    [blocks.segments.properties]
+    root_icon = ""
+
+  [[blocks.segments]]
+  background = "#444444"
+  foreground = "#E4E4E4"
+  powerline_symbol = ""
+  style = "powerline"
+  template = "  {{ .Path }} "
+  type = "path"
+    [blocks.segments.properties]
+    style = "letter"
+
+  [[blocks.segments]]
+  background = '#353746'
+  foreground = 'white'
+  powerline_symbol = ""
+  style = "powerline"
+  type = "git"
+  template = """ \
+  {{ if .UpstreamURL }}{{ url .UpstreamIcon .UpstreamURL }} {{ end }}\
+  {{ .HEAD }}\
+  {{ if .BranchStatus }} {{ .BranchStatus }}{{ end }}\
+  {{ if lt .Working.Changed 0 }} \
+    {{ if .Working.Untracked }} {{ .Working.Untracked }}{{ end }}\
+    {{ if .Working.Modified }} {{ .Working.Modified }}{{ end }}\
+    {{ if .Working.Deleted }} {{ .Working.Deleted }}{{ end }}\
+    {{ if .Working.Added }} {{ .Working.Added }}{{ end }}\
+    {{ if .Working.Unmerged }} {{ .Working.Unmerged }}{{ end }}\
+  {{ end }}\
+  {{ if .Working.Changed }} {{ .Working.String }}{{end}}\
+  {{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }}\
+  {{ if gt .StashCount 0}} 󰆓 {{ .StashCount }}{{end}} \
+  """
+
+    [blocks.segments.properties]
+    branch_icon = " "
+    branch_template = "{{ trunc 25 .Branch }}"
+    fetch_status = true
+    fetch_upstream_icon = true
+      [blocks.segments.properties.mapped_brances]
+      "feat/*" = "🚀 "
+      "bug/*" = "🐛 "
+      [blocks.segments.properties.status_formats]
+      Added = " <p:green>+%d</>"
+      Modified = " <p:blue>~%d</>"
+      Deleted = " <p:red>-%d</>"
+      Untracked = " <p:yellow>?%d</>"
+      Unmerged = " <p:red>x%d</>"
+
+  [[blocks.segments]]
+  type = "executiontime"
+  style = "powerline"
+  foreground = "#ffffff"
+  background = "#8800dd"
+  template = " <#fefefe></> {{ .FormattedMs }} "
+
+    [blocks.segments.properties]
+    threshold = 3_000
+
+[[blocks]]
+alignment = "right"
+type = "prompt"
+
+  [[blocks.segments]]
+  background = "#303030"
+  foreground = "#3C873A"
+  leading_diamond = " "
+  style = "diamond"
+  template = "  {{ .Full }} "
+  trailing_diamond = ""
+  type = "rust"
+
+  [[blocks.segments]]
+  background = "#303030"
+  foreground = "#3C873A"
+  leading_diamond = " "
+  style = "diamond"
+  template = "  {{ .Full }} "
+  trailing_diamond = ""
+  type = "python"
+
+  [[blocks.segments]]
+  background = "blue"
+  foreground = "white"
+  leading_diamond = " "
+  style = "diamond"
+  template = "  {{ .Full }} "
+  trailing_diamond = ""
+  type = "lua"
+
+  [[blocks.segments]]
+  foreground = "#ffffff"
+  background = "#4063D8"
+  leading_diamond = " "
+  style = "diamond"
+  template = "  {{ .Full }}"
+  trailing_diamond = ""
+  type = "java"
+
+  [[blocks.segments]]
+  foreground = "#906cff"
+  background = "#100e23"
+  template = "  {{ .Full }}"
+  leading_diamond = " "
+  style = "diamond"
+  trailing_diamond = ""
+  type = "haskell"
+
+  [[blocks.segments]]
+  foreground = "#ffffff"
+  background = "#7FD5EA"
+  template = "  {{ .Full }} "
+  leading_diamond = " "
+  style = "diamond"
+  trailing_diamond = ""
+  type = "haskell"
+
+  [[blocks.segments]]
+  background = "#303030"
+  foreground = "#3C873A"
+  leading_diamond = " "
+  style = "diamond"
+  template = " {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }}"
+  trailing_diamond = ""
+  type = "node"
+
+    [blocks.segments.properties]
+    fetch_package_manager = true
+    npm_icon = " <#cc3a3a></> "
+    yarn_icon = " <#348cba></>"
+
+  [[blocks.segments]]
+  background = "#40c4ff"
+  foreground = "#ffffff"
+  invert_powerline = true
+  leading_diamond = " "
+  style = "diamond"
+  template = "  {{ .CurrentDate | date .Format }} "
+  trailing_diamond = ""
+  type = "time"
+
+[[blocks]]
+alignment = "left"
+newline = true
+type = "prompt"
+
+  [[blocks.segments]]
+  foreground = "#21c7c7"
+  style = "plain"
+  template = "╰─"
+  type = "text"
+
+  [[blocks.segments]]
+  foreground = "#ffffff"
+  background = "transparent"
+
+  style = "diamond"
+  template = "{{ if .SSHSession }} {{ end }}<#A0D89C>{{ .UserName }}</><#F9E1B0>@</><#DF819C>{{ .HostName }}</>"
+  type = "session"
+
+  [[blocks.segments]]
+  foreground = "#e0f8ff"
+  foreground_templates = [
+    "{{ if gt .Code 0 }}#ef5350{{ end }}",
+    "{{ if eq .Code 0 }}#11cf30{{ end }}"
+  ]
+  style = "plain"
+  template = "{{ if .Error }} {{ reason .Code }}{{ end }} ❯ "
+  type = "status"
+
+    [blocks.segments.properties]
+    always_enabled = true

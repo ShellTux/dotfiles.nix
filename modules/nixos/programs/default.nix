@@ -1,0 +1,8 @@
+{ ... }:
+{
+  imports = [
+    ./bat
+    ./ssh
+    ./tmux
+  ];
+}

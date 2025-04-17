@@ -1,0 +1,53 @@
+{
+  ...
+}:
+{
+  imports = [
+    ./alacritty
+    ./bash
+    ./bat
+    ./brave
+    ./btop
+    ./chromium
+    ./direnv
+    ./emacs
+    ./eza
+    ./fastfetch
+    ./fd
+    ./floorp
+    ./fzf
+    ./ghostty
+    ./git
+    ./htop
+    ./hyprlock
+    ./hyprshell
+    ./imv
+    ./jellyfin
+    ./khal
+    ./kitty
+    ./man
+    ./mpv
+    ./ncmpcpp
+    ./newsboat
+    ./nh
+    ./nixvim
+    ./nix-your-shell
+    ./nushell
+    ./oh-my-posh
+    ./rofi
+    ./ssh
+    ./starship
+    ./tealdeer
+    ./thunar
+    ./tmux
+    ./vim
+    ./waybar
+    ./wezterm
+    ./wofi
+    ./xournalpp
+    ./yazi
+    ./yt-dlp
+    ./zathura
+    ./zsh
+  ];
+}

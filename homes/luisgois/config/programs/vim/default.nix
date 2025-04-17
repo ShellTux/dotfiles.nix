@@ -1,0 +1,4 @@
+{ ... }:
+{
+  programs.vim.defaultEditor = true;
+}

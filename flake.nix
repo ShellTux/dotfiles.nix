@@ -1,63 +1,252 @@
 {
   description = "Dotfiles managed by Nix, NixOS and HomeManager";
 
-  outputs = inputs@{ flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      flake = {
-        # Put your original flake attributes here.
-      };
-      systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
-      perSystem = { config, self', inputs', pkgs, system, ... }: let
-        inherit (pkgs.lib) getExe;
+  nixConfig.commit-lockfile-summary = "chore(flake.lock): update inputs";
 
-        onefetch = getExe pkgs.onefetch;
-      in {
-        # Per-system attributes can be defined here. The self' and inputs'
-        # module parameters provide easy access to attributes of the same
-        # system.
+  outputs =
+    inputs@{
+      self,
+      flake-parts,
+      git-hooks-nix,
+      home-manager,
+      nixos-anywhere,
+      nixpkgs,
+      nix-unit,
+      treefmt-nix,
+      ...
+    }:
+    let
+      specialArgs.lib = nixpkgs.lib.extend (self: _: (import ./lib { inherit inputs self; }));
+    in
+    flake-parts.lib.mkFlake { inherit inputs specialArgs; } {
+      imports = [
+        ./homes
+        ./hosts
+        ./lib
+        ./modules
+        ./nix-unit
+        ./pkgs
+      ]
+      ++ [
+        nix-unit.modules.flake.default
+        treefmt-nix.flakeModule
+        git-hooks-nix.flakeModule
+      ];
 
-        # Equivalent to  inputs'.nixpkgs.legacyPackages.hello;
-        packages.default = pkgs.hello;
-        devShells.default = pkgs.mkShell {
-          shellHook = ''
-            ${onefetch} --no-bots
-          '';
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+        "x86_64-darwin"
+      ];
+
+      perSystem =
+        {
+          config,
+          self',
+          inputs',
+          pkgs,
+          system,
+          lib,
+          ...
+        }:
+        let
+          inherit (builtins) attrValues elem;
+          inherit (pkgs) mkShell;
+          inherit (lib) getExe filterAttrs getName;
+
+          additionalPackages =
+            config.packages
+            |> filterAttrs (
+              key: value:
+              (elem key [
+                "dotfiles-check"
+                "mknix"
+                "repl"
+                "vm"
+              ])
+            )
+            |> attrValues;
+
+          onefetch = getExe pkgs.onefetch;
+        in
+        {
+          _module.args.pkgs = import self.inputs.nixpkgs {
+            inherit system;
+            config.allowUnfreePredicate =
+              pkg:
+              elem (getName pkg) [
+              ];
+          };
+
+          # NOTE: This sets the formatter
+          # treefmt = {
+          #   programs = {
+          #     nixfmt.enable = true;
+          #     shellcheck.enable = true;
+          #   };
+          #   settings.formatter.shellcheck.excludes = [ "**/.envrc" ];
+          # };
+
+          pre-commit.settings.hooks = {
+            nixfmt-rfc-style.enable = true;
+            shellcheck.enable = true;
+            # pre-commit-ensure-sops.enable = true;
+            # ripsecrets.enable = true;
+            # trufflehog.enable = true;
+
+            gitleaks = {
+              enable = true;
+
+              name = "Detect hardcoded secrets";
+              description = "Detect hardcoded secrets using Gitleaks";
+              entry = "gitleaks git --pre-commit --redact --staged --verbose";
+              language = "golang";
+              pass_filenames = false;
+            };
+
+            gitleaks-docker = {
+              enable = false;
+
+              name = "Detect hardcoded secrets";
+              description = "Detect hardcoded secrets using Gitleaks";
+              entry = "gitleaks git --pre-commit --redact --staged --verbose";
+              language = "docker_image";
+              pass_filenames = false;
+            };
+
+            gitleaks-system = {
+              enable = true;
+
+              name = "Detect hardcoded secrets";
+              description = "Detect hardcoded secrets using Gitleaks";
+              entry = "gitleaks git --pre-commit --redact --staged --verbose";
+              language = "system";
+              pass_filenames = false;
+            };
+
+          };
+
+          devShells.default = mkShell {
+            name = "dotfiles.nix";
+
+            packages = [
+              pkgs.age
+              pkgs.git
+              pkgs.git-crypt
+              pkgs.gitleaks
+              pkgs.git-secrets
+              # pkgs.guestfs-tools
+              pkgs.nh
+              pkgs.nix-index
+              pkgs.nixos-rebuild
+              pkgs.ripsecrets
+              pkgs.sops
+              pkgs.ssh-to-age
+              pkgs.tokei
+              pkgs.trufflehog
+            ]
+            ++ [
+              inputs'.nixos-anywhere.packages.nixos-anywhere
+              inputs'.home-manager.packages.home-manager
+            ]
+            ++ additionalPackages
+            ++ [ nix-unit.packages.${system}.nix-unit ];
+
+            env = {
+              NIX_SSHOPTS = "-o RequestTTY=force";
+            };
+
+            shellHook = ''
+              ${config.pre-commit.installationScript}
+              ${onefetch} --no-bots
+            '';
+          };
+
+          nix-unit = {
+            inputs = {
+              # NOTE: a `nixpkgs-lib` follows rule is currently required
+              inherit (inputs) nixpkgs flake-parts nix-unit;
+            };
+          };
         };
-      };
     };
 
   inputs = {
-    # We build against NixOS unstable, because stable takes way too long to get things into
-    # more versions with or without pinned branches can be added if deemed necessary
-    # stable? Never heard of her.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs-small.url = "github:NixOS/nixpkgs/nixos-unstable-small"; # moves faster, has less packages
 
-    # Sometimes nixpkgs breaks something I need, pin a working commit when that occurs
-    # nixpkgs-pinned.url = "github:NixOS/nixpkgs/b610c60e23e0583cdc1997c54badfd32592d3d3e";
-
-    # Powered by
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
 
-    # Home Manager
+    flake-utils.url = "github:numtide/flake-utils";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Ever wanted nix error messages to be even more cryptic?
-    # Try flake-utils today! (Devs I beg you please stop)
-    flake-utils.url = "github:numtide/flake-utils";
+    nix-topology.url = "github:oddlama/nix-topology";
 
-    # This exists, I guess
-    flake-compat = {
-      url = "github:edolstra/flake-compat";
-      flake = false;
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-  };
 
+    git-hooks-nix.url = "github:cachix/git-hooks.nix";
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-unit = {
+      url = "github:nix-community/nix-unit";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+      };
+    };
+
+    treefmt-nix.url = "github:numtide/treefmt-nix";
+
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprshell = {
+      url = "github:H3rmt/hyprshell?ref=hyprshell-release";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixos-anywhere = {
+      url = "github:nix-community/nixos-anywhere";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+  };
 }

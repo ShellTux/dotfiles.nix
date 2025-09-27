@@ -151,6 +151,7 @@
               inputs'.home-manager.packages.home-manager
             ]
             ++ additionalPackages
+            ++ config.pre-commit.settings.enabledPackages
             ++ [ nix-unit.packages.${system}.nix-unit ];
 
             env = {

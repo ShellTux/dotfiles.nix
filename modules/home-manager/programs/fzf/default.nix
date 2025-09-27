@@ -31,6 +31,14 @@ in
       enableZshIntegration = true;
     };
 
+    programs.bash.profileExtra = ''
+      source ${./custom.sh}
+    '';
+
+    programs.zsh.init.extra = ''
+      source ${./custom.sh}
+    '';
+
     home.shellAliases = {
       fzf = ''fzf --preview "${bat} --color=always --style=numbers --line-range=:500 {}"'';
     };

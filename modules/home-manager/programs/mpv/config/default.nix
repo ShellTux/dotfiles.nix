@@ -29,6 +29,9 @@ in
 
         osd-font-size = 20;
         sub-font-size = 34;
+
+        msg-color = "yes";
+        msg-module = "yes";
       };
     };
 

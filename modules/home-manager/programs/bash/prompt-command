@@ -20,12 +20,18 @@ __prompt_command() {
     #local RED='\[\e[0;1;38;5;196m\]'
     #local CYAN='\[\e[0;1;38;5;50m\]'
 
+    local JOBS_PROMPT=
+    if [ -n "$(jobs)" ]
+    then
+        JOBS_PROMPT+=" ${YELLOW}jobs: \j${RESET}"
+    fi
+
     local EXIT_PROMPT=
     if [ "$EXIT" = 0 ]
     then
-        EXIT_PROMPT+="( ${GREEN}✓${RESET} )"
+        EXIT_PROMPT+="( ${GREEN}✓${RESET}${JOBS_PROMPT} )"
     else
-        EXIT_PROMPT+="( ${RED}✕${RESET} ${EXIT} )"
+        EXIT_PROMPT+="( ${RED}✕${RESET} ${EXIT}${JOBS_PROMPT} )"
     fi
 
     local GIT_PROMPT=

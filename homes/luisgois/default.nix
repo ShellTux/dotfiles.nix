@@ -35,6 +35,7 @@
       pkgs.qbittorrent
       pkgs.qiv
       pkgs.ripgrep
+      pkgs.ripgrep-all
       pkgs.rmpc
       pkgs.rsync
       pkgs.silicon

@@ -48,10 +48,11 @@ let
         ];
 
       specialArgs = {
-        inherit inputs self;
+        inherit inputs self system;
 
         flake-pkgs = packages.${system};
-      } // extraSpecialArgs;
+      }
+      // extraSpecialArgs;
     };
 in
 {

@@ -145,6 +145,45 @@
         "type": "github"
       }
     },
+    "dwl": {
+      "inputs": {
+        "dwl-source": "dwl-source",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "pre-commit-hooks": "pre-commit-hooks",
+        "slstatus": "slstatus"
+      },
+      "locked": {
+        "lastModified": 1758849182,
+        "narHash": "sha256-Z01QjO3yGZh0UeGvMqBCnf9jjAkDjEJKmMI9M1QlCPs=",
+        "owner": "ShellTux",
+        "repo": "dwl",
+        "rev": "314cf7cef0f38a3a70d6d2c0b74ae55c53a7e175",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ShellTux",
+        "repo": "dwl",
+        "type": "github"
+      }
+    },
+    "dwl-source": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1754342854,
+        "narHash": "sha256-AvhGE0PGlwtX+wn59kw+9cH3vHa3S+REEOD9IIzHNxU=",
+        "ref": "refs/heads/main",
+        "rev": "ab4cb6e28365cf8754d6d3bdd293c05abfc27e26",
+        "revCount": 1306,
+        "type": "git",
+        "url": "https://codeberg.org/dwl/dwl"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/dwl/dwl"
+      }
+    },
     "firefox-addons": {
       "inputs": {
         "nixpkgs": [
@@ -202,11 +241,59 @@
     "flake-compat_2": {
       "flake": false,
       "locked": {
+        "lastModified": 1747046372,
+        "narHash": "sha256-CIVLLkVgvHYbgI2UpXvIIBJ12HWgX+fjA8Xf8PUmqCY=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "9100a0f413b0c601e0533d1d94ffd501ce2e7885",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "flake-compat_3": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1747046372,
+        "narHash": "sha256-CIVLLkVgvHYbgI2UpXvIIBJ12HWgX+fjA8Xf8PUmqCY=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "9100a0f413b0c601e0533d1d94ffd501ce2e7885",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "flake-compat_4": {
+      "flake": false,
+      "locked": {
         "lastModified": 1696426674,
         "narHash": "sha256-kvjfFW7WAETZlt09AgDn1MrtKzP7t90Vf7vypd3OL1U=",
         "owner": "edolstra",
         "repo": "flake-compat",
         "rev": "0f9255e01c2351cc7d116c072cb317785dd33b33",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "flake-compat_5": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1747046372,
+        "narHash": "sha256-CIVLLkVgvHYbgI2UpXvIIBJ12HWgX+fjA8Xf8PUmqCY=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "9100a0f413b0c601e0533d1d94ffd501ce2e7885",
         "type": "github"
       },
       "original": {
@@ -412,8 +499,8 @@
     },
     "git-hooks-nix": {
       "inputs": {
-        "flake-compat": "flake-compat",
-        "gitignore": "gitignore",
+        "flake-compat": "flake-compat_3",
+        "gitignore": "gitignore_3",
         "nixpkgs": "nixpkgs"
       },
       "locked": {
@@ -433,7 +520,8 @@
     "gitignore": {
       "inputs": {
         "nixpkgs": [
-          "git-hooks-nix",
+          "dwl",
+          "pre-commit-hooks",
           "nixpkgs"
         ]
       },
@@ -454,7 +542,73 @@
     "gitignore_2": {
       "inputs": {
         "nixpkgs": [
+          "dwl",
+          "slstatus",
+          "pre-commit-hooks",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1709087332,
+        "narHash": "sha256-HG2cCnktfHsKV0s4XW83gU3F57gaTljL9KNSuG6bnQs=",
+        "owner": "hercules-ci",
+        "repo": "gitignore.nix",
+        "rev": "637db329424fd7e46cf4185293b9cc8c88c95394",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "gitignore.nix",
+        "type": "github"
+      }
+    },
+    "gitignore_3": {
+      "inputs": {
+        "nixpkgs": [
+          "git-hooks-nix",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1709087332,
+        "narHash": "sha256-HG2cCnktfHsKV0s4XW83gU3F57gaTljL9KNSuG6bnQs=",
+        "owner": "hercules-ci",
+        "repo": "gitignore.nix",
+        "rev": "637db329424fd7e46cf4185293b9cc8c88c95394",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "gitignore.nix",
+        "type": "github"
+      }
+    },
+    "gitignore_4": {
+      "inputs": {
+        "nixpkgs": [
           "nix-topology",
+          "pre-commit-hooks",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1709087332,
+        "narHash": "sha256-HG2cCnktfHsKV0s4XW83gU3F57gaTljL9KNSuG6bnQs=",
+        "owner": "hercules-ci",
+        "repo": "gitignore.nix",
+        "rev": "637db329424fd7e46cf4185293b9cc8c88c95394",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "gitignore.nix",
+        "type": "github"
+      }
+    },
+    "gitignore_5": {
+      "inputs": {
+        "nixpkgs": [
+          "slstatus",
           "pre-commit-hooks",
           "nixpkgs"
         ]
@@ -608,7 +762,7 @@
         "devshell": "devshell",
         "flake-utils": "flake-utils_2",
         "nixpkgs": "nixpkgs_2",
-        "pre-commit-hooks": "pre-commit-hooks"
+        "pre-commit-hooks": "pre-commit-hooks_3"
       },
       "locked": {
         "lastModified": 1752093877,
@@ -926,8 +1080,55 @@
     },
     "pre-commit-hooks": {
       "inputs": {
+        "flake-compat": "flake-compat",
+        "gitignore": "gitignore",
+        "nixpkgs": [
+          "dwl",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1757974173,
+        "narHash": "sha256-4DpXmct/2rcLgScT1CXOLr0TUeIlrBB1rnFqCOf5MUw=",
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
+        "rev": "302af509428169db34f268324162712d10559f74",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
+        "type": "github"
+      }
+    },
+    "pre-commit-hooks_2": {
+      "inputs": {
         "flake-compat": "flake-compat_2",
         "gitignore": "gitignore_2",
+        "nixpkgs": [
+          "dwl",
+          "slstatus",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1757974173,
+        "narHash": "sha256-4DpXmct/2rcLgScT1CXOLr0TUeIlrBB1rnFqCOf5MUw=",
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
+        "rev": "302af509428169db34f268324162712d10559f74",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
+        "type": "github"
+      }
+    },
+    "pre-commit-hooks_3": {
+      "inputs": {
+        "flake-compat": "flake-compat_4",
+        "gitignore": "gitignore_4",
         "nixpkgs": [
           "nix-topology",
           "nixpkgs"
@@ -951,9 +1152,33 @@
         "type": "github"
       }
     },
+    "pre-commit-hooks_4": {
+      "inputs": {
+        "flake-compat": "flake-compat_5",
+        "gitignore": "gitignore_5",
+        "nixpkgs": [
+          "slstatus",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1757974173,
+        "narHash": "sha256-4DpXmct/2rcLgScT1CXOLr0TUeIlrBB1rnFqCOf5MUw=",
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
+        "rev": "302af509428169db34f268324162712d10559f74",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "disko": "disko",
+        "dwl": "dwl",
         "firefox-addons": "firefox-addons",
         "flake-parts": "flake-parts",
         "flake-utils": "flake-utils",
@@ -969,9 +1194,87 @@
         "nixpkgs-stable": "nixpkgs-stable",
         "nixvim": "nixvim",
         "nur": "nur",
+        "slstatus": "slstatus_2",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "treefmt-nix": "treefmt-nix_3"
+      }
+    },
+    "slstatus": {
+      "inputs": {
+        "nixpkgs": [
+          "dwl",
+          "nixpkgs"
+        ],
+        "pre-commit-hooks": "pre-commit-hooks_2",
+        "slstatus-source": "slstatus-source"
+      },
+      "locked": {
+        "lastModified": 1758848920,
+        "narHash": "sha256-r7hAPdCtG1zrZfnblf/yqwLpwDKwnKlIt/RytAOMNr4=",
+        "owner": "ShellTux",
+        "repo": "slstatus",
+        "rev": "192d2ce34759b4e1f7ac55cf80b12b31620e64cf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ShellTux",
+        "repo": "slstatus",
+        "type": "github"
+      }
+    },
+    "slstatus-source": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1753389685,
+        "narHash": "sha256-jCxMiWyZIcrxk1YzmnQaf3znjPgExcl8Y8R7Sc3UZ2M=",
+        "ref": "refs/heads/master",
+        "rev": "8723e8b8c69c08bae8abe02ea1f4a49758b8bdfc",
+        "revCount": 613,
+        "type": "git",
+        "url": "https://git.suckless.org/slstatus"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.suckless.org/slstatus"
+      }
+    },
+    "slstatus-source_2": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1753389685,
+        "narHash": "sha256-jCxMiWyZIcrxk1YzmnQaf3znjPgExcl8Y8R7Sc3UZ2M=",
+        "ref": "refs/heads/master",
+        "rev": "8723e8b8c69c08bae8abe02ea1f4a49758b8bdfc",
+        "revCount": 613,
+        "type": "git",
+        "url": "https://git.suckless.org/slstatus"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://git.suckless.org/slstatus"
+      }
+    },
+    "slstatus_2": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "pre-commit-hooks": "pre-commit-hooks_4",
+        "slstatus-source": "slstatus-source_2"
+      },
+      "locked": {
+        "lastModified": 1758848920,
+        "narHash": "sha256-r7hAPdCtG1zrZfnblf/yqwLpwDKwnKlIt/RytAOMNr4=",
+        "owner": "ShellTux",
+        "repo": "slstatus",
+        "rev": "192d2ce34759b4e1f7ac55cf80b12b31620e64cf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ShellTux",
+        "repo": "slstatus",
+        "type": "github"
       }
     },
     "sops-nix": {

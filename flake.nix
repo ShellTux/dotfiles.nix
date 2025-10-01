@@ -249,5 +249,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    dwl = {
+      url = "github:ShellTux/dwl";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    slstatus = {
+      url = "github:ShellTux/slstatus";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 }

@@ -83,6 +83,7 @@ in
     |> elem (getName pkg);
 
   programs = {
+    dwl.enable = true;
     htop.enable = true;
     hyprland.enable = true;
     less.enable = true;

@@ -21,8 +21,9 @@ in
     luisgois = {
       isNormalUser = true;
       extraGroups = [
-        "wheel"
+        "libvirtd"
         "lp"
+        "wheel"
       ];
       initialPassword = "123456";
       shell = pkgs.zsh;
@@ -89,6 +90,7 @@ in
     less.enable = true;
     nh.enable = true;
     tmux.enable = true;
+    virt-manager.enable = true;
     yazi.enable = true;
     zsh.enable = true;
   };
@@ -115,6 +117,8 @@ in
   powerManagement.enable = true;
 
   stylix.enable = true;
+
+  virtualisation.libvirtd.enable = true;
 
   system.stateVersion = "25.05";
 }

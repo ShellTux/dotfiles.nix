@@ -89,6 +89,7 @@ in
     hyprland.enable = true;
     less.enable = true;
     nh.enable = true;
+    obs-studio.enable = true;
     tmux.enable = true;
     virt-manager.enable = true;
     yazi.enable = true;

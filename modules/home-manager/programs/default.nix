@@ -33,6 +33,7 @@
     ./nixvim
     ./nix-your-shell
     ./nushell
+    ./obs-studio
     ./oh-my-posh
     ./rofi
     ./ssh

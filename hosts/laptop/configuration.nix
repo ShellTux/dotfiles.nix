@@ -33,6 +33,11 @@ in
       isNormalUser = true;
       initialPassword = "123456";
     };
+
+    streamer = {
+      isNormalUser = true;
+      initialPassword = "123456";
+    };
   };
 
   home-manager.users = {
@@ -44,6 +49,12 @@ in
     dev = args: {
       imports = [
         "${self}/homes/dev"
+      ];
+    };
+
+    streamer = args: {
+      imports = [
+        "${self}/homes/streamer"
       ];
     };
   };

@@ -17,6 +17,7 @@
     fzf.enable = true;
     git.enable = true;
     htop.enable = true;
+    nh.enable = true;
     nixvim.enable = true;
     nix-your-shell.enable = true;
     tealdeer.enable = true;

@@ -34,7 +34,6 @@ in
         pkgs.rofi-screenshot
         pkgs.rofi-top
         pkgs.rofi-vpn
-        pkgs.rofi-wayland
       ];
     };
   };

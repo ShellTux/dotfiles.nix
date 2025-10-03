@@ -20,11 +20,13 @@
     in
     flake-parts.lib.mkFlake { inherit inputs specialArgs; } {
       imports = [
+        ./flake
+      ]
+      ++ [
         ./homes
         ./hosts
         ./lib
         ./modules
-        ./nix-unit
         ./pkgs
       ]
       ++ [
@@ -39,138 +41,6 @@
         "aarch64-darwin"
         "x86_64-darwin"
       ];
-
-      perSystem =
-        {
-          config,
-          self',
-          inputs',
-          pkgs,
-          system,
-          lib,
-          ...
-        }:
-        let
-          inherit (builtins) attrValues elem;
-          inherit (pkgs) mkShell;
-          inherit (lib) getExe filterAttrs getName;
-
-          additionalPackages =
-            config.packages
-            |> filterAttrs (
-              key: value:
-              (elem key [
-                "dotfiles-check"
-                "mknix"
-                "repl"
-                "vm"
-              ])
-            )
-            |> attrValues;
-
-          onefetch = getExe pkgs.onefetch;
-        in
-        {
-          _module.args.pkgs = import self.inputs.nixpkgs {
-            inherit system;
-            config.allowUnfreePredicate =
-              pkg:
-              elem (getName pkg) [
-              ];
-          };
-
-          # NOTE: This sets the formatter
-          # treefmt = {
-          #   programs = {
-          #     nixfmt.enable = true;
-          #     shellcheck.enable = true;
-          #   };
-          #   settings.formatter.shellcheck.excludes = [ "**/.envrc" ];
-          # };
-
-          pre-commit.settings.hooks = {
-            nixfmt-rfc-style.enable = true;
-            shellcheck.enable = true;
-            # pre-commit-ensure-sops.enable = true;
-            # ripsecrets.enable = true;
-            # trufflehog.enable = true;
-
-            gitleaks = {
-              enable = true;
-
-              name = "Detect hardcoded secrets";
-              description = "Detect hardcoded secrets using Gitleaks";
-              entry = "gitleaks git --pre-commit --redact --staged --verbose";
-              language = "golang";
-              pass_filenames = false;
-            };
-
-            gitleaks-docker = {
-              enable = false;
-
-              name = "Detect hardcoded secrets";
-              description = "Detect hardcoded secrets using Gitleaks";
-              entry = "gitleaks git --pre-commit --redact --staged --verbose";
-              language = "docker_image";
-              pass_filenames = false;
-            };
-
-            gitleaks-system = {
-              enable = true;
-
-              name = "Detect hardcoded secrets";
-              description = "Detect hardcoded secrets using Gitleaks";
-              entry = "gitleaks git --pre-commit --redact --staged --verbose";
-              language = "system";
-              pass_filenames = false;
-            };
-
-          };
-
-          devShells.default = mkShell {
-            name = "dotfiles.nix";
-
-            packages = [
-              pkgs.age
-              pkgs.git
-              pkgs.git-crypt
-              pkgs.gitleaks
-              pkgs.git-secrets
-              # pkgs.guestfs-tools
-              pkgs.nh
-              pkgs.nix-index
-              pkgs.nixos-rebuild
-              pkgs.ripsecrets
-              pkgs.sops
-              pkgs.ssh-to-age
-              pkgs.tokei
-              pkgs.trufflehog
-            ]
-            ++ [
-              inputs'.nixos-anywhere.packages.nixos-anywhere
-              inputs'.home-manager.packages.home-manager
-            ]
-            ++ additionalPackages
-            ++ config.pre-commit.settings.enabledPackages
-            ++ [ nix-unit.packages.${system}.nix-unit ];
-
-            env = {
-              NIX_SSHOPTS = "-o RequestTTY=force";
-            };
-
-            shellHook = ''
-              ${config.pre-commit.installationScript}
-              ${onefetch} --no-bots
-            '';
-          };
-
-          nix-unit = {
-            inputs = {
-              # NOTE: a `nixpkgs-lib` follows rule is currently required
-              inherit (inputs) nixpkgs flake-parts nix-unit;
-            };
-          };
-        };
     };
 
   inputs = {

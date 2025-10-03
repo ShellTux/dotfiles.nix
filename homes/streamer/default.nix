@@ -16,20 +16,21 @@
     eza.enable = true;
     fastfetch.enable = true;
     fd.enable = true;
-    mpv.enable = true;
+    floorp.enable = true;
     fzf.enable = true;
     git.enable = true;
     htop.enable = true;
+    mpv.enable = true;
     nh.enable = true;
     nixvim.enable = true;
     nix-your-shell.enable = true;
     obs-studio.enable = true;
     tealdeer.enable = true;
     tmux.enable = true;
-    wezterm.enable = true;
     vim.enable = true;
-    zathura.enable = true;
+    wezterm.enable = true;
     wofi.enable = true;
+    zathura.enable = true;
   };
 
   services = {

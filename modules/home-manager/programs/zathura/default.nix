@@ -23,8 +23,8 @@ in
     };
   };
 
-  config = mkIf (cfg.enable && !cfg.disableModule) (mkDefault {
-    programs.zathura = {
+  config = mkIf (cfg.enable && !cfg.disableModule) {
+    programs.zathura = mkDefault {
       options = {
         guioptions = "sv";
         adjust-open = "width";
@@ -79,5 +79,5 @@ in
       "image/x-eps"
       "image/x-gzeps"
     ] (_: "org.pwmt.zathura.desktop");
-  });
+  };
 }

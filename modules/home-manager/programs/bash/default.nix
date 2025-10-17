@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (builtins) readFile;
+  inherit (builtins) concatStringsSep readFile;
   inherit (lib)
     mkOption
     mkIf
@@ -47,7 +47,14 @@ in
         "[ t\]*"
       ];
       sessionVariables = {
-        CDPATH = ''.:$HOME:${config.xdg.configHome}:$HOME/.local/src:$HOME/.local:/etc'';
+        CDPATH = concatStringsSep ":" [
+          "."
+          "~/.local/src"
+          config.xdg.configHome
+          "~"
+          "~/.local"
+          "/etc"
+        ];
         PROMPT_COMMAND = "__prompt_command";
         PS1 = ''┌──\[\e[0m\]\[\e[1m\][ \[\e[0;1;38;5;48m\]\u\[\e[0;1;1;38;5;226m\]@\[\e[0;1;38;5;196m\]\h\[\e[0;1m\] \`if [ \$(stat --format %u .) = 0 ]; then printf 🔐; fi\` \w ]\[\e[0m\]\[\e[0;3;96m\]\$(git branch --show-current 2>/dev/null | sed 's/^/ (/;s/$/)/;') \[\e[0m\]( \`if [ \$? = 0 ]; then printf '\[\e[0;1;38;5;48m\]✓'; else printf '\[\e[0;1;38;5;196m\]✕'; fi\`\[\e[0m\] )\n└──   \[\e[0;1;38;5;50m\]$ \[\e[0m\]'';
       };

@@ -11,9 +11,10 @@ in
 {
   config = mkIf (cfg.enable && !cfg.disableModule) {
     programs.zsh.cdpath = mkDefault [
-      "~"
+      "."
       "~/.local/src"
-      "~/.local/bin"
+      config.xdg.configHome
+      "~"
       "~/.local"
       "/etc"
     ];

@@ -16,6 +16,8 @@ in
   config = mkIf (!cfg.disableModule) {
     home.sessionVariables =
       {
+        LESSHISTFILE = "/dev/null";
+        LESS = "--ignore-case --quit-if-one-screen --RAW-CONTROL-CHARS";
         MANPAGER = "sh -c 'col --no-backspaces --spaces | ${bat} --language=man --plain'";
         MANROFFOPT = "-c";
       }

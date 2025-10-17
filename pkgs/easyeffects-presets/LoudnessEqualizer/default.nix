@@ -10,7 +10,7 @@ mkDerivation {
     owner = "Digitalone1";
     repo = "EasyEffects-Presets";
     rev = "master";
-    sha256 = "0sbx0jwvl1xgj0kzx1sywdh2w44l5ah150d1aync3cwffg495m2k";
+    hash = "sha256-gst5D7k7aNtUdcvMVLTZmTnBFc+vfdylBCv4dqKuWDo=";
   };
 
   buildInputs = [ ];

@@ -12,8 +12,8 @@ in
       readFile "${LoudnessEqualizer}/LoudnessCrystalEqualizer.json" |> fromJSON;
 
     LoudnessEqualizerOldGate =
-      readFile "${LoudnessEqualizer}/LoudnessEqualizerOldGate.json" |> fromJSON;
+      readFile "${LoudnessEqualizer}/LoudnessEqualizer-OldGate.json" |> fromJSON;
 
-    LoudnessEqualizerPE = readFile "${LoudnessEqualizer}/LoudnessEqualizerPE.json" |> fromJSON;
+    LoudnessEqualizerPE = readFile "${LoudnessEqualizer}/LoudnessEqualizer-PE.json" |> fromJSON;
   };
 }

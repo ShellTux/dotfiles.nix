@@ -10,7 +10,7 @@ mkDerivation {
     owner = "EvoXCX";
     repo = "EasyEffect-Preset";
     rev = "main";
-    sha256 = "0yd83izcvk0m17sz8icsvxvjwb3mjlzrazsiwn7a14lfysjjr0cn";
+    hash = "sha256-loEspfaOkqCO5VF/lT+VdSwud9+aRfT1CRXMzX4cqHk=";
   };
 
   buildInputs = [ ];

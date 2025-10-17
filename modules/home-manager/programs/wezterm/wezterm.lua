@@ -56,8 +56,8 @@ return {
     { key = "\\",         mods = "LEADER",         action = action.SplitHorizontal { domain = "CurrentPaneDomain" } },
     { key = "%",          mods = "LEADER | SHIFT", action = action.SplitHorizontal { domain = "CurrentPaneDomain" } },
     { key = "z",          mods = "LEADER",         action = "TogglePaneZoomState" },
-    { key = "c",          mods = "LEADER",         action = action { SpawnTab = "DefaultDomain" } },
-    { key = "DownArrow",  mods = "SHIFT",          action = action { SpawnTab = "DefaultDomain" } },
+    { key = "c",          mods = "LEADER",         action = action.SpawnCommandInNewTab { cwd = os.getenv('HOME') } },
+    { key = "DownArrow",  mods = "SHIFT",          action = action.SpawnCommandInNewTab { cwd = os.getenv('HOME') } },
 
     { key = "h",          mods = "CTRL",           action = action.ActivatePaneDirection("Left") },
     { key = "j",          mods = "CTRL",           action = action.ActivatePaneDirection("Down") },
@@ -114,6 +114,19 @@ return {
 
     { key = "s",          mods = "LEADER",         action = action.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
     { key = ",",          mods = "LEADER",         action = utils.RenameWorkspace },
+
+    -- Open wezterm config file
+    -- {
+    --   key = ".",
+    --   mods = "LEADER",
+    --   action = action.SpawnCommandInNewTab {
+    --     cwd = os.getenv('WEZTERM_CONFIG_DIR'),
+    --     set_environment_variables = {
+    --       TERM = 'screen-256color',
+    --     },
+    --     args = { os.getenv('EDITOR'), os.getenv('WEZTERM_CONFIG_FILE') },
+    --   },
+    -- },
 
     -- Activate Copy Mode
     { key = "[",          mods = "LEADER",         action = action.ActivateCopyMode },

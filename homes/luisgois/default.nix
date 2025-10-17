@@ -67,6 +67,7 @@
   };
 
   programs = {
+    bash.enable = true;
     bat.enable = true;
     brave.enable = true;
     btop.enable = true;

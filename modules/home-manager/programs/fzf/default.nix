@@ -29,6 +29,13 @@ in
   config = mkIf (cfg.enable && !cfg.disableModule) (mkDefault {
     programs.fzf = {
       enableZshIntegration = true;
+      defaultCommand = "fd --type f --hidden --follow --exclude .git";
+      defaultOptions = [
+        "--layout=reverse"
+        "--border"
+        "--cycle"
+        "--info=inline"
+      ];
     };
 
     programs.bash.profileExtra = ''

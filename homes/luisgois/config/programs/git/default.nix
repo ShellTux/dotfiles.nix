@@ -4,8 +4,8 @@
     ./includes.crypt.nix
   ];
 
-  programs.git = {
-    userName = "ShellTux";
-    userEmail = "115948079+ShellTux@users.noreply.github.com";
+  programs.git.settings.user = {
+    name = "ShellTux";
+    email = "115948079+ShellTux@users.noreply.github.com";
   };
 }

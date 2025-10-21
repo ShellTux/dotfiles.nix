@@ -71,6 +71,7 @@
     bat.enable = true;
     brave.enable = true;
     btop.enable = true;
+    diff-so-fancy.enable = true;
     direnv.enable = true;
     emacs.enable = true;
     eza.enable = true;

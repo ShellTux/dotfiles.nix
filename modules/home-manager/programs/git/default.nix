@@ -22,33 +22,32 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    programs.git = mkDefault {
-      extraConfig = {
-        branch.sort = "-committerdate";
-        column.ui = "auto";
-        commit = {
-          template = "${./template}";
-          verbose = true;
-        };
-        core = {
-          editor = "nvim";
-          autocrlf = "input";
-        };
-        diff = {
-          algorithm = "histogram";
-          colorMoved = "plain";
-          mnemonicPrefix = true;
-          renames = true;
-        };
-        help.autoCorrect = "prompt";
-        init.defaultBranch = "main";
-        rerere = {
-          enable = true;
-          autoupdate = true;
-        };
-        tag.sort = "version:refname";
+    programs.git.settings = {
+      branch.sort = "-committerdate";
+      column.ui = "auto";
+      commit = {
+        template = "${./template}";
+        verbose = true;
       };
-      aliases =
+      core = {
+        editor = "nvim";
+        autocrlf = "input";
+      };
+      diff = {
+        algorithm = "histogram";
+        colorMoved = "plain";
+        mnemonicPrefix = true;
+        renames = true;
+      };
+      help.autoCorrect = "prompt";
+      init.defaultBranch = "main";
+      rerere = {
+        enable = true;
+        autoupdate = true;
+      };
+      tag.sort = "version:refname";
+
+      alias =
         let
           inherit (lib) getExe getExe';
           inherit (pkgs) callPackage;
@@ -114,17 +113,6 @@ in
           visit = ''!${xdg-open} "https://`git config --get remote.origin.url | sed -E "s#(git@|git://|https?://|.git$)##g;s#:#/#"`"'';
           yolo = ''!git commit --message="$(curl --silent https://whatthecommit.com/index.txt)"'';
         };
-      delta = {
-        enable = false;
-
-        options = {
-          light = false;
-          navigate = true;
-        };
-      };
-      diff-so-fancy = {
-        enable = true;
-      };
     };
   };
 }

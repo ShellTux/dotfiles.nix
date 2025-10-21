@@ -9,6 +9,8 @@
     ./brave
     ./btop
     ./chromium
+    ./delta
+    ./diff-so-fancy
     ./direnv
     ./emacs
     ./eza

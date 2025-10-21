@@ -36,7 +36,7 @@ in
       pkgs.finamp
       # pkgs.jellyfin-media-player
       # pkgs.jellyfin-mpv-shim
-      pkgs.jellyflix
+      # pkgs.jellyflix
     ];
 
     wayland.windowManager.hyprland.settings.windowrule = [

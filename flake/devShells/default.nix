@@ -40,6 +40,7 @@ _: {
           pkgs.gitleaks
           pkgs.git-secrets
           # pkgs.guestfs-tools
+          pkgs.just
           pkgs.nh
           pkgs.nix-index
           pkgs.nixos-rebuild

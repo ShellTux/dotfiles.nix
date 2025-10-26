@@ -1,5 +1,6 @@
 { config, lib, ... }:
 let
+  inherit (builtins) map readFile concatStringsSep;
   inherit (lib) mkOption mkIf mkDefault;
   inherit (lib.types) bool;
 
@@ -15,6 +16,19 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    programs.newsboat = mkDefault { };
+    programs.newsboat = mkDefault {
+      autoReload = true;
+      reloadTime = 15;
+
+      extraConfig =
+        [
+          ./extra-config
+          ./vim
+          ./highlights
+          ./macros
+        ]
+        |> map readFile
+        |> concatStringsSep "\n";
+    };
   };
 }

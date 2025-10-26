@@ -1,0 +1,11 @@
+# Vim Keybindings
+bind-key j down
+bind-key k up
+bind-key l open
+bind-key h quit
+bind-key g home feedlist
+bind-key g home articlelist
+bind-key g home article
+bind-key G end feedlist
+bind-key G end articlelist
+bind-key G end article

@@ -72,6 +72,7 @@ in
       pkgs.fastfetch
       pkgs.htop
       pkgs.lolcat
+      pkgs.sshfs
       pkgs.tldr
       pkgs.tmux
       pkgs.vim

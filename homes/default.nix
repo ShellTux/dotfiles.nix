@@ -36,6 +36,11 @@ in
       system = "x86_64-linux";
     };
 
+    dev = mkHome {
+      name = "dev";
+      system = "x86_64-linux";
+    };
+
     # For Unit testing purposes
     test = mkHome {
       name = "test";

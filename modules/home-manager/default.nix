@@ -22,6 +22,7 @@ in
       inputs.stylix.homeModules.stylix
     ]
     ++ [
+      ./accounts
       ./gtk
       ./home
       ./nix

@@ -9,6 +9,7 @@
     ./gammastep
     ./hypridle
     ./kdeconnect
+    ./mbsync
     ./mpd
     ./mpd-notification
     ./wpaperd

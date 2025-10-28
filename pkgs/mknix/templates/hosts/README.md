@@ -5,8 +5,8 @@
 ## Install nixos on a remote machine
 
 ```sh
-nixos-anywhere test --flake .#HOST_NAME --vm-test
-nixos-anywhere test --flake .#HOST_NAME --target-host root@<ip address>
+nixos-anywhere --flake .#HOST_NAME --vm-test
+nixos-anywhere --flake .#HOST_NAME --target-host root@<ip address>
 ssh-keygen -R <ip address>
 ```
 

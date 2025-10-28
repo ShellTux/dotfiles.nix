@@ -42,6 +42,7 @@
     ./starship
     ./tealdeer
     ./thunar
+    ./thunderbird
     ./tmux
     ./vim
     ./waybar

@@ -16,6 +16,10 @@ let
       publicShare = userDir "Público";
       templates = userDir "Modelos";
       videos = userDir "Vídeos";
+      extraConfig = {
+        XDG_VAULT_DIR = userDir "Cofre";
+        XDG_MAIL_DIR = config.accounts.email.maildirBasePath or (userDir "Mail");
+      };
     };
   };
 

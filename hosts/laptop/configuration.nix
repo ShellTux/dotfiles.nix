@@ -9,6 +9,10 @@ let
   inherit (lib) getName;
 in
 {
+  imports = [
+    ./config
+  ];
+
   boot = {
     plymouth.enable = true;
     loader = {

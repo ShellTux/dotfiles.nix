@@ -137,11 +137,7 @@
     awesome.enable = true;
   };
 
-  sops = {
-    defaultSopsFile = ./secrets.yaml;
-
-    secrets."Ssh/Github/PrivateKey" = { };
-  };
+  sops.defaultSopsFile = ./secrets.yaml;
 
   programs.home-manager.enable = true;
 }

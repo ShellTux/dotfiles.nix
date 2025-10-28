@@ -3,6 +3,7 @@
 }:
 {
   imports = [
+    ./aerc
     ./alacritty
     ./bash
     ./bat

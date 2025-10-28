@@ -100,6 +100,7 @@
     ssh.enable = true;
     tealdeer.enable = true;
     thunar.enable = true;
+    thunderbird.enable = true;
     tmux.enable = true;
     translate-shell.enable = true;
     vim.enable = true;

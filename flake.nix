@@ -129,5 +129,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    easyeffects-presets = {
+      url = "github:Digitalone1/EasyEffects-Presets";
+      flake = false;
+    };
+
+    easyeffect-preset = {
+      url = "github:EvoXCX/EasyEffect-Preset";
+      flake = false;
+    };
+
   };
 }

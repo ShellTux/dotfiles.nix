@@ -1,8 +1,8 @@
-{ flake-pkgs, ... }:
+{ inputs, ... }:
 let
   inherit (builtins) fromJSON readFile;
 
-  LoudnessEqualizer = flake-pkgs.easyeffects-preset-loudness-equalizer;
+  LoudnessEqualizer = inputs.easyeffects-presets.outPath;
 in
 {
   services.easyeffects.extraPresets = {

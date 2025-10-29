@@ -7,10 +7,6 @@
       ...
     }:
     {
-      imports = [
-        ./easyeffects-presets
-      ];
-
       packages =
         let
           inherit (pkgs) callPackage;

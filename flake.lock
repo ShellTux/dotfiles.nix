@@ -185,6 +185,38 @@
         "url": "https://codeberg.org/dwl/dwl"
       }
     },
+    "easyeffect-preset": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1647696713,
+        "narHash": "sha256-loEspfaOkqCO5VF/lT+VdSwud9+aRfT1CRXMzX4cqHk=",
+        "owner": "EvoXCX",
+        "repo": "EasyEffect-Preset",
+        "rev": "69ab54760a3b965153a1700cf23624660b484701",
+        "type": "github"
+      },
+      "original": {
+        "owner": "EvoXCX",
+        "repo": "EasyEffect-Preset",
+        "type": "github"
+      }
+    },
+    "easyeffects-presets": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1761690345,
+        "narHash": "sha256-xBF55KKADLFFiG8NOob29s6Ug3JLn1KakrJLFhzQzHI=",
+        "owner": "Digitalone1",
+        "repo": "EasyEffects-Presets",
+        "rev": "98345bfd22853fe65aa23611e28395b37c5fd318",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Digitalone1",
+        "repo": "EasyEffects-Presets",
+        "type": "github"
+      }
+    },
     "firefox-addons": {
       "inputs": {
         "nixpkgs": [
@@ -1180,6 +1212,8 @@
       "inputs": {
         "disko": "disko",
         "dwl": "dwl",
+        "easyeffect-preset": "easyeffect-preset",
+        "easyeffects-presets": "easyeffects-presets",
         "firefox-addons": "firefox-addons",
         "flake-parts": "flake-parts",
         "flake-utils": "flake-utils",

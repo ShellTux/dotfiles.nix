@@ -35,6 +35,11 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    xdg.userDirs = mkDefault userDirs.pt;
+    xdg.userDirs = mkDefault (
+      userDirs.pt
+      // {
+        createDirectories = true;
+      }
+    );
   };
 }

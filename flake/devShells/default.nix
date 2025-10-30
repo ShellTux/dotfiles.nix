@@ -60,7 +60,7 @@ _: {
         ++ config.pre-commit.settings.enabledPackages;
 
         env = {
-          NIX_SSHOPTS = "-o RequestTTY=force";
+          NIX_SSHOPTS = "-t";
         };
 
         shellHook = ''

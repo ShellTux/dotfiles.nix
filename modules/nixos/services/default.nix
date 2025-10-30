@@ -12,6 +12,7 @@
     ./jellyfin
     ./kavita
     ./locate
+    ./nginx
     ./openssh
     ./pipewire
     ./printing

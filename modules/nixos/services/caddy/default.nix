@@ -8,7 +8,6 @@ let
   inherit (lib)
     mkOption
     mkIf
-    mkDefault
     substring
     toIntBase10
     hasPrefix
@@ -36,49 +35,57 @@ in
     services.caddy = {
       globalConfig = ''
         email admin@email.caddy
+        http_port 8080
+        https_port 8443
       '';
 
-      extraConfig = ''
-        # Snippets
+      extraConfig =
+        let
+          crt = config.sops.secrets."caddy/tls/crt";
+          key = config.sops.secrets."caddy/tls/key";
+        in
+        ''
+          # Snippets
 
-        (https) {
-          # tls /var/lib/caddy/homeapps.crt /var/lib/caddy/homeapps.key
-          # tls /var/lib/caddy/homeapps+1.pem /var/lib/caddy/homeapps+1-key.pem
-          # tls internal {
-          #    on_demand
-          # }
-        }
+          (https) {
+            tls ${crt.path} ${key.path}
+          }
 
-        (reverse-proxy) {
-            reverse_proxy {args[0]}:{args[1]} {
-                #@error status 500 502 503
-                #handle_response @error {
-                #   respond "Not found"
-                #}
-            }
-        }
-
-        # (reverse-proxy-https) {
-        #     reverse_proxy https://{args[0]}:{args[1]} {
-        #                 transport http {
-        #                         tls_insecure_skip_verify
-        #                 }
-        #         }
-        # }
-      '';
+          (reverse-proxy) {
+              reverse_proxy {args[0]}:{args[1]} {
+                  # @error status 500 502 503
+                  # handle_response @error {
+                  #    respond "Not found"
+                  # }
+              }
+          }
+        '';
 
       virtualHosts = {
         ":9900".extraConfig = ''
           respond "Hello world from 9900"
         '';
+
         ":9901".extraConfig = ''
           import https
           import reverse-proxy 127.0.0.1 9900
-          # respond "Hello world from https://:9901"
         '';
       };
     };
 
     networking.firewall.allowedTCPPorts = caddyPorts;
+
+    sops.secrets = {
+      "caddy/tls/crt" = {
+        owner = config.services.caddy.user;
+        restartUnits = [ "caddy.service" ];
+      };
+
+      "caddy/tls/key" = {
+        owner = config.services.caddy.user;
+        restartUnits = [ "caddy.service" ];
+      };
+    };
+
   };
 }

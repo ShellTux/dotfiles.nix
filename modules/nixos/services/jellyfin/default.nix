@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 let
@@ -11,15 +10,12 @@ let
     mkDefault
     hasPrefix
     ;
-  inherit (lib.types) bool nullOr str;
-
-  domain = "example.com";
-  subdomain = "jellyfin.${domain}";
-
-  jellyfin-port = 8096;
-
-  user = config.users.users.jellyfin.name;
-  group = config.users.groups.jellyfin.name;
+  inherit (lib.types)
+    bool
+    nullOr
+    str
+    port
+    ;
 
   cfg = config.services.jellyfin;
 in
@@ -29,6 +25,18 @@ in
       description = "Whether to disable this module configuration";
       type = bool;
       default = false;
+    };
+
+    port = mkOption {
+      description = "port";
+      type = port;
+      default = 8096;
+    };
+
+    subdomain = mkOption {
+      description = "subdomain";
+      type = str;
+      default = "jellyfin.${config.server.domain}";
     };
 
     backupDir = mkOption {
@@ -53,17 +61,17 @@ in
     services.jellyfin = mkDefault { };
 
     services.caddy.virtualHosts = {
-      "${subdomain}".extraConfig = ''
+      "${cfg.subdomain}".extraConfig = ''
         encode zstd gzip
 
-        reverse_proxy :${jellyfin-port |> toString} {
+        reverse_proxy :${cfg.port |> toString} {
           header_up X-Real-IP {remote_host}
         }
       '';
 
-      ":7001".extraConfig = ''
+      ":${toString config.server.reverse-proxy.port.jellyfin}".extraConfig = ''
         import https
-        import reverse-proxy 127.0.0.1 ${jellyfin-port |> toString}
+        import reverse-proxy 127.0.0.1 ${cfg.port |> toString}
       '';
     };
 
@@ -103,6 +111,9 @@ in
     #     mode = "0770";
     #   };
     # };
+
+    users.groups.media = { };
+    users.users.jellyfin.extraGroups = [ config.users.groups.media.name ];
   };
 
 }

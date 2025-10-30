@@ -10,30 +10,30 @@ let
 in
 {
   flake.nixosModules.default = {
-    imports =
-      [
-        inputs.disko.nixosModules.disko
-        inputs.home-manager.nixosModules.home-manager
-        inputs.nix-index-database.nixosModules.nix-index
-        inputs.nixvim.nixosModules.nixvim
-        inputs.sops-nix.nixosModules.sops
-        inputs.stylix.nixosModules.stylix
-      ]
-      ++ [
-        ./boot
-        ./console
-        ./documentation
-        ./fonts
-        ./hardware
-        ./networking
-        ./nix
-        ./programs
-        ./security
-        ./services
-        ./stylix
-        ./systemd
-        ./virtualisation
-      ];
+    imports = [
+      inputs.disko.nixosModules.disko
+      inputs.home-manager.nixosModules.home-manager
+      inputs.nix-index-database.nixosModules.nix-index
+      inputs.nixvim.nixosModules.nixvim
+      inputs.sops-nix.nixosModules.sops
+      inputs.stylix.nixosModules.stylix
+    ]
+    ++ [
+      ./boot
+      ./console
+      ./documentation
+      ./fonts
+      ./hardware
+      ./networking
+      ./nix
+      ./options
+      ./programs
+      ./security
+      ./services
+      ./stylix
+      ./systemd
+      ./virtualisation
+    ];
 
     options.inspect = {
       self = mkOption {

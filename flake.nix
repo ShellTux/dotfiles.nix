@@ -15,10 +15,10 @@
       treefmt-nix,
       ...
     }:
-    let
-      specialArgs.lib = nixpkgs.lib.extend (self: _: (import ./lib { inherit inputs self; }));
-    in
-    flake-parts.lib.mkFlake { inherit inputs specialArgs; } {
+    # let
+    #   specialArgs.lib = nixpkgs.lib.extend (self: _: (import ./lib { inherit inputs self; }));
+    # in
+    flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         ./flake
       ]

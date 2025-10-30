@@ -6,12 +6,12 @@
 }:
 let
   inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types) bool;
-
-  domain = "example.com";
-  subdomain = "qbittorrent.${domain}";
-
-  download-path = "/srv/downloads/qbittorent";
+  inherit (lib.types)
+    bool
+    str
+    path
+    nullOr
+    ;
 
   cfg = config.services.qbittorrent;
 in
@@ -21,6 +21,20 @@ in
       description = "Whether to disable this module configuration";
       type = bool;
       default = false;
+    };
+
+    subdomain = mkOption {
+      description = "Subdomain";
+      type = str;
+
+      default = "vaultwarden.${config.server.domain}";
+    };
+
+    downloadPath = mkOption {
+      description = "Qbittorrent download path";
+      type = nullOr path;
+      default = null;
+      example = "/srv/downloads/qbittorrent";
     };
   };
 
@@ -40,7 +54,7 @@ in
             # nix run git+https://codeberg.org/feathecutie/qbittorrent_password -- -p "$(read -s PASSWORD; echo $PASSWORD)"
             # Password_PBKDF2 = "<hash password>";
           };
-          Downloads.SavePath = download-path;
+          Downloads.SavePath = mkIf (cfg.downloadPath != null) cfg.downloadPath;
         };
         BitTorrent.Session = {
           MaxActiveTorrents = 10;
@@ -50,7 +64,7 @@ in
     };
 
     services.caddy.virtualHosts = {
-      "${subdomain}".extraConfig = ''
+      "${cfg.subdomain}".extraConfig = ''
         encode zstd gzip
 
         reverse_proxy :${cfg.webuiPort |> toString} {
@@ -58,14 +72,14 @@ in
         }
       '';
 
-      ":7003".extraConfig = ''
+      ":${toString config.server.reverse-proxy.port.qbittorrent}".extraConfig = ''
         import https
         import reverse-proxy 127.0.0.1 ${cfg.webuiPort |> toString}
       '';
     };
 
     systemd.tmpfiles.rules = [
-      "d ${download-path} 0755 ${cfg.group} ${cfg.user}"
+      (mkIf (cfg.downloadPath != null) "d ${cfg.downloadPath} 0755 ${cfg.group} ${cfg.user}")
     ];
 
   };

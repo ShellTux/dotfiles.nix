@@ -16,7 +16,7 @@
     ./openssh
     ./pipewire
     ./printing
-    # ./qbittorrent
+    ./qbittorrent
     ./static-web-server
     ./stirling-pdf
     ./upower

@@ -46,7 +46,7 @@ in
           }
           {
             Download = [
-              (import ./qbittorrent.nix qbittorrent.enable qbittorrent.port reverse-proxy.port.qbittorrent)
+              (import ./qbittorrent.nix qbittorrent.enable qbittorrent.webuiPort reverse-proxy.port.qbittorrent)
             ];
           }
           {

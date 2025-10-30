@@ -19,6 +19,7 @@
     ./qbittorrent
     ./static-web-server
     ./stirling-pdf
+    ./transmission
     ./upower
     ./vaultwarden
   ];

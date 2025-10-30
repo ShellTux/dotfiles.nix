@@ -19,6 +19,7 @@ let
       extraConfig = {
         XDG_VAULT_DIR = userDir "Cofre";
         XDG_MAIL_DIR = config.accounts.email.maildirBasePath or (userDir "Mail");
+        XDG_SERVER_DIR = "Servidor";
       };
     };
   };

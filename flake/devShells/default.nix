@@ -44,6 +44,7 @@ _: {
           pkgs.nh
           pkgs.nix-index
           pkgs.nixos-rebuild
+          pkgs.openssl
           pkgs.ripsecrets
           pkgs.sops
           pkgs.ssh-to-age

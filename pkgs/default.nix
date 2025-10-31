@@ -14,7 +14,12 @@
           nixvim' = inputs'.nixvim.legacyPackages;
           nixvimModule = {
             inherit system pkgs;
-            module = import ./neovim;
+            module = import ./nixvim;
+            extraSpecialArgs = {
+              inherit pkgs;
+              leader-key = " ";
+              noice.enable = true;
+            };
           };
         in
         rec {
@@ -30,10 +35,11 @@
           mknix = callPackage ./mknix { };
           mktouch = callPackage ./mktouch { };
           mpd-notification = callPackage ./mpd-notification { inherit notify-music; };
-          neovim = nixvim'.makeNixvimWithModule nixvimModule;
+          neovim = nixvim;
           nix-out-paths = callPackage ./nix-out-paths { };
+          nixvim = nixvim'.makeNixvimWithModule nixvimModule;
           notify-music = callPackage ./notify-music { inherit fetch-music-data; };
-          nvim = neovim;
+          nvim = nixvim;
           open = callPackage ./open { };
           prismlauncher = callPackage ./prismlauncher { };
           repl = callPackage ./repl { };

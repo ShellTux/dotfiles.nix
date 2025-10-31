@@ -1,9 +1,0 @@
-{
-  ...
-}:
-{
-  imports = [
-    ./keymaps
-    ./servers
-  ];
-}

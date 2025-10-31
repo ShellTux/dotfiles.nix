@@ -55,6 +55,7 @@
       flake-pkgs.mktouch
       # flake-pkgs.mpd-notification
       flake-pkgs.nix-out-paths
+      flake-pkgs.nixvim
       flake-pkgs.notify-music
       flake-pkgs.open
       flake-pkgs.repl
@@ -92,7 +93,6 @@
     newsboat.enable = true;
     nh.enable = true;
     nix-index.enable = true;
-    nixvim.enable = true;
     nix-your-shell.enable = true;
     nushell.enable = true;
     oh-my-posh.enable = true;

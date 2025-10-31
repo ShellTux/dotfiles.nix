@@ -1,11 +1,14 @@
-{ pkgs, ... }:
+{ pkgs, flake-pkgs, ... }:
 {
   home = rec {
     username = "streamer";
     homeDirectory = "/home/${username}";
     stateVersion = "25.05";
 
-    packages = [ pkgs.droidcam ];
+    packages = [
+      pkgs.droidcam
+      flake-pkgs.nixvim
+    ];
   };
 
   programs = {
@@ -22,7 +25,6 @@
     htop.enable = true;
     mpv.enable = true;
     nh.enable = true;
-    nixvim.enable = true;
     nix-your-shell.enable = true;
     obs-studio.enable = true;
     tealdeer.enable = true;

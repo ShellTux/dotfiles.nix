@@ -1,9 +1,11 @@
-{ ... }:
+{ flake-pkgs, ... }:
 {
   home = rec {
     username = "dev";
     homeDirectory = "/home/${username}";
     stateVersion = "25.05";
+
+    packages = [ flake-pkgs.nixvim ];
   };
 
   programs = {
@@ -18,7 +20,6 @@
     git.enable = true;
     htop.enable = true;
     nh.enable = true;
-    nixvim.enable = true;
     nix-your-shell.enable = true;
     tealdeer.enable = true;
     vim.enable = true;

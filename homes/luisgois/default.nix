@@ -53,6 +53,7 @@
       flake-pkgs.help
       flake-pkgs.ipa
       flake-pkgs.mktouch
+      flake-pkgs.mounts
       # flake-pkgs.mpd-notification
       flake-pkgs.nix-out-paths
       flake-pkgs.nixvim
@@ -60,6 +61,7 @@
       flake-pkgs.open
       flake-pkgs.repl
       flake-pkgs.swap
+      flake-pkgs.umounts
       flake-pkgs.vman
       flake-pkgs.volume
       flake-pkgs.walld

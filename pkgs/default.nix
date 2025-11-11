@@ -47,6 +47,7 @@
           sddm-lain-wired-theme = callPackage ./sddm-lain-wired-theme { };
           stay = callPackage ./stay { };
           swap = callPackage ./swap { };
+          umounts = callPackage ./umounts { };
           vman = callPackage ./vman { };
           vm = callPackage ./vm { };
           volume = callPackage ./volume { };

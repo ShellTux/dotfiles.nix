@@ -3,6 +3,7 @@
   imports = [
     ./caddy
     ./dashy
+    ./deluge
     ./displayManager
     ./flatpak
     ./forgejo

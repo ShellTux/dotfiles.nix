@@ -34,6 +34,7 @@ in
             vaultwarden
             kavita
             qbittorrent
+            deluge
             ;
           inherit (config.server) reverse-proxy;
         in
@@ -47,6 +48,7 @@ in
           {
             Download = [
               (import ./qbittorrent.nix qbittorrent.enable qbittorrent.webuiPort reverse-proxy.port.qbittorrent)
+              (import ./deluge.nix deluge.enable deluge.web.port reverse-proxy.port.deluge)
             ];
           }
           {

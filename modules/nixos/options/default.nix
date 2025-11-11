@@ -41,6 +41,12 @@ in
         type = port;
         default = 9905;
       };
+
+      deluge = mkOption {
+        description = "The port assigned for reverse proxy access to deluge, allowing easy management of torrent downloads through the specified port.";
+        type = port;
+        default = 9906;
+      };
     };
   };
 }

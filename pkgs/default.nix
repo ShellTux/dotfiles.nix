@@ -34,6 +34,7 @@
           ipa = callPackage ./ipa { };
           mknix = callPackage ./mknix { };
           mktouch = callPackage ./mktouch { };
+          mounts = callPackage ./mounts { };
           mpd-notification = callPackage ./mpd-notification { inherit notify-music; };
           neovim = nixvim;
           nix-out-paths = callPackage ./nix-out-paths { };

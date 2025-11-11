@@ -4,21 +4,50 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types) bool;
+  inherit (lib) mkIf;
 
-  cfg = config.programs.yazi.keymap;
+  cfg = config.programs.yazi;
 in
 {
-  options.programs.yazi.keymap = {
-    disableModule = mkOption {
-      description = "Whether to disable this module configuration";
-      type = bool;
-      default = false;
+  programs.yazi = mkIf cfg.enable {
+    keymap = {
+      input.prepend_keymap = [
+        {
+          run = "close";
+          on = [ "<c-q>" ];
+        }
+        {
+          run = "close --submit";
+          on = [ "<enter>" ];
+        }
+        {
+          run = "escape";
+          on = [ "<esc>" ];
+        }
+        {
+          run = "backspace";
+          on = [ "<backspace>" ];
+        }
+        {
+          run = ''shell "$SHELL" --block --confirm'';
+          on = [ "<A-s>" ];
+          desc = "Open shell here";
+        }
+      ];
+      mgr.prepend_keymap = [
+        {
+          run = "escape";
+          on = [ "<esc>" ];
+        }
+        {
+          run = "quit";
+          on = [ "q" ];
+        }
+        {
+          run = "close";
+          on = [ "<c-q>" ];
+        }
+      ];
     };
-  };
-
-  config = mkIf (cfg.enable && !cfg.disableModule) {
-    programs.yazi.keymap = mkDefault { };
   };
 }

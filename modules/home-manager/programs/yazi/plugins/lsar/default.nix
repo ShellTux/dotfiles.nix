@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -10,6 +11,6 @@ let
 in
 {
   programs.yazi = mkIf cfg.enable {
-    theme = { };
+    plugins = { inherit (pkgs.yaziPlugins) lsar; };
   };
 }

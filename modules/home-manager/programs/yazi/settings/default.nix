@@ -4,21 +4,20 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types) bool;
+  inherit (lib) mkIf;
 
-  cfg = config.programs.yazi.settings;
+  cfg = config.programs.yazi;
 in
 {
-  options.programs.yazi.settings = {
-    disableModule = mkOption {
-      description = "Whether to disable this module configuration";
-      type = bool;
-      default = false;
+  programs.yazi = mkIf cfg.enable {
+    settings = {
+      opener.extract = [
+        {
+          run = ''unar "$1"'';
+          desc = "Extract here";
+          for = "unix";
+        }
+      ];
     };
-  };
-
-  config = mkIf (cfg.enable && !cfg.disableModule) {
-    programs.yazi.settings = mkDefault { };
   };
 }

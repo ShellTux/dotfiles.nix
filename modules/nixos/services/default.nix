@@ -15,6 +15,7 @@
     ./locate
     ./nginx
     ./openssh
+    ./photoprism
     ./pipewire
     ./printing
     ./qbittorrent

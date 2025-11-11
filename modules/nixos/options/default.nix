@@ -47,6 +47,12 @@ in
         type = port;
         default = 9906;
       };
+
+      photoprism = mkOption {
+        description = "The port assigned for reverse proxy access to photoprism, allowing easy management of torrent downloads through the specified port.";
+        type = port;
+        default = 9907;
+      };
     };
   };
 }

@@ -64,6 +64,8 @@ in
 
     };
 
+    programs.rust-motd.settings.service_status.Homepage = "homepage-dashboard";
+
     services.caddy.virtualHosts.":${toString config.server.reverse-proxy.port.homepage-dashboard}".extraConfig =
       ''
         import https

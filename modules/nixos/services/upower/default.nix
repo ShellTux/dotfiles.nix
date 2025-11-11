@@ -24,5 +24,7 @@ in
       percentageCritical = 20;
       percentageLow = 25;
     };
+
+    programs.rust-motd.settings.service_status.Upower = "upower";
   };
 }

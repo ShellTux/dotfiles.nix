@@ -112,6 +112,8 @@ in
     #   };
     # };
 
+    programs.rust-motd.settings.service_status.Jellyfin = "jellyfin";
+
     users.groups.media = { };
     users.users.jellyfin.extraGroups = [ config.users.groups.media.name ];
   };

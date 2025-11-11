@@ -78,6 +78,8 @@ in
       '';
     };
 
+    programs.rust-motd.settings.service_status.Qbittorrent = "qbittorrent";
+
     systemd.tmpfiles.rules = [
       (mkIf (cfg.downloadPath != null) "d ${cfg.downloadPath} 0755 ${cfg.group} ${cfg.user}")
     ];

@@ -74,6 +74,7 @@ in
     };
 
     networking.firewall.allowedTCPPorts = caddyPorts;
+    programs.rust-motd.settings.service_status.Caddy = "caddy";
 
     sops.secrets = {
       "caddy/tls/crt" = {

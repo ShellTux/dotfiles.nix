@@ -35,6 +35,8 @@ in
       };
     };
 
+    programs.rust-motd.settings.service_status.Vaultwarden = "vaultwarden";
+
     services.nginx.virtualHosts."${cfg.subdomain}" = {
       enableACME = true;
       forceSSL = true;

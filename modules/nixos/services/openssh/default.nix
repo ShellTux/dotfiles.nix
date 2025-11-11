@@ -32,5 +32,7 @@ in
         PrintMotd = true;
       };
     };
+
+    programs.rust-motd.settings.service_status.Sshd = "sshd";
   };
 }

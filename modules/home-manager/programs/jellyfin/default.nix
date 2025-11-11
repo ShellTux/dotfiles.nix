@@ -28,14 +28,12 @@ in
   config = mkIf (cfg.enable && !cfg.disableModule) {
     warnings = [
       "jellyfin-media-player is disabled because it depends on qtwebengine which is a insecure package"
-      "jellyfin-mpv-shim is disabled because it depends on qtwebengine which is a insecure package"
     ];
 
     home.packages = [
       pkgs.delfin
       pkgs.finamp
       # pkgs.jellyfin-media-player
-      # pkgs.jellyfin-mpv-shim
       # pkgs.jellyflix
     ];
 

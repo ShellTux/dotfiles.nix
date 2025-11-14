@@ -111,6 +111,9 @@ in
         "$mainMod, backslash, exec, ${pypr} toggle-dpms"
 
         "$mainMod SHIFT, apostrophe, exec, ${pypr} menu"
+
+        # Toggle waybar
+        "$mainMod SHIFT, B, exec, pkill -SIGUSR1 waybar"
       ];
 
       bindm = [

@@ -32,32 +32,31 @@ in
     extraPackages = mkOption {
       description = "Useful extra packages to install along side with hyprland";
       type = listOf package;
-      default =
-        [
-          pkgs.kitty
-          pkgs.libnotify
-          pkgs.pavucontrol
-          pkgs.pw-volume
-          pkgs.pwvucontrol
-          pkgs.qpwgraph
-          pkgs.wofi
-        ]
-        ++ [
-          # Pyprland
-          pkgs.btop
-          pkgs.htop
-          pkgs.hyprpicker
-          pkgs.hyprshot
-          pkgs.libqalculate
-          pkgs.pyprland
-          pkgs.satty
-          pkgs.yazi
-        ]
-        ++ [
-          ncmpcpp
-          brightness
-          volume
-        ];
+      default = [
+        pkgs.kitty
+        pkgs.libnotify
+        pkgs.pavucontrol
+        pkgs.pw-volume
+        pkgs.pwvucontrol
+        pkgs.qpwgraph
+        pkgs.wofi
+      ]
+      ++ [
+        # Pyprland
+        pkgs.btop
+        pkgs.htop
+        pkgs.hyprpicker
+        pkgs.hyprshot
+        pkgs.libqalculate
+        pkgs.pyprland
+        pkgs.satty
+      ]
+      ++ (if config.programs.yazi.enable then [ ] else [ pkgs.yazi ])
+      ++ [
+        ncmpcpp
+        brightness
+        volume
+      ];
       example = [ ];
     };
   };

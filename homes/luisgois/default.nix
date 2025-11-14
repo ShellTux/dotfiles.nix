@@ -109,6 +109,7 @@
     waybar.enable = true;
     wezterm.enable = true;
     xournalpp.enable = true;
+    yazi.enable = true;
     yt-dlp.enable = true;
     zathura.enable = true;
     zsh.enable = true;

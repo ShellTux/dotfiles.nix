@@ -1,0 +1,6 @@
+{ ... }:
+{
+  programs.tmux = {
+    shortcut = "b";
+  };
+}

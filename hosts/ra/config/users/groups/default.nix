@@ -1,0 +1,6 @@
+{ ... }:
+{
+  users.groups = {
+    ssh-users = { };
+  };
+}

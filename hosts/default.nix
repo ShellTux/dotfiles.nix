@@ -67,6 +67,14 @@ in
       ];
     };
 
+    ra = mkHost {
+      name = "ra";
+      system = "x86_64-linux";
+      extraProfiles = [
+        (profiles.locale "pt")
+      ];
+    };
+
     # For Unit testing purposes
     test = mkHost {
       name = "test";

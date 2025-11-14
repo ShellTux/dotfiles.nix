@@ -1,13 +1,25 @@
+# mkdir -p $(dirname <key.txt>)
+# age-keygen --output <key.txt>
+# age-keygen -y <key.txt> # To get public key
 keys:
-  - &secret age1f6ctydt8rupctvtlw84rwjj5ycw0y8glf56snse7td6q0h57jyks7hevh4
+  - &laptop   age13w8xpqjdmtydzrfh98pqrxc2epq2rze3vm6xxm9rhx88j2sa3ams28txc5
+  - &luisgois age1f6ctydt8rupctvtlw84rwjj5ycw0y8glf56snse7td6q0h57jyks7hevh4
+  - &ra       age14h563937uzjn50r00dxc26ehp9pa87erfvyrzzhzv8k6q3n4qesqa22h3j
   - &streamer age12ve4uzk3vvhsqpalagcpmz3jsw92ar36y66g7xrhzesrdvty9dxs8hynwh
 creation_rules:
-  - path_regex: secrets\.(yaml|json|env|ini)$
+  - path_regex: hosts/laptop/secrets\.(yaml|json|env|ini)$
     key_groups:
-    - pgp:
-      age:
-      - *secret
-  - path_regex: .*/streamer/secrets\.(yaml|json|env|ini)$
+    - age:
+      - *laptop
+  - path_regex: hosts/ra/secrets\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *ra
+  - path_regex: homes/luisgois/secrets\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *luisgois
+  - path_regex: homes/streamer/secrets\.(yaml|json|env|ini)$
     key_groups:
     - age:
       - *streamer

@@ -24,6 +24,7 @@
     ./vim-easy-align
     ./vim-llvm
     ./vim-polyglot
+    ./vim-visual-multi
     ./web-devicons
   ];
 

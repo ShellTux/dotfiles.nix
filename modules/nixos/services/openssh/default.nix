@@ -19,17 +19,16 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    services.openssh = mkDefault {
+    services.openssh = {
       startWhenNeeded = true;
       ports = [ 22 ];
 
       settings = {
-        PasswordAuthentication = false;
-        AllowUsers = null;
-        UseDns = true;
-        X11Forwarding = false;
-        PermitRootLogin = "no";
-        PrintMotd = true;
+        PasswordAuthentication = mkDefault false;
+        AllowUsers = mkDefault null;
+        X11Forwarding = mkDefault false;
+        PermitRootLogin = mkDefault "no";
+        PrintMotd = mkDefault true;
       };
     };
 

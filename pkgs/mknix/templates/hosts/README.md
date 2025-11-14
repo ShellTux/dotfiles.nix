@@ -31,10 +31,69 @@ nixos-rebuild switch --flake .#HOST_NAME --build-host <user>@<ip address> --targ
 
 ## Secrets keys
 
-- Install sops age key at location specified `sops.age.keyFile`:
+1. First get sops age key file location
 
 ```sh
 $ nix repl
 nix-repl> :lf .
 outputs.nixosConfigurations.HOST_NAME.config.sops.age.keyFile
+```
+
+2. Create output directory
+
+```sh
+$ mkdir --parents "$(dirname "<key.txt>")"
+```
+
+3. Generate sops key file
+
+```sh
+$ age-keygen -o "<key.txt>"
+```
+
+4. Get public key
+
+```sh
+$ age-keygen -y "<key.txt>"
+```
+
+5. Update `.sops.yaml`
+
+```diff
+@@ -2,9 +2,14 @@
+ # age-keygen --output <key.txt>
+ # age-keygen -y <key.txt> # To get public key
+ keys:
+   - &name agepublickey_name
++  - &HOST_NAME agepublickey_HOST_NAME
+ creation_rules:
+   - path_regex: hosts/name/secrets\.(yaml|json|env|ini)$
+     key_groups:
+     - age:
+       - *name
++  - path_regex: hosts/HOST_NAME/secrets\.(yaml|json|env|ini)$
++    key_groups:
++    - age:
++      - *HOST_NAME
+```
+
+6. Create `secrets.yaml`
+
+Create with the user to edit files to create `secrets.yaml` with correct permissions.
+
+```sh
+$ sops hosts/HOST_NAME/secrets.yaml
+```
+
+After creating the `secrets.yaml` file, to edit:
+
+```sh
+$ sops edit hosts/HOST_NAME/secrets.yaml
+$ sudo -E SOPS_AGE_KEY_FILE=<key.txt> sops edit hosts/HOST_NAME/secrets.yaml # If you need additional permissions to read the file
+```
+
+7. Update Nix configuration to provide your `secrets.yaml`
+
+```nix
+sops.defaultSopsFile = ./secrets.yaml;
 ```

@@ -41,6 +41,11 @@ in
       system = "x86_64-linux";
     };
 
+    streamer = mkHome {
+      name = "streamer";
+      system = "x86_64-linux";
+    };
+
     # For Unit testing purposes
     test = mkHome {
       name = "test";

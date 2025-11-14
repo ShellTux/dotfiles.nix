@@ -1,5 +1,9 @@
 { pkgs, flake-pkgs, ... }:
 {
+  imports = [
+    ./config
+  ];
+
   home = rec {
     username = "streamer";
     homeDirectory = "/home/${username}";
@@ -7,6 +11,9 @@
 
     packages = [
       pkgs.droidcam
+      pkgs.gimp3-with-plugins
+    ]
+    ++ [
       flake-pkgs.nixvim
     ];
   };
@@ -27,9 +34,11 @@
     nh.enable = true;
     nix-your-shell.enable = true;
     obs-studio.enable = true;
+    ssh.enable = true;
     tealdeer.enable = true;
     tmux.enable = true;
     vim.enable = true;
+    waybar.enable = true;
     wezterm.enable = true;
     wofi.enable = true;
     zathura.enable = true;
@@ -48,8 +57,14 @@
     wpaperd.enable = true;
   };
 
+  wayland.windowManager = {
+    hyprland.enable = true;
+  };
+
   stylix.enable = true;
   xdg.enable = true;
+
+  sops.defaultSopsFile = ./secrets.yaml;
 
   programs.home-manager.enable = true;
 }

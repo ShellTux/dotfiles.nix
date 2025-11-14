@@ -1,8 +1,13 @@
 keys:
   - &secret age1f6ctydt8rupctvtlw84rwjj5ycw0y8glf56snse7td6q0h57jyks7hevh4
+  - &streamer age12ve4uzk3vvhsqpalagcpmz3jsw92ar36y66g7xrhzesrdvty9dxs8hynwh
 creation_rules:
   - path_regex: secrets\.(yaml|json|env|ini)$
     key_groups:
     - pgp:
       age:
       - *secret
+  - path_regex: .*/streamer/secrets\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *streamer

@@ -27,7 +27,7 @@ in
       description = "Subdomain";
       type = str;
 
-      default = "vaultwarden.${config.server.domain}";
+      default = "qbittorrent.${config.server.domain}";
     };
 
     downloadPath = mkOption {

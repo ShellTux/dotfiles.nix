@@ -6,13 +6,7 @@
 }:
 let
   inherit (builtins) concatStringsSep readFile;
-  inherit (lib)
-    mkOption
-    mkIf
-    mkDefault
-    mkMerge
-    getExe
-    ;
+  inherit (lib) mkOption mkIf getExe;
   inherit (lib.types) bool;
 
   cfg = config.programs.bash;
@@ -29,7 +23,7 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    programs.bash = mkDefault {
+    programs.bash = {
       enableCompletion = true;
       historyControl = [
         # "erasedups"
@@ -66,10 +60,10 @@ in
         "checkjobs"
         "autocd"
       ];
-      initExtra = mkMerge [ fastfetch ];
-      profileExtra = ''
-        ${readFile ./prompt-command}
-      '';
+      initExtra = concatStringsSep "\n" [
+        (readFile ./prompt-command)
+        fastfetch
+      ];
     };
   };
 }

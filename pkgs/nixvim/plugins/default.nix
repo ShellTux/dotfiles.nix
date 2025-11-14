@@ -15,6 +15,7 @@
     ./lsp-lines
     ./lualine
     ./luasnip
+    ./multicursors
     ./noice
     ./notify
     ./nvim-snippets

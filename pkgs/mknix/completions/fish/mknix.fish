@@ -1,6 +1,6 @@
 # Print an optspec for argparse to handle cmd's options that are independent of any subcommand.
 function __fish_mknix_global_optspecs
-	string join \n completion= h/help
+	string join \n completion= dry-run h/help
 end
 
 function __fish_mknix_needs_command
@@ -29,6 +29,7 @@ elvish\t''
 fish\t''
 powershell\t''
 zsh\t''"
+complete -c mknix -n "__fish_mknix_needs_command" -l dry-run
 complete -c mknix -n "__fish_mknix_needs_command" -s h -l help -d 'Print help'
 complete -c mknix -n "__fish_mknix_needs_command" -f -a "home"
 complete -c mknix -n "__fish_mknix_needs_command" -f -a "module"

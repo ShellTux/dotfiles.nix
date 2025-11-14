@@ -16,6 +16,7 @@ _mknix() {
     local context curcontext="$curcontext" state line
     _arguments "${_arguments_options[@]}" : \
 '--completion=[]:COMPLETION:(bash elvish fish powershell zsh)' \
+'--dry-run[]' \
 '-h[Print help]' \
 '--help[Print help]' \
 ":: :_mknix_commands" \

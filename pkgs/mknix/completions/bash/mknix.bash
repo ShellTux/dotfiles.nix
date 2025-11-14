@@ -53,7 +53,7 @@ _mknix() {
 
     case "${cmd}" in
         mknix)
-            opts="-h --completion --help home module package host help"
+            opts="-h --completion --dry-run --help home module package host help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0

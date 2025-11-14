@@ -11,6 +11,9 @@ pub struct Cli {
 
     #[arg(long)]
     pub completion: Option<Shell>,
+
+    #[arg(long)]
+    pub dry_run: bool,
 }
 
 #[derive(Clone)]
@@ -40,7 +43,7 @@ impl fmt::Display for ModuleType {
     }
 }
 
-#[derive(Subcommand)]
+#[derive(Subcommand, Clone)]
 pub enum Commands {
     Home {
         users: Vec<String>,

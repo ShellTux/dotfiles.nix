@@ -13,25 +13,37 @@ use std::{
     process::exit,
 };
 
-fn create_file(filepath: &str, data: String) {
+fn create_file(filepath: &str, data: String, cli: &Cli) {
     // You are cringing at a lot of unwrap
     // IDC. Deal with it 󰱫
-    fs::create_dir_all(Path::new(filepath).parent().unwrap()).unwrap();
+    if !cli.dry_run {
+        fs::create_dir_all(Path::new(filepath).parent().unwrap()).unwrap();
 
-    let mut file = File::create(filepath).expect("Unable to create file");
-    file.write_all(data.as_bytes())
-        .expect("Unable to write to file");
+        let mut file = File::create(filepath).expect("Unable to create file");
+        file.write_all(data.as_bytes())
+            .expect("Unable to write to file");
+        println!("File {}: written successfully!", filepath);
 
-    println!("File {}: written successfully!", filepath);
-    PrettyPrinter::new()
-        .input_file(filepath)
-        .line_numbers(true)
-        .grid(true)
-        .header(true)
-        .rule(true)
-        .theme("TwoDark")
-        .print()
-        .unwrap();
+        PrettyPrinter::new()
+            .input_file(filepath)
+            .line_numbers(true)
+            .grid(true)
+            .header(true)
+            .rule(true)
+            .theme("TwoDark")
+            .print()
+            .unwrap();
+    } else {
+        PrettyPrinter::new()
+            .input_from_bytes(data.as_bytes())
+            .line_numbers(true)
+            .grid(true)
+            .header(true)
+            .rule(true)
+            .theme("TwoDark")
+            .print()
+            .unwrap();
+    }
 }
 
 fn main() {
@@ -44,7 +56,7 @@ fn main() {
         return;
     }
 
-    match cli.command {
+    match &cli.command {
         None => Cli::command().print_long_help().unwrap(),
 
         Some(command) => match command {
@@ -58,10 +70,12 @@ fn main() {
                     create_file(
                         format!("./homes/{}/README.md", &user).as_ref(),
                         include_str!("../templates/homes/README.md").replace("USERNAME", &user),
+                        &cli,
                     );
                     create_file(
                         format!("./homes/{}/default.nix", user).as_ref(),
                         include_str!("../templates/homes/default.nix").replace("USERNAME", &user),
+                        &cli,
                     );
                 }
             }
@@ -79,6 +93,7 @@ fn main() {
                                 format!("./modules/nixos/{}/default.nix", name_path).as_ref(),
                                 include_str!("../templates/modules/nixos/default.nix")
                                     .replace("MODULE_NAME", &module_name),
+                                &cli,
                             );
                         }
                         ModuleType::HomeManager => {
@@ -87,6 +102,7 @@ fn main() {
                                     .as_ref(),
                                 include_str!("../templates/modules/home-manager/default.nix")
                                     .replace("MODULE_NAME", &module_name),
+                                &cli,
                             );
                         }
                     }
@@ -104,11 +120,13 @@ fn main() {
                         format!("./pkgs/{}/default.nix", module_name).as_ref(),
                         include_str!("../templates/pkgs/default.nix")
                             .replace("PACKAGE_NAME", &module_name),
+                        &cli,
                     );
 
                     create_file(
                         format!("./pkgs/{}/{}.sh", module_name, module_name).as_ref(),
                         include_str!("../templates/pkgs/default.sh").to_string(),
+                        &cli,
                     );
                 }
             }
@@ -116,25 +134,29 @@ fn main() {
                 for name in if names.len() == 0 {
                     let god = GodsRepository::default().get_random_god().unwrap();
                     dbg!(&god);
-                    [god].iter().map(|god| god.to_host()).collect()
+                    [god].map(|god| god.to_host()).into_iter().collect()
                 } else {
-                    names
+                    names.clone()
                 } {
                     create_file(
                         format!("./hosts/{}/README.md", name).as_ref(),
                         include_str!("../templates/hosts/README.md").replace("HOST_NAME", &name),
+                        &cli,
                     );
                     create_file(
                         format!("./hosts/{}/default.nix", name).as_ref(),
                         include_str!("../templates/hosts/default.nix").to_string(),
+                        &cli,
                     );
                     create_file(
                         format!("./hosts/{}/configuration.nix", name).as_ref(),
                         include_str!("../templates/hosts/configuration.nix").to_string(),
+                        &cli,
                     );
                     create_file(
                         format!("./hosts/{}/hardware.nix", name).as_ref(),
                         include_str!("../templates/hosts/hardware.nix").to_string(),
+                        &cli,
                     );
                 }
             }

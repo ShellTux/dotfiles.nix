@@ -9,7 +9,7 @@ let
   cfg = config.programs.yazi;
 in
 {
-  programs.yazi = mkIf cfg.enable {
+  programs.yazi = mkIf (cfg.enable && !cfg.disableModule) {
     keymap = {
       input.prepend_keymap = [
         {
@@ -28,11 +28,6 @@ in
           run = "backspace";
           on = [ "<backspace>" ];
         }
-        {
-          run = ''shell "$SHELL" --block --confirm'';
-          on = [ "<A-s>" ];
-          desc = "Open shell here";
-        }
       ];
       mgr.prepend_keymap = [
         {
@@ -46,6 +41,11 @@ in
         {
           run = "close";
           on = [ "<c-q>" ];
+        }
+        {
+          run = ''shell "$SHELL" --block'';
+          on = [ "!" ];
+          desc = "Open shell here";
         }
       ];
     };

@@ -10,7 +10,7 @@ let
   cfg = config.programs.yazi;
 in
 {
-  programs.yazi = mkIf cfg.enable {
+  programs.yazi = mkIf (cfg.enable && !cfg.disableModule) {
     plugins = { inherit (pkgs.yaziPlugins) mediainfo; };
 
     extraPackages = [

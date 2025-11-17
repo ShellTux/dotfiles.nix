@@ -13,6 +13,7 @@ in
   imports = [
     ./networkmanager
     ./stevenblack
+    ./wireguard
   ];
 
   options.networking = {

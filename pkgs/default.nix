@@ -53,6 +53,7 @@
           volume = callPackage ./volume { };
           walld = callPackage ./walld { };
           wclip = callPackage ./wclip { };
+          wg-conf = callPackage ./wg-conf { };
         };
     };
 }

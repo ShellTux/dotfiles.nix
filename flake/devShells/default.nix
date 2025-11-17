@@ -23,6 +23,7 @@ _: {
             "mknix"
             "repl"
             "vm"
+            "wg-conf"
           ])
         )
         |> attrValues;

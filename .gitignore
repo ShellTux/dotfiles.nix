@@ -124,3 +124,5 @@ $RECYCLE.BIN/
 *.qcow2
 
 !/keys/README.md
+
+keys.txt

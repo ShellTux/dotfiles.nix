@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, flake-pkgs, ... }:
 {
   imports = [
     ./config
@@ -38,6 +38,9 @@
       pkgs.tldr
       pkgs.tmux
       pkgs.vim
+    ]
+    ++ [
+      flake-pkgs.ipa
     ];
   };
 

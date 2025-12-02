@@ -36,6 +36,7 @@ in
             qbittorrent
             deluge
             photoprism
+            immich
             ;
           inherit (config.server) reverse-proxy;
         in
@@ -45,6 +46,7 @@ in
               (import ./jellyfin.nix jellyfin.enable jellyfin.port reverse-proxy.port.jellyfin)
               (import ./kavita.nix kavita.enable kavita.port reverse-proxy.port.kavita)
               (import ./photoprism.nix photoprism.enable photoprism.port reverse-proxy.port.photoprism)
+              (import ./immich.nix immich.enable immich.port reverse-proxy.port.immich)
             ];
           }
           {

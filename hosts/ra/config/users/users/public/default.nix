@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 let
   username = "public";
 in
@@ -10,6 +10,11 @@ in
     ];
     initialPassword = "123456";
     homeMode = "750";
+  };
+
+  services.immich = {
+    externalLibraries = [ "/home/${username}/Imagens" ];
+    extraGroups = [ "users" ];
   };
 
   home-manager.users.${username} =

@@ -53,6 +53,12 @@ in
         type = port;
         default = 9907;
       };
+
+      immich = mkOption {
+        description = "The port assigned for reverse proxy access to immich";
+        type = port;
+        default = 9908;
+      };
     };
   };
 }

@@ -10,6 +10,7 @@
     ./glance
     ./guix
     ./homepage-dashboard
+    ./immich
     ./jellyfin
     ./kavita
     ./locate

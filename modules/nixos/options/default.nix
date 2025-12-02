@@ -19,37 +19,37 @@ in
 
     reverse-proxy.port = {
       homepage-dashboard = mkOption {
-        description = "The port used for the reverse proxy to access the homepage dashboard. This allows users to reach the dashboard services through the specified port.";
+        description = "The port used for the reverse proxy to access the homepage dashboard.";
         type = port;
         default = 9902;
       };
 
       vaultwarden = mkOption {
-        description = "The port designated for reverse proxy access to Vaultwarden services, enabling secure password management through the specified port.";
+        description = "The port designated for reverse proxy access to Vaultwarden";
         type = port;
         default = 9903;
       };
 
       jellyfin = mkOption {
-        description = "The port allocated for reverse proxy connections to Jellyfin, facilitating media streaming from the specified service.";
+        description = "The port allocated for reverse proxy connections to Jellyfin";
         type = port;
         default = 9904;
       };
 
       qbittorrent = mkOption {
-        description = "The port assigned for reverse proxy access to qBittorrent, allowing easy management of torrent downloads through the specified port.";
+        description = "The port assigned for reverse proxy access to qBittorrent";
         type = port;
         default = 9905;
       };
 
       deluge = mkOption {
-        description = "The port assigned for reverse proxy access to deluge, allowing easy management of torrent downloads through the specified port.";
+        description = "The port assigned for reverse proxy access to deluge";
         type = port;
         default = 9906;
       };
 
       photoprism = mkOption {
-        description = "The port assigned for reverse proxy access to photoprism, allowing easy management of torrent downloads through the specified port.";
+        description = "The port assigned for reverse proxy access to photoprism";
         type = port;
         default = 9907;
       };

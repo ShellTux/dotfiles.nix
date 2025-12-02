@@ -51,6 +51,7 @@ _: {
           pkgs.ssh-to-age
           pkgs.tokei
           pkgs.trufflehog
+          pkgs.yq
         ]
         ++ [
           inputs'.nixos-anywhere.packages.nixos-anywhere

@@ -23,6 +23,7 @@
       pkgs.easyeffects
       pkgs.ffmpeg
       pkgs.fselect
+      pkgs.gimp3-with-plugins
       pkgs.gocryptfs
       pkgs.gtkhash
       pkgs.kdePackages.dolphin

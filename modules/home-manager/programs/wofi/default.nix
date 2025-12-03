@@ -2,12 +2,14 @@
   config,
   lib,
   pkgs,
+  flake-lib,
   ...
 }:
 let
   inherit (builtins) elem;
   inherit (lib) mkOption mkIf mkDefault;
   inherit (lib.types) bool;
+  inherit (flake-lib.hyprland.windowrule) noborder;
 
   isInstalled = elem pkgs.wofi config.home.packages;
 
@@ -33,7 +35,7 @@ in
     };
 
     wayland.windowManager.hyprland.settings.windowrule = [
-      "noborder, class:^wofi$"
+      (noborder "class:^wofi$")
     ];
   };
 }

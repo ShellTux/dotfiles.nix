@@ -4,12 +4,19 @@
   lib,
   pkgs,
   system,
+  flake-lib,
   ...
 }:
 let
   inherit (lib) mkOption mkIf mkDefault;
   inherit (lib.types) bool;
   inherit (config.home) username;
+  inherit (flake-lib.hyprland.windowrule)
+    float
+    idleinhibit
+    opaque
+    pin
+    ;
 
   fa = inputs.firefox-addons.packages.${system};
 
@@ -167,10 +174,10 @@ in
     stylix.targets.floorp.profileNames = [ "${username}" ];
 
     wayland.windowManager.hyprland.settings.windowrule = [
-      "float, title:^Extension:.*- Bitwarden — (Ablaze Floorp|Firefox)$"
-      "idleinhibit, fullscreen, class:firefox(-developer-edition)?"
-      "opaque, title:^(Vídeo em janela flutuante|Picture-in-Picture)$"
-      "pin, title:^(Vídeo em janela flutuante|Picture-in-Picture)$"
+      (float "title:^Extension:.*- Bitwarden — (Ablaze Floorp|Firefox)$")
+      (idleinhibit "fullscreen" "class:firefox(-developer-edition)?")
+      (opaque "title:^(Vídeo em janela flutuante|Picture-in-Picture)$")
+      (pin "title:^(Vídeo em janela flutuante|Picture-in-Picture)$")
     ];
   };
 }

@@ -1,11 +1,10 @@
-{ ... }:
+{ flake-lib, ... }:
 let
-  inherit (builtins) toString;
-
-  float = rule: "float, ${rule}";
-  idleinhibit = mode: rule: "idleinhibit ${mode}, ${rule}";
-  opaque = rule: "opaque, ${rule}";
-  workspace = number: rule: "workspace ${toString number}, ${rule}";
+  inherit (flake-lib.hyprland.windowrule)
+    float
+    idleinhibit
+    workspace
+    ;
 in
 {
   config.wayland.windowManager.hyprland.settings.windowrule = [

@@ -9,6 +9,8 @@ let
   inherit (inputs.nixpkgs.lib) nixosSystem;
   inherit (config.flake) nixosModules homeManagerModules packages;
 
+  flake-lib = import ../lib.nix { inherit inputs self; };
+
   profiles = import "${self}/profiles";
 
   mkHost =
@@ -26,7 +28,12 @@ let
             useGlobalPkgs = true;
             sharedModules = attrValues homeManagerModules;
             extraSpecialArgs = {
-              inherit inputs system self;
+              inherit
+                inputs
+                system
+                self
+                flake-lib
+                ;
 
               flake-pkgs = packages.${system};
             };
@@ -48,7 +55,12 @@ let
         ];
 
       specialArgs = {
-        inherit inputs self system;
+        inherit
+          inputs
+          self
+          system
+          flake-lib
+          ;
 
         flake-pkgs = packages.${system};
       }

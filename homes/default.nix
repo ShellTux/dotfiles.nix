@@ -9,6 +9,8 @@ let
   inherit (inputs.home-manager.lib) homeManagerConfiguration;
   inherit (config.flake) homeManagerModules packages;
 
+  flake-lib = import ../lib.nix { inherit inputs self; };
+
   mkHome =
     {
       name,
@@ -23,7 +25,12 @@ let
       ];
 
       extraSpecialArgs = {
-        inherit inputs self system;
+        inherit
+          inputs
+          self
+          system
+          flake-lib
+          ;
 
         flake-pkgs = packages.${system};
       };

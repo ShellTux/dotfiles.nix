@@ -1,10 +1,12 @@
 {
   config,
   lib,
+  flake-lib,
   ...
 }:
 let
   inherit (lib) mkIf;
+  inherit (flake-lib.hyprland.windowrule) opaque idleinhibit;
 
   cfg = config.programs.mpv;
 in
@@ -36,8 +38,8 @@ in
     };
 
     wayland.windowManager.hyprland.settings.windowrule = [
-      "idleinhibit, focus, class:mpv"
-      "opaque, class:mpv"
+      (idleinhibit "focus" "class:mpv")
+      (opaque "class:mpv")
     ];
   };
 }

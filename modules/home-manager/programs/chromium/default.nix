@@ -2,16 +2,17 @@
   config,
   lib,
   pkgs,
+  flake-lib,
   ...
 }:
 let
-  inherit (builtins) filter;
   inherit (lib)
     mkOption
     mkIf
     mapAttrs
     ;
   inherit (lib.types) bool listOf enum;
+  inherit (flake-lib.hyprland.windowrule) idleinhibit float size;
 
   chromium-extensions = mapAttrs (extension: id: { inherit id; }) {
     bitwarden = "nngceckbapebfimnlniiiahkandclblb";
@@ -81,12 +82,12 @@ in
     # ) (filter (pkg: pkg.meta.mainProgram != cfg.package.meta.mainProgram) cfg.flavors);
 
     wayland.windowManager.hyprland.settings.windowrule = [
-      "idleinhibit, focus, class:^(brave)$,title:(.*)(YouTube)(.*)"
-      "idleinhibit, fullscreen, class:^(brave)$"
-      "float, initialClass:^(brave)$, initialTitle:^(Save File)$"
-      "size <50% <50%,initialClass:^(brave)$,initialTitle:^(Save File)$"
-      "float,initialClass:^(brave)$,initialTitle:(.*)(wants to save)$"
-      "size <50% <50%,initialClass:^(brave)$,initialTitle:(.*)(wants to save)$"
+      (idleinhibit "focus" "class:^(brave)$,title:(.*)(YouTube)(.*)")
+      (idleinhibit "fullscreen" "class:^(brave)$")
+      (float "initialClass:^(brave)$,initialTitle:^(Save File)$")
+      (size "<50%" "<50%" "initialClass:^(brave)$,initialTitle:^(Save File)$")
+      (float "initialClass:^(brave)$,initialTitle:(.*)(wants to save)$")
+      (size "<50%" "<50%" "initialClass:^(brave)$,initialTitle:(.*)(wants to save)$")
     ];
   };
 }

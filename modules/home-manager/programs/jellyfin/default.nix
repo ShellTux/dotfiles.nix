@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  flake-lib,
   ...
 }:
 let
@@ -11,6 +12,7 @@ let
     mkEnableOption
     ;
   inherit (lib.types) bool;
+  inherit (flake-lib.hyprland.windowrule) idleinhibit;
 
   cfg = config.programs.jellyfin;
 in
@@ -38,8 +40,8 @@ in
     ];
 
     wayland.windowManager.hyprland.settings.windowrule = [
-      "idleinhibit, focus, class:Jellyfin Media Player"
-      "idleinhibit, focus, class:org.jellyfin.jellyfinmediaplayer"
+      (idleinhibit "focus" "class:Jellyfin Media Player")
+      (idleinhibit "focus" "class:org.jellyfin.jellyfinmediaplayer")
     ];
   };
 }

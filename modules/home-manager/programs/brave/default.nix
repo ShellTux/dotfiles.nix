@@ -1,12 +1,17 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  flake-lib,
+  ...
+}:
 let
   inherit (lib)
     mkOption
     mkIf
-    mkDefault
     mapAttrs
     ;
   inherit (lib.types) bool;
+  inherit (flake-lib.hyprland.windowrule) idleinhibit float size;
 
   # TODO: Make this globally accesible to all diferent modules on chromium browsers
   chromium-extensions = mapAttrs (extension: id: { inherit id; }) {
@@ -62,12 +67,12 @@ in
     };
 
     wayland.windowManager.hyprland.settings.windowrule = [
-      "idleinhibit, focus, class:^(brave)$,title:(.*)(YouTube)(.*)"
-      "idleinhibit, fullscreen, class:^(brave)$"
-      "float, initialClass:^(brave)$, initialTitle:^(Save File)$"
-      "size <50% <50%,initialClass:^(brave)$,initialTitle:^(Save File)$"
-      "float,initialClass:^(brave)$,initialTitle:(.*)(wants to save)$"
-      "size <50% <50%,initialClass:^(brave)$,initialTitle:(.*)(wants to save)$"
+      (idleinhibit "focus" "class:^(brave)$,title:(.*)(YouTube)(.*)")
+      (idleinhibit "fullscreen" "class:^(brave)$")
+      (float "initialClass:^(brave)$,initialTitle:^(Save File)$")
+      (size "<50%" "<50%" "initialClass:^(brave)$,initialTitle:^(Save File)$")
+      (float "initialClass:^(brave)$,initialTitle:(.*)(wants to save)$")
+      (size "<50%" "<50%" "initialClass:^(brave)$,initialTitle:(.*)(wants to save)$")
     ];
   };
 }

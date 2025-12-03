@@ -25,7 +25,7 @@ in
       type = listOf package;
       default = [
         flake-pkgs.notify-music
-        pkgs.mpc-cli
+        pkgs.mpc
         pkgs.playerctl
         pkgs.rmpc
       ];

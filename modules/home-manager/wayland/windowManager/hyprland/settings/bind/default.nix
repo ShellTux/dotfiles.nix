@@ -10,7 +10,7 @@ let
 
   brightness = getExe flake-pkgs.brightness;
   hyprshot = getExe pkgs.hyprshot;
-  mpc-cli = getExe pkgs.mpc-cli;
+  mpc = getExe pkgs.mpc;
   pypr = getExe pkgs.pyprland;
   rofi = getExe (
     pkgs.rofi.override {
@@ -126,9 +126,9 @@ in
 
       bindl = [
         # Music
-        ", XF86AudioPlay, exec, ${mpc-cli} toggle"
-        ", XF86AudioPrev, exec, ${mpc-cli} prev"
-        ", XF86AudioNext, exec, ${mpc-cli} next"
+        ", XF86AudioPlay, exec, ${mpc} toggle"
+        ", XF86AudioPrev, exec, ${mpc} prev"
+        ", XF86AudioNext, exec, ${mpc} next"
       ];
 
       bindle = [

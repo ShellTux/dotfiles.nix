@@ -26,7 +26,6 @@ in
           pkgs.intel-media-driver # For Broadwell (2014) or newer processors. LIBVA_DRIVER_NAME=iHD
           # pkgs.intel-ocl # Unfree
           pkgs.intel-vaapi-driver # For older processors. LIBVA_DRIVER_NAME=i965
-          pkgs.vaapiIntel
         ]
       );
 

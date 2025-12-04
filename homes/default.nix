@@ -18,7 +18,10 @@ let
       extraModules ? [ homeManagerModules.default ],
     }:
     homeManagerConfiguration {
-      pkgs = import nixpkgs { inherit system; };
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [ (import ../overlays.nix { inherit inputs; }) ];
+      };
 
       modules = extraModules ++ [
         ./${name}

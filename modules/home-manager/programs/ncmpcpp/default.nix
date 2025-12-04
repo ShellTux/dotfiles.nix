@@ -25,11 +25,6 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    programs.ncmpcpp = mkDefault {
-      package = pkgs.ncmpcpp.override {
-        clockSupport = true;
-        visualizerSupport = true;
-      };
-    };
+    programs.ncmpcpp = mkDefault { };
   };
 }

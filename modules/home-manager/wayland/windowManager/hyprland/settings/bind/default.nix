@@ -12,11 +12,7 @@ let
   hyprshot = getExe pkgs.hyprshot;
   mpc = getExe pkgs.mpc;
   pypr = getExe pkgs.pyprland;
-  rofi = getExe (
-    pkgs.rofi.override {
-      plugins = [ pkgs.rofi-emoji ];
-    }
-  );
+  rofi = getExe pkgs.rofi;
   volume = getExe flake-pkgs.volume;
   wlogout = getExe pkgs.wlogout;
   wofi = getExe pkgs.wofi;

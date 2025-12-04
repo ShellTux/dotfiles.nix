@@ -29,6 +29,12 @@ extra-args :=
 home-manager:
 	home-manager $(command) $(extra-args) --flake .
 
+.PHONY: test
+test:
+	$(MAKE) nixos command=build
+	$(MAKE) home-manager command=build
+	@printf '\033[32m%s\033[0m\n' PASSED
+
 .PHONY: garbage-collect
 garbage-collect:
 	nix-collect-garbage --delete-older-than 7d

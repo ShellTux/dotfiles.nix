@@ -30,7 +30,6 @@ in
       extraEntries = concatStrings [
         (readFile ./40_custom)
       ];
-      efiSupport = true;
     };
   };
 }

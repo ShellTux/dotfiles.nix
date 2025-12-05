@@ -91,10 +91,12 @@ in
       service,
       subdomain,
       domain ? "home",
-      widget ? { },
+      widgetEnabled ? false,
     }:
     let
       inherit (reverse-proxy.port) external internal;
+
+      href = "https://${subdomain}.${domain}:${toString external}";
 
       serviceName =
         {
@@ -122,15 +124,43 @@ in
         }
         .${service};
 
+      widgetConfig =
+        if widgetEnabled then
+          {
+            widget =
+              {
+                jellyfin = {
+                  type = "jellyfin";
+                  url = href;
+                  key = "{{HOMEPAGE_VAR_JELLYFIN_KEY}}";
+                  enableBlocks = true; # optional, defaults to false
+                  enableNowPlaying = true; # optional, defaults to true
+                  enableUser = true; # optional, defaults to false
+                  enableMediaControl = false; # optional, defaults to true
+                  showEpisodeNumber = true; # optional, defaults to false
+                  expandOneStreamToTwoRows = false; # optional, defaults to true
+                };
+                immich = {
+                  type = "immich";
+                  url = href;
+                  key = "{{HOMEPAGE_VAR_IMMICH_KEY}}";
+                  version = 2;
+                };
+              }
+              .${service};
+          }
+        else
+          { };
+
       icon = "${service}.png";
     in
     if enable then
       {
         ${serviceName} = {
-          inherit icon description widget;
+          inherit icon description href;
           ping = "http://127.0.0.1:${toString internal}";
-          href = "https://${subdomain}.${domain}:${toString external}";
-        };
+        }
+        // widgetConfig;
       }
     else
       { };

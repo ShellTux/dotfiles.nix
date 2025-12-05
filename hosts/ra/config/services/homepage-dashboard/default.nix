@@ -1,0 +1,6 @@
+{ ... }:
+{
+  imports = [
+    ./widget.crypt.nix
+  ];
+}

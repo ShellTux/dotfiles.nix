@@ -9,6 +9,7 @@ let
     mkOption
     mkIf
     mkDefault
+    mkEnableOption
     pipe
     filterAttrs
     mapAttrsToList
@@ -46,6 +47,17 @@ in
         default = cfg.listenPort;
       };
     };
+
+    widget = {
+      deluge = mkEnableOption "Wether to enable deluge widget";
+      forgejo = mkEnableOption "Wether to enable forgejo widget";
+      immich = mkEnableOption "Wether to enable immich widget";
+      jellyfin = mkEnableOption "Wether to enable jellyfin widget";
+      kavita = mkEnableOption "Wether to enable kavita widget";
+      photoprism = mkEnableOption "Wether to enable photoprism widget";
+      qbittorrent = mkEnableOption "Wether to enable qbittorrent widget";
+      vaultwarden = mkEnableOption "Wether to enable vaultwarden widget";
+    };
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
@@ -65,6 +77,8 @@ in
                 service: serviceConfig: {
                   inherit service;
                   inherit (serviceConfig) enable subdomain reverse-proxy;
+
+                  widgetEnabled = cfg.widget.${service};
                 }
               ))
               (map genService)

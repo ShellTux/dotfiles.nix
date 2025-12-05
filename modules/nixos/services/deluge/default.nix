@@ -68,7 +68,7 @@ in
       inherit (cfg) subdomain reverse-proxy;
     };
 
-    programs.rust-motd.settings.service_status.Deluge = "deluge";
+    programs.rust-motd.settings.service_status.Deluge = "delugeweb";
 
     systemd.tmpfiles.rules = [
       (mkIf (cfg.downloadPath != null) "d ${cfg.downloadPath} 0755 ${cfg.user} ${cfg.group} - -")

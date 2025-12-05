@@ -5,6 +5,7 @@
     ./dashy
     ./deluge
     ./displayManager
+    ./dnsmasq
     ./flatpak
     ./forgejo
     ./glance

@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  flake-lib,
   ...
 }:
 let
@@ -11,7 +12,9 @@ let
     str
     path
     nullOr
+    port
     ;
+  inherit (flake-lib.caddy) genVirtualHosts;
 
   cfg = config.services.qbittorrent;
 in
@@ -26,8 +29,21 @@ in
     subdomain = mkOption {
       description = "Subdomain";
       type = str;
+      default = "qbittorrent";
+    };
 
-      default = "qbittorrent.${config.server.domain}";
+    reverse-proxy.port = {
+      external = mkOption {
+        description = "Reverse Proxy external port";
+        type = port;
+        default = 9905;
+      };
+
+      internal = mkOption {
+        description = "Reverse Proxy internal port";
+        type = port;
+        default = cfg.webuiPort;
+      };
     };
 
     downloadPath = mkOption {
@@ -63,19 +79,8 @@ in
       webuiPort = 9839;
     };
 
-    services.caddy.virtualHosts = {
-      "${cfg.subdomain}".extraConfig = ''
-        encode zstd gzip
-
-        reverse_proxy :${cfg.webuiPort |> toString} {
-          header_up X-Real-IP {remote_host}
-        }
-      '';
-
-      ":${toString config.server.reverse-proxy.port.qbittorrent}".extraConfig = ''
-        import https
-        import reverse-proxy 127.0.0.1 ${cfg.webuiPort |> toString}
-      '';
+    services.caddy.virtualHosts = genVirtualHosts {
+      inherit (cfg) subdomain reverse-proxy;
     };
 
     programs.rust-motd.settings.service_status.Qbittorrent = "qbittorrent";

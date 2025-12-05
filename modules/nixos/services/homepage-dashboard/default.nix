@@ -1,12 +1,21 @@
 {
   config,
   lib,
+  flake-lib,
   ...
 }:
 let
-  inherit (builtins) toString;
-  inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types) bool;
+  inherit (lib)
+    mkOption
+    mkIf
+    mkDefault
+    pipe
+    filterAttrs
+    mapAttrsToList
+    ;
+  inherit (lib.types) bool str port;
+  inherit (flake-lib.homepage-dashboard) genService;
+  inherit (flake-lib.caddy) genVirtualHosts;
 
   cfg = config.services.homepage-dashboard;
 in
@@ -16,6 +25,26 @@ in
       description = "Whether to disable this module configuration";
       type = bool;
       default = false;
+    };
+
+    subdomain = mkOption {
+      description = "subdomain";
+      type = str;
+      default = "homepage";
+    };
+
+    reverse-proxy.port = {
+      external = mkOption {
+        description = "Reverse Proxy external port";
+        type = port;
+        default = 9902;
+      };
+
+      internal = mkOption {
+        description = "Reverse Proxy internal port";
+        type = port;
+        default = cfg.listenPort;
+      };
     };
   };
 
@@ -29,49 +58,37 @@ in
 
       services =
         let
-          inherit (config.services)
-            jellyfin
-            vaultwarden
-            kavita
-            qbittorrent
-            deluge
-            photoprism
-            immich
-            ;
-          inherit (config.server) reverse-proxy;
+          genSection = section: services: {
+            ${section} = pipe services [
+              (filterAttrs (sName: sConfig: sConfig.enable))
+              (mapAttrsToList (
+                service: serviceConfig: {
+                  inherit service;
+                  inherit (serviceConfig) enable subdomain reverse-proxy;
+                }
+              ))
+              (map genService)
+            ];
+          };
         in
         [
-          {
-            Media = [
-              (import ./jellyfin.nix jellyfin.enable jellyfin.port reverse-proxy.port.jellyfin)
-              (import ./kavita.nix kavita.enable kavita.port reverse-proxy.port.kavita)
-              (import ./photoprism.nix photoprism.enable photoprism.port reverse-proxy.port.photoprism)
-              (import ./immich.nix immich.enable immich.port reverse-proxy.port.immich)
-            ];
-          }
-          {
-            Download = [
-              (import ./qbittorrent.nix qbittorrent.enable qbittorrent.webuiPort reverse-proxy.port.qbittorrent)
-              (import ./deluge.nix deluge.enable deluge.web.port reverse-proxy.port.deluge)
-            ];
-          }
-          {
-            Services = [
-              (import ./vaultwarden.nix vaultwarden.enable vaultwarden.config.ROCKET_PORT
-                reverse-proxy.port.vaultwarden
-              )
-            ];
-          }
+          (genSection "Media" {
+            inherit (config.services)
+              jellyfin
+              kavita
+              photoprism
+              immich
+              ;
+          })
+          (genSection "Download" { inherit (config.services) qbittorrent deluge; })
+          (genSection "Services" { inherit (config.services) vaultwarden forgejo; })
         ];
-
     };
 
     programs.rust-motd.settings.service_status.Homepage = "homepage-dashboard";
 
-    services.caddy.virtualHosts.":${toString config.server.reverse-proxy.port.homepage-dashboard}".extraConfig =
-      ''
-        import https
-        import reverse-proxy 127.0.0.1 ${cfg.listenPort |> toString}
-      '';
+    services.caddy.virtualHosts = genVirtualHosts {
+      inherit (cfg) subdomain reverse-proxy;
+    };
   };
 }

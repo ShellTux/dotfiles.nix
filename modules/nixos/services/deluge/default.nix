@@ -2,11 +2,18 @@
   config,
   lib,
   pkgs,
+  flake-lib,
   ...
 }:
 let
   inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types) bool str path;
+  inherit (lib.types)
+    bool
+    str
+    path
+    port
+    ;
+  inherit (flake-lib.caddy) genVirtualHosts;
 
   cfg = config.services.deluge;
 in
@@ -21,8 +28,21 @@ in
     subdomain = mkOption {
       description = "Subdomain";
       type = str;
+      default = "deluge";
+    };
 
-      default = "deluge.${config.server.domain}";
+    reverse-proxy.port = {
+      external = mkOption {
+        description = "Reverse Proxy external port";
+        type = port;
+        default = 9906;
+      };
+
+      internal = mkOption {
+        description = "Reverse Proxy internal port";
+        type = port;
+        default = cfg.web.port;
+      };
     };
 
     downloadPath = mkOption {
@@ -44,19 +64,8 @@ in
       web.enable = true;
     };
 
-    services.caddy.virtualHosts = {
-      "${cfg.subdomain}".extraConfig = ''
-        encode zstd gzip
-
-        reverse_proxy :${cfg.web.port |> toString} {
-          header_up X-Real-IP {remote_host}
-        }
-      '';
-
-      ":${toString config.server.reverse-proxy.port.deluge}".extraConfig = ''
-        import https
-        import reverse-proxy 127.0.0.1 ${cfg.web.port |> toString}
-      '';
+    services.caddy.virtualHosts = genVirtualHosts {
+      inherit (cfg) subdomain reverse-proxy;
     };
 
     programs.rust-motd.settings.service_status.Deluge = "deluge";

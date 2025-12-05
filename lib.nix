@@ -44,5 +44,96 @@ in
       };
   };
 
+  nginx.genVirtualHosts =
+    {
+      subdomain,
+      reverse-proxy, # AttrSet { .port = { external, internal }; }
+    }:
+    let
+      inherit (reverse-proxy.port) external internal;
+    in
+    {
+      enableACME = true;
+      forceSSL = true;
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:${toString internal}";
+      };
+    };
+
+  caddy.genVirtualHosts =
+    {
+      subdomain,
+      domain ? "home",
+      reverse-proxy, # AttrSet { .port = { external, internal }; }
+    }:
+    let
+      inherit (reverse-proxy.port) external internal;
+    in
+    {
+      "${subdomain}.${domain}".extraConfig = ''
+        encode zstd gzip
+
+        reverse_proxy :${toString external} {
+          header_up X-Real-IP {remote_host}
+        }
+      '';
+
+      ":${toString external}".extraConfig = ''
+        import https
+        import reverse-proxy 127.0.0.1 ${toString internal}
+      '';
+    };
+
+  homepage-dashboard.genService =
+    {
+      enable,
+      reverse-proxy, # AttrSet { .port = { external, internal }; }
+      service,
+      subdomain,
+      domain ? "home",
+      widget ? { },
+    }:
+    let
+      inherit (reverse-proxy.port) external internal;
+
+      serviceName =
+        {
+          deluge = "Deluge";
+          forgejo = "Forgejo";
+          immich = "Immich";
+          jellyfin = "Jellyfin";
+          kavita = "Kavita";
+          photoprism = "Photoprism";
+          qbittorrent = "Qbittorrent";
+          vaultwarden = "Vaultwarden";
+        }
+        .${service};
+
+      description =
+        {
+          immich = "High performance self-hosted photo and video management solution.";
+          forgejo = "Forgejo is a self-hosted lightweight software forge.";
+          deluge = "Deluge is a lightweight, Free Software, cross-platform BitTorrent client.";
+          jellyfin = "Free media server for organizing and streaming your personal media.";
+          kavita = "Kavita is an open-source app for managing and reading manga, comics, and ebooks.";
+          photoprism = "PhotoPrism® is an AI-Powered Photos App for the Decentralized Web. It makes use of the latest technologies to tag and find pictures automatically without getting in your way. You can run it at home, on a private server, or in the cloud.";
+          qbittorrent = "Open-source torrent client for downloading and sharing files.";
+          vaultwarden = "Self-hosted password manager for securely storing passwords and notes.";
+        }
+        .${service};
+
+      icon = "${service}.png";
+    in
+    if enable then
+      {
+        ${serviceName} = {
+          inherit icon description widget;
+          ping = "http://127.0.0.1:${toString internal}";
+          href = "https://${subdomain}.${domain}:${toString external}";
+        };
+      }
+    else
+      { };
+
   double = a: a * 2;
 }

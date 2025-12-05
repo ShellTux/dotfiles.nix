@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  flake-lib,
   ...
 }:
 let
@@ -16,6 +17,8 @@ let
     str
     port
     ;
+
+  inherit (flake-lib.caddy) genVirtualHosts;
 
   cfg = config.services.jellyfin;
 in
@@ -36,7 +39,21 @@ in
     subdomain = mkOption {
       description = "subdomain";
       type = str;
-      default = "jellyfin.${config.server.domain}";
+      default = "jellyfin";
+    };
+
+    reverse-proxy.port = {
+      external = mkOption {
+        description = "Reverse Proxy external port";
+        type = port;
+        default = 9904;
+      };
+
+      internal = mkOption {
+        description = "Reverse Proxy internal port";
+        type = port;
+        default = cfg.port;
+      };
     };
 
     backupDir = mkOption {
@@ -60,19 +77,8 @@ in
 
     services.jellyfin = mkDefault { };
 
-    services.caddy.virtualHosts = {
-      "${cfg.subdomain}".extraConfig = ''
-        encode zstd gzip
-
-        reverse_proxy :${cfg.port |> toString} {
-          header_up X-Real-IP {remote_host}
-        }
-      '';
-
-      ":${toString config.server.reverse-proxy.port.jellyfin}".extraConfig = ''
-        import https
-        import reverse-proxy 127.0.0.1 ${cfg.port |> toString}
-      '';
+    services.caddy.virtualHosts = genVirtualHosts {
+      inherit (cfg) subdomain reverse-proxy;
     };
 
     # TODO: backup jellyfin

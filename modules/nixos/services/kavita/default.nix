@@ -1,14 +1,13 @@
 {
   config,
   lib,
+  flake-lib,
   ...
 }:
 let
   inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types) bool;
-
-  domain = "example.com";
-  subdomain = "kavita.${domain}";
+  inherit (lib.types) bool str port;
+  inherit (flake-lib.caddy) genVirtualHosts;
 
   cfg = config.services.kavita;
 in
@@ -19,24 +18,33 @@ in
       type = bool;
       default = false;
     };
+
+    subdomain = mkOption {
+      description = "subdomain";
+      type = str;
+      default = "kavita";
+    };
+
+    reverse-proxy.port = {
+      external = mkOption {
+        description = "Reverse Proxy external port";
+        type = port;
+        default = 9911;
+      };
+
+      internal = mkOption {
+        description = "Reverse Proxy internal port";
+        type = port;
+        default = cfg.settings.Port;
+      };
+    };
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    services.kavita = mkDefault { };
+    services.kavita = { };
 
-    services.caddy.virtualHosts = {
-      "${subdomain}".extraConfig = ''
-        encode zstd gzip
-
-        reverse_proxy :${cfg.settings.Port |> toString} {
-          header_up X-Real-IP {remote_host}
-        }
-      '';
-
-      ":7005".extraConfig = ''
-        import https
-        import reverse-proxy 127.0.0.1 ${cfg.settings.Port |> toString}
-      '';
+    services.caddy.virtualHosts = genVirtualHosts {
+      inherit (cfg) subdomain reverse-proxy;
     };
   };
 }

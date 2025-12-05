@@ -1,11 +1,13 @@
 {
   config,
   lib,
+  flake-lib,
   ...
 }:
 let
   inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types) bool str;
+  inherit (lib.types) bool str port;
+  inherit (flake-lib.caddy) genVirtualHosts;
 
   cfg = config.services.vaultwarden;
 in
@@ -20,8 +22,21 @@ in
     subdomain = mkOption {
       description = "Subdomain";
       type = str;
+      default = "vaultwarden";
+    };
 
-      default = "vaultwarden.${config.server.domain}";
+    reverse-proxy.port = {
+      external = mkOption {
+        description = "Reverse Proxy external port";
+        type = port;
+        default = 9903;
+      };
+
+      internal = mkOption {
+        description = "Reverse Proxy internal port";
+        type = port;
+        default = cfg.config.ROCKET_PORT;
+      };
     };
   };
 
@@ -29,7 +44,7 @@ in
     services.vaultwarden = mkDefault {
       backupDir = "/var/backup/vaultwarden";
       config = {
-        DOMAIN = "https://${cfg.subdomain}";
+        DOMAIN = "https://${cfg.subdomain}.${config.server.domain}";
         ROCKET_ADDRESS = "127.0.0.1";
         ROCKET_PORT = 8222;
       };
@@ -37,27 +52,8 @@ in
 
     programs.rust-motd.settings.service_status.Vaultwarden = "vaultwarden";
 
-    services.nginx.virtualHosts."${cfg.subdomain}" = {
-      enableACME = true;
-      forceSSL = true;
-      locations."/" = {
-        proxyPass = "http://127.0.0.1:${cfg.config.ROCKET_PORT |> toString}";
-      };
-    };
-
-    services.caddy.virtualHosts = {
-      "${cfg.subdomain}".extraConfig = ''
-        encode zstd gzip
-
-        reverse_proxy :${cfg.config.ROCKET_PORT |> toString} {
-          header_up X-Real-IP {remote_host}
-        }
-      '';
-
-      ":${toString config.server.reverse-proxy.port.vaultwarden}".extraConfig = ''
-        import https
-        import reverse-proxy 127.0.0.1 ${cfg.config.ROCKET_PORT |> toString}
-      '';
+    services.caddy.virtualHosts = genVirtualHosts {
+      inherit (cfg) subdomain reverse-proxy;
     };
   };
 }

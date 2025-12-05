@@ -1,27 +1,24 @@
 {
   config,
   lib,
-  pkgs,
+  flake-lib,
   ...
 }:
 let
-  inherit (builtins)
-    length
-    map
-    listToAttrs
-    ;
+  inherit (builtins) map listToAttrs;
   inherit (lib)
     mkOption
     mkIf
     mkForce
-    getExe'
-    flatten
     pipe
     ;
-  inherit (lib.types) bool str listOf;
-
-  mount = getExe' pkgs.util-linux "mount";
-  umount = getExe' pkgs.util-linux "umount";
+  inherit (lib.types)
+    bool
+    str
+    listOf
+    port
+    ;
+  inherit (flake-lib.caddy) genVirtualHosts;
 
   cfg = config.services.immich;
 in
@@ -36,7 +33,21 @@ in
     subdomain = mkOption {
       description = "subdomain";
       type = str;
-      default = "immich.${config.server.domain}";
+      default = "immich";
+    };
+
+    reverse-proxy.port = {
+      external = mkOption {
+        description = "Reverse Proxy external port";
+        type = port;
+        default = 9908;
+      };
+
+      internal = mkOption {
+        description = "Reverse Proxy internal port";
+        type = port;
+        default = cfg.port;
+      };
     };
 
     extraGroups = mkOption {
@@ -61,19 +72,8 @@ in
       };
     };
 
-    services.caddy.virtualHosts = {
-      "${cfg.subdomain}".extraConfig = ''
-        encode zstd gzip
-
-        reverse_proxy :${cfg.port |> toString} {
-          header_up X-Real-IP {remote_host}
-        }
-      '';
-
-      ":${toString config.server.reverse-proxy.port.immich}".extraConfig = ''
-        import https
-        import reverse-proxy 127.0.0.1 ${cfg.port |> toString}
-      '';
+    services.caddy.virtualHosts = genVirtualHosts {
+      inherit (cfg) subdomain reverse-proxy;
     };
 
     programs.rust-motd.settings.service_status.Immich = "immich-server";

@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  flake-lib,
   ...
 }:
 let
@@ -12,6 +13,7 @@ let
     literalExpression
     ;
   inherit (lib.types) bool listOf package;
+  inherit (flake-lib.hyprland.windowrule) float;
 
   cfg = config.programs.thunar;
 in
@@ -46,6 +48,13 @@ in
       (pkgs.xfce.thunar.override {
         thunarPlugins = cfg.plugins;
       })
+    ];
+
+    wayland.windowManager.hyprland.settings.windowrule = [
+      (float "initialClass:thunar, title:(Rename:.*)")
+      (float "initialClass:thunar, title:(Renomear:.*)")
+      (float "initialClass:thunar, title:(File Operation Progress.*)")
+      (float "initialClass:thunar, title:(Progresso da operação do ficheiro.*)")
     ];
   };
 }

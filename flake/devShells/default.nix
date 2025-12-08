@@ -47,6 +47,7 @@ _: {
           pkgs.nixos-rebuild
           pkgs.openssl
           pkgs.ripsecrets
+          pkgs.simple-http-server
           pkgs.sops
           pkgs.ssh-to-age
           pkgs.tokei

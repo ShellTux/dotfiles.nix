@@ -28,5 +28,6 @@
     ./transmission
     ./upower
     ./vaultwarden
+    ./wiki-js
   ];
 }

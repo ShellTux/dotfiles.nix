@@ -8,7 +8,6 @@ let
   inherit (lib)
     mkOption
     mkIf
-    mkDefault
     mkEnableOption
     pipe
     filterAttrs
@@ -62,7 +61,7 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    services.homepage-dashboard = mkDefault {
+    services.homepage-dashboard = {
       allowedHosts = "*";
 
       settings = import ./settings.nix;

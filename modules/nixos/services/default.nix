@@ -6,6 +6,7 @@
     ./deluge
     ./displayManager
     ./dnsmasq
+    ./echoip
     ./flatpak
     ./forgejo
     ./glance

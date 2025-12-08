@@ -68,6 +68,9 @@ in
       reverse-proxy ? null, # AttrSet { .port = { external, internal }; }
       file_serve ? null, # attrSet { port = port; root = "path"; }
     }:
+    let
+      blocked_tag = "${subdomain}_blocked";
+    in
     if reverse-proxy != null then
       let
         inherit (reverse-proxy.port) external internal;
@@ -84,11 +87,11 @@ in
         ":${toString external}".extraConfig = ''
           encode zstd gzip
 
-          @blocked not remote_ip ${allowed-ranges}
+          @${blocked_tag} not remote_ip ${allowed-ranges}
 
-          header @blocked Content-Type "text/html"
+          header @${blocked_tag} Content-Type "text/html"
 
-          respond @blocked 403 {
+          respond @${blocked_tag} 403 {
             body <<HTML
               <html>
                 <p>
@@ -112,11 +115,11 @@ in
         ":${toString port}".extraConfig = ''
           encode zstd gzip
 
-          @blocked not remote_ip ${allowed-ranges}
+          @${blocked_tag} not remote_ip ${allowed-ranges}
 
-          header @blocked Content-Type "text/html"
+          header @${blocked_tag} Content-Type "text/html"
 
-          respond @blocked 403 {
+          respond @${blocked_tag} 403 {
             body <<HTML
               <html>
                 <p>

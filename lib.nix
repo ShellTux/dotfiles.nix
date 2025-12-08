@@ -70,15 +70,17 @@ in
       inherit (reverse-proxy.port) external internal;
     in
     {
-      "${subdomain}.${domain}".extraConfig = ''
-        encode zstd gzip
-
-        reverse_proxy :${toString external} {
-          header_up X-Real-IP {remote_host}
-        }
-      '';
+      # "${subdomain}.${domain}".extraConfig = ''
+      #   encode zstd gzip
+      #
+      #   reverse_proxy :${toString external} {
+      #     header_up X-Real-IP {remote_host}
+      #   }
+      # '';
 
       ":${toString external}".extraConfig = ''
+        encode zstd gzip
+
         import https
         import reverse-proxy 127.0.0.1 ${toString internal}
       '';

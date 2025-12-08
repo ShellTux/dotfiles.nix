@@ -154,6 +154,7 @@ in
 
       serviceName =
         {
+          changedetection-io = "ChangeDetectionIO";
           deluge = "Deluge";
           forgejo = "Forgejo";
           immich = "Immich";
@@ -167,9 +168,10 @@ in
 
       description =
         {
-          immich = "High performance self-hosted photo and video management solution.";
-          forgejo = "Forgejo is a self-hosted lightweight software forge.";
+          changedetection-io = "Monitor and detect website changes with alerts. Easily track website changes.";
           deluge = "Deluge is a lightweight, Free Software, cross-platform BitTorrent client.";
+          forgejo = "Forgejo is a self-hosted lightweight software forge.";
+          immich = "High performance self-hosted photo and video management solution.";
           jellyfin = "Free media server for organizing and streaming your personal media.";
           kavita = "Kavita is an open-source app for managing and reading manga, comics, and ebooks.";
           photoprism = "PhotoPrism® is an AI-Powered Photos App for the Decentralized Web. It makes use of the latest technologies to tag and find pictures automatically without getting in your way. You can run it at home, on a private server, or in the cloud.";
@@ -200,13 +202,23 @@ in
                   key = "{{HOMEPAGE_VAR_IMMICH_KEY}}";
                   version = 2;
                 };
+                changedetection-io = {
+                  type = "changedetectionio";
+                  url = href;
+                  key = "{{HOMEPAGE_VAR_CHANGEDETECTIONIO_KEY}}";
+                  version = 2;
+                };
               }
               .${service};
           }
         else
           { };
 
-      icon = "${service}.png";
+      icons = {
+        changedetection-io = "changedetection.png";
+      };
+
+      icon = if icons ? ${service} then icons.${service} else "${service}.png";
     in
     if enable then
       {

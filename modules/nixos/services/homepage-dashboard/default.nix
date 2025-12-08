@@ -49,6 +49,7 @@ in
     };
 
     widget = {
+      changedetection-io = mkEnableOption "Wether to enable changedetection-io widget";
       deluge = mkEnableOption "Wether to enable deluge widget";
       forgejo = mkEnableOption "Wether to enable forgejo widget";
       immich = mkEnableOption "Wether to enable immich widget";
@@ -95,7 +96,7 @@ in
               ;
           })
           (genSection "Download" { inherit (config.services) qbittorrent deluge; })
-          (genSection "Services" { inherit (config.services) vaultwarden forgejo; })
+          (genSection "Services" { inherit (config.services) vaultwarden forgejo changedetection-io; })
         ];
     };
 

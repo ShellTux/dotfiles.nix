@@ -2,6 +2,7 @@
 {
   imports = [
     ./caddy
+    ./changedetection-io
     ./dashy
     ./deluge
     ./displayManager

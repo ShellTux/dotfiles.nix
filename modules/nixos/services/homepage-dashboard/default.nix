@@ -85,18 +85,28 @@ in
               (map genService)
             ];
           };
+
+          inherit (config.services)
+            changedetection-io
+            deluge
+            forgejo
+            gitea
+            grafana
+            immich
+            jellyfin
+            photoprism
+            qbittorrent
+            uptime-kuma
+            vaultwarden
+            ;
         in
         [
-          (genSection "Media" {
-            inherit (config.services)
-              jellyfin
-              kavita
-              photoprism
-              immich
-              ;
-          })
-          (genSection "Download" { inherit (config.services) qbittorrent deluge; })
-          (genSection "Services" { inherit (config.services) vaultwarden forgejo changedetection-io; })
+          (genSection "Media Streaming" { inherit jellyfin; })
+          (genSection "Photo Gallery" { inherit photoprism immich; })
+          (genSection "Download Manager" { inherit qbittorrent deluge; })
+          (genSection "Security and Authentication" { inherit vaultwarden; })
+          (genSection "Development and Collaboration" { inherit forgejo gitea; })
+          (genSection "Monitoring and Analytics" { inherit changedetection-io grafana uptime-kuma; })
         ];
     };
 

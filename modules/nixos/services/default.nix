@@ -11,6 +11,7 @@
     ./flatpak
     ./forgejo
     ./glance
+    ./grafana
     ./guix
     ./homepage-dashboard
     ./immich
@@ -22,6 +23,7 @@
     ./photoprism
     ./pipewire
     ./printing
+    ./prometheus
     ./qbittorrent
     ./static-web-server
     ./stirling-pdf

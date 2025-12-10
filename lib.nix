@@ -157,6 +157,7 @@ in
           changedetection-io = "ChangeDetectionIO";
           deluge = "Deluge";
           forgejo = "Forgejo";
+          grafana = "Grafana";
           immich = "Immich";
           jellyfin = "Jellyfin";
           kavita = "Kavita";
@@ -171,6 +172,7 @@ in
           changedetection-io = "Monitor and detect website changes with alerts. Easily track website changes.";
           deluge = "Deluge is a lightweight, Free Software, cross-platform BitTorrent client.";
           forgejo = "Forgejo is a self-hosted lightweight software forge.";
+          grafana = "Grafana is a visualization tool for creating real-time monitoring dashboards from various data sources.";
           immich = "High performance self-hosted photo and video management solution.";
           jellyfin = "Free media server for organizing and streaming your personal media.";
           kavita = "Kavita is an open-source app for managing and reading manga, comics, and ebooks.";

@@ -51,6 +51,7 @@ in
       changedetection-io = mkEnableOption "Wether to enable changedetection-io widget";
       deluge = mkEnableOption "Wether to enable deluge widget";
       forgejo = mkEnableOption "Wether to enable forgejo widget";
+      grafana = mkEnableOption "Wether to enable grafana widget";
       immich = mkEnableOption "Wether to enable immich widget";
       jellyfin = mkEnableOption "Wether to enable jellyfin widget";
       kavita = mkEnableOption "Wether to enable kavita widget";

@@ -87,19 +87,25 @@ in
     services = {
       prometheus = {
         enable = true;
+
+        scrapeConfigs = [
+          {
+            job_name = "${config.networking.hostName}-prometheus";
+            scrape_interval = "10s";
+            static_configs = [
+              {
+                targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.node.port}" ];
+              }
+            ];
+          }
+        ];
+
         exporters = {
           node = {
             enable = true;
             enabledCollectors = [
-              "disable-defaults"
-              "cpu"
-              "diskstats"
-              "filesystem"
-              "meminfo"
-              "netdev"
               "processes"
               "systemd"
-              "uname"
             ];
           };
         };

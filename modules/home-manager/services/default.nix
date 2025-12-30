@@ -8,6 +8,7 @@
     ./emacs
     ./gammastep
     ./hypridle
+    ./hyprshell
     ./jellyfin-mpv-shim
     ./kdeconnect
     ./mbsync

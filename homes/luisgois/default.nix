@@ -86,7 +86,6 @@
     ghostty.enable = true;
     git.enable = true;
     htop.enable = true;
-    hyprshell.enable = true;
     imv.enable = true;
     jellyfin.enable = true;
     jq.enable = true;
@@ -121,7 +120,7 @@
     easyeffects.enable = true;
     emacs.enable = true;
     gammastep.enable = true;
-    # hyprshell.enable = true;
+    hyprshell.enable = true;
     jellyfin-mpv-shim.enable = true;
     mpd.enable = true;
     mpd-mpris.enable = true;

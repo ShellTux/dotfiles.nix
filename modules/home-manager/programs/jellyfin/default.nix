@@ -18,7 +18,7 @@ let
 in
 {
   options.programs.jellyfin = {
-    enable = mkEnableOption "Wether to install jellyfin-media-player";
+    enable = mkEnableOption "Wether to install Jellyfin Desktop";
 
     disableModule = mkOption {
       description = "Whether to disable this module configuration";
@@ -28,20 +28,14 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    warnings = [
-      "jellyfin-media-player is disabled because it depends on qtwebengine which is a insecure package"
-    ];
-
     home.packages = [
       pkgs.delfin
       pkgs.finamp
-      # pkgs.jellyfin-media-player
-      # pkgs.jellyflix
+      pkgs.jellyfin-desktop
     ];
 
     wayland.windowManager.hyprland.settings.windowrule = [
-      (idleinhibit "focus" "class:Jellyfin Media Player")
-      (idleinhibit "focus" "class:org.jellyfin.jellyfinmediaplayer")
+      (idleinhibit "focus" "class:org.jellyfin.JellyfinDesktop")
     ];
   };
 }

@@ -88,7 +88,7 @@ in
     };
 
     services = {
-      openssh.settings.AcceptEnv = "GIT_PROTOCOL";
+      openssh.settings.AcceptEnv = [ "GIT_PROTOCOL" ];
 
       caddy.virtualHosts = genVirtualHosts {
         inherit (cfg) subdomain reverse-proxy;

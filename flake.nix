@@ -99,11 +99,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprshell = {
-      url = "github:H3rmt/hyprshell?ref=hyprshell-release";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";

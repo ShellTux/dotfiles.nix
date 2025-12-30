@@ -23,7 +23,6 @@
     ./git
     ./htop
     ./hyprlock
-    ./hyprshell
     ./imv
     ./jellyfin
     ./khal

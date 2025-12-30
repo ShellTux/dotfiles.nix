@@ -1,12 +1,12 @@
 { config, lib, ... }:
 let
-  inherit (lib) mkOption mkIf mkDefault;
+  inherit (lib) mkOption mkIf;
   inherit (lib.types) bool;
 
-  cfg = config.programs.hyprshell;
+  cfg = config.services.hyprshell;
 in
 {
-  options.programs.hyprshell = {
+  options.services.hyprshell = {
     disableModule = mkOption {
       description = "Whether to disable this module configuration";
       type = bool;
@@ -15,7 +15,7 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    programs.hyprshell = mkDefault {
+    services.hyprshell = {
       settings = {
         windows = {
           enable = true;
@@ -42,6 +42,8 @@ in
           switch.enable = true;
         };
       };
+
+      # style = mkDefault (import ./style.css);
     };
   };
 }

@@ -15,7 +15,6 @@ in
 
   flake.homeManagerModules.default = {
     imports = [
-      inputs.hyprshell.homeModules.hyprshell
       inputs.nix-index-database.homeModules.nix-index
       inputs.nixvim.homeModules.nixvim
       inputs.sops-nix.homeManagerModules.sops

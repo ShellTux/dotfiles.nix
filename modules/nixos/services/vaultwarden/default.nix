@@ -41,7 +41,7 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    services.vaultwarden = mkDefault {
+    services.vaultwarden = {
       backupDir = "/var/backup/vaultwarden";
       config = {
         DOMAIN = "https://${cfg.subdomain}.${config.server.domain}";

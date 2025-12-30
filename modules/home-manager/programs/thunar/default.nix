@@ -29,7 +29,7 @@ in
 
     plugins = mkOption {
       default = [
-        pkgs.xfce.exo
+        pkgs.xfce4-exo
         pkgs.xfce.thunar-archive-plugin
         pkgs.xfce.thunar-media-tags-plugin
         pkgs.xfce.thunar-vcs-plugin

@@ -134,5 +134,7 @@
       flake = false;
     };
 
+    pyprland.url = "github:hyprland-community/pyprland";
+
   };
 }

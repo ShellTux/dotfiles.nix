@@ -174,10 +174,13 @@ in
     stylix.targets.floorp.profileNames = [ "${username}" ];
 
     wayland.windowManager.hyprland.settings.windowrule = [
-      (float "title:^Extension:.*- Bitwarden — (Ablaze Floorp|Firefox)$")
-      (idleinhibit "fullscreen" "class:firefox(-developer-edition)?")
-      (opaque "title:^(Vídeo em janela flutuante|Picture-in-Picture)$")
-      (pin "title:^(Vídeo em janela flutuante|Picture-in-Picture)$")
+      (float { match = "title ^Extension:.*- Bitwarden — (Ablaze Floorp|Firefox)$"; })
+      (idleinhibit {
+        idle_inhibit = "fullscreen";
+        match = "class firefox(-developer-edition)?";
+      })
+      (opaque { match = "class ^(Vídeo em janela flutuante|Picture-in-Picture)$"; })
+      (pin { match = "title ^(Vídeo em janela flutuante|Picture-in-Picture)$"; })
     ];
   };
 }

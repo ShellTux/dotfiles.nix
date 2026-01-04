@@ -9,7 +9,7 @@ let
   inherit (builtins) elem;
   inherit (lib) mkOption mkIf mkDefault;
   inherit (lib.types) bool;
-  inherit (flake-lib.hyprland.windowrule) noborder;
+  inherit (flake-lib.hyprland.windowrule) border_size;
 
   isInstalled = elem pkgs.wofi config.home.packages;
 
@@ -35,7 +35,10 @@ in
     };
 
     wayland.windowManager.hyprland.settings.windowrule = [
-      (noborder "class:^wofi$")
+      (border_size {
+        match = "class ^wofi$";
+        border_size = 0;
+      })
     ];
   };
 }

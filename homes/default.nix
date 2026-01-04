@@ -24,6 +24,15 @@ let
       };
 
       modules = extraModules ++ [
+        {
+          nixpkgs = {
+            overlays = [ (import ../overlays.nix { inherit inputs; }) ];
+            config.packageOverrides = pkgs: {
+              small = import inputs.nixpkgs-small { inherit system; };
+              stable = import inputs.nixpkgs-stable { inherit system; };
+            };
+          };
+        }
         ./${name}
       ];
 

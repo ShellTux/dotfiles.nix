@@ -39,13 +39,11 @@
       pkgs.ripgrep-all
       pkgs.rmpc
       pkgs.rsync
-      pkgs.silicon
       pkgs.sl
       pkgs.tealdeer
       pkgs.unar
       pkgs.vimv
       pkgs.virt-viewer
-      pkgs.webcord
       pkgs.wl-clipboard
       pkgs.xdg-ninja
     ]
@@ -135,7 +133,10 @@
   stylix.enable = true;
 
   wayland.windowManager = {
-    hyprland.enable = true;
+    hyprland = {
+      enable = true;
+      pyprland.enable = true;
+    };
   };
 
   xsession.windowManager = {

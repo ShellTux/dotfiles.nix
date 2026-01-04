@@ -18,11 +18,9 @@ in
     };
   };
 
-  config = mkIf (!cfg.disableModule) {
-    networking.stevenblack = mkDefault {
-      enable = true;
-
-      block = [
+  config = mkIf (cfg.enable && !cfg.disableModule) {
+    networking.stevenblack = {
+      block = mkDefault [
         "fakenews"
         "gambling"
       ];

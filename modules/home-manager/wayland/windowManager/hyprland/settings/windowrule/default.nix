@@ -1,8 +1,14 @@
 { flake-lib, ... }:
 let
   inherit (flake-lib.hyprland.windowrule)
+    center
     float
+    fullscreen
     idleinhibit
+    no_anim
+    pin
+    size
+    stay_focused
     workspace
     ;
 in
@@ -10,95 +16,95 @@ in
   config.wayland.windowManager.hyprland.settings.windowrule = [
     # Floating {{{
 
-    (float "class:confirm")
-    (float "class:confirmreset")
-    (float "class:dialog")
-    (float "class:download")
-    (float "class:error")
-    (float "class:file_progress")
-    (float "class:file-roller")
-    (float "class:gcolor3")
-    (float "class:Lxappearance")
-    (float "class:nannou")
-    (float "class:nm-connection-editor")
-    (float "class:notification")
-    (float "class:OpenGL")
-    (float "class:org.kde.polkit-kde-authentication-agent-1")
-    (float "class:pavucontrol")
-    (float "class:pavucontrol-qt")
-    (float "class:qt5ct")
-    (float "class:Rofi")
-    (float "class:Scratchpad")
-    (float "class:splash")
-    (float "class:syncthing-gtk")
-    (float "class:syncthingtray")
-    (float "title:branchdialog")
-    (float "title:Confirm to replace files")
-    (float "title:^/dev/ttyUSB")
-    (float "title:File Operation Progress")
-    (float "title:^(Media viewer)$")
-    (float "title:Open File")
-    (float "title:^(Picture-in-Picture)$")
-    (float "title:^(Vídeo em janela flutuante)$")
-    (float "title:^(Volume Control)$")
-    (float "title:wlogout")
-    (float "class:viewnior")
-    (float "class:Viewnior")
-    (float "class:xdg-desktop-portal-gtk")
+    (float { match = "class confirm"; })
+    (float { match = "class confirmreset"; })
+    (float { match = "class dialog"; })
+    (float { match = "class download"; })
+    (float { match = "class error"; })
+    (float { match = "class file_progress"; })
+    (float { match = "class file-roller"; })
+    (float { match = "class gcolor3"; })
+    (float { match = "class Lxappearance"; })
+    (float { match = "class nannou"; })
+    (float { match = "class nm-connection-editor"; })
+    (float { match = "class notification"; })
+    (float { match = "class OpenGL"; })
+    (float { match = "class org.kde.polkit-kde-authentication-agent-1"; })
+    (float { match = "class pavucontrol"; })
+    (float { match = "class pavucontrol-qt"; })
+    (float { match = "class qt5ct"; })
+    (float { match = "class Rofi"; })
+    (float { match = "class Scratchpad"; })
+    (float { match = "class splash"; })
+    (float { match = "class syncthing-gtk"; })
+    (float { match = "class syncthingtray"; })
+    (float { match = "title branchdialog"; })
+    (float { match = "title Confirm to replace files"; })
+    (float { match = "title ^/dev/ttyUSB"; })
+    (float { match = "title File Operation Progress"; })
+    (float { match = "title ^(Media viewer)$"; })
+    (float { match = "title Open File"; })
+    (float { match = "title ^(Picture-in-Picture)$"; })
+    (float { match = "title ^(Vídeo em janela flutuante)$"; })
+    (float { match = "title ^(Volume Control)$"; })
+    (float { match = "title wlogout"; })
+    (float { match = "class viewnior"; })
+    (float { match = "class Viewnior"; })
+    (float { match = "class xdg-desktop-portal-gtk"; })
 
     # }}}
 
     # Idlle Inhibit {{{
 
-    (idleinhibit "focus" "class:com.stremio.stremio")
+    (idleinhibit {
+      idle_inhibit = "focus";
+      match = "class com.stremio.stremio";
+    })
 
     # }}}
 
-    "center, floating:1, class:.*"
-    "animation none, class:Rofi"
-    "fullscreen, title:wlogout"
-    "fullscreen, class:wlogout"
-    "move 75 44%, title:^/dev/ttyUSB"
-    "move 75 44%, title:^(Volume Control)$"
-    "size 600 400, title:^(Volume Control)$"
-    "size 800 600, title:^/dev/ttyUSB"
-    "size 600 400, class:qt5ct"
-    "float, title:^(Floating Window - Show Me The Key)$"
-    "size 781 113, title:^(Floating Window - Show Me The Key)$"
-    "move 893 35, title:^(Floating Window - Show Me The Key)$"
-    "workspace 1, title:^(Floating Window - Show Me The Key)$"
-    "pin, title:^(Floating Window - Show Me The Key)$"
-    "noanim, class:^ueberzugpp_.*$"
+    (center { match = "float yes"; })
+    (size {
+      match = "float yes";
+      width = "<60%";
+      height = "<70%";
+    })
+    (no_anim { match = "class Rofi"; })
+    (fullscreen { match = "title wlogout"; })
+    (fullscreen { match = "class wlogout"; })
+    (float { match = "title ^(Floating Window - Show Me The Key)$"; })
+    (pin { match = "title ^(Floating Window - Show Me The Key)$"; })
+    (no_anim { match = "class ^ueberzugpp_.*$"; })
 
     # Workspace {{{
 
-    (workspace 1 "class:Alacritty")
-    (workspace 1 "class:Arduino IDE")
-    (workspace 2 "class:firefox")
-    (workspace 4 "class:krita")
-    (workspace 4 "class:xournalpp")
-    (workspace 5 "class:one.alynx.showmethekey")
-    (workspace 5 "class:org.keepassxc.KeePassXC")
-    (workspace 7 "class:com.obsproject.Studio")
-    (workspace 7 "class:com.stremio.stremio")
-    (workspace 7 "class:Jellyfin Media Player")
-    (workspace 7 "class:org.jellyfin.jellyfinmediaplayer")
-    (workspace 8 "class:com-atlauncher-App")
-    (workspace 8 "class:lutris")
-    (workspace 8 "class:Minecraft")
-    (workspace 8 "class:PPSSPPQt")
-    (workspace 8 "class:PPSSPPSDL")
-    (workspace 8 "class:rpcs3")
-    (workspace 8 "class:steam")
-    (workspace 8 "class:Steam")
-    (workspace 8 "class:SummertimeSaga") # 😉
-    (workspace 9 "class:discord")
-    (workspace 9 "class:Slack")
-    (workspace 9 "class:WebCord")
-    (workspace 9 "class:zoom")
+    (workspace 1 { match = "class Alacritty"; })
+    (workspace 1 { match = "class Arduino IDE"; })
+    (workspace 2 { match = "class firefox"; })
+    (workspace 4 { match = "class krita"; })
+    (workspace 4 { match = "class xournalpp"; })
+    (workspace 5 { match = "class one.alynx.showmethekey"; })
+    (workspace 5 { match = "class org.keepassxc.KeePassXC"; })
+    (workspace 7 { match = "class com.obsproject.Studio"; })
+    (workspace 7 { match = "class com.stremio.stremio"; })
+    (workspace 7 { match = "class Jellyfin Media Player"; })
+    (workspace 7 { match = "class org.jellyfin.jellyfinmediaplayer"; })
+    (workspace 8 { match = "class com-atlauncher-App"; })
+    (workspace 8 { match = "class lutris"; })
+    (workspace 8 { match = "class Minecraft"; })
+    (workspace 8 { match = "class PPSSPPQt"; })
+    (workspace 8 { match = "class PPSSPPSDL"; })
+    (workspace 8 { match = "class rpcs3"; })
+    (workspace 8 { match = "class steam"; })
+    (workspace 8 { match = "class Steam"; })
+    (workspace 8 { match = "class SummertimeSaga"; }) # 😉
+    (workspace 9 { match = "class discord"; })
+    (workspace 9 { match = "class Slack"; })
+    (workspace 9 { match = "class WebCord"; })
+    (workspace 9 { match = "class zoom"; })
 
     # }}}
 
-    "stayfocused,  class:(pinentry-)(.*)"
+    (stay_focused { match = "class (pinentry-)(.*)"; })
   ];
 }

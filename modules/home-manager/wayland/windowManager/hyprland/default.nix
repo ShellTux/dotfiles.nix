@@ -8,7 +8,7 @@
 }:
 let
   inherit (builtins) readFile;
-  inherit (lib) mkOption mkIf;
+  inherit (lib) mkOption mkIf mkDefault;
   inherit (lib.types) bool listOf package;
   inherit (self.packages.${system}) volume brightness;
 
@@ -18,6 +18,7 @@ let
 in
 {
   imports = [
+    ./pyprland
     ./settings
     ./systemd
   ];
@@ -70,9 +71,7 @@ in
 
     home.packages = cfg.extraPackages;
 
-    xdg.configFile."hypr/pyprland.toml".text = builtins.readFile ./pyprland.toml;
-
-    programs.hyprlock.enable = true;
-    services.hypridle.enable = true;
+    programs.hyprlock.enable = mkDefault true;
+    services.hypridle.enable = mkDefault true;
   };
 }

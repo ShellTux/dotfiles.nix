@@ -67,12 +67,26 @@ in
     };
 
     wayland.windowManager.hyprland.settings.windowrule = [
-      (idleinhibit "focus" "class:^(brave)$,title:(.*)(YouTube)(.*)")
-      (idleinhibit "fullscreen" "class:^(brave)$")
-      (float "initialClass:^(brave)$,initialTitle:^(Save File)$")
-      (size "<50%" "<50%" "initialClass:^(brave)$,initialTitle:^(Save File)$")
-      (float "initialClass:^(brave)$,initialTitle:(.*)(wants to save)$")
-      (size "<50%" "<50%" "initialClass:^(brave)$,initialTitle:(.*)(wants to save)$")
+      (idleinhibit {
+        match = "title (.*)(YouTube)(.*)";
+        idle_inhibit = "focus";
+      })
+      (idleinhibit {
+        match = "class ^(brave)$";
+        idle_inhibit = "fullscreen";
+      })
+      (float { match = "initial_title ^(Save File)$"; })
+      (size {
+        match = "initial_title ^(Save File)$";
+        width = "<50%";
+        height = "<50%";
+      })
+      (float { match = "initial_title (.*)(wants to save)$"; })
+      (size {
+        match = "initial_title (.*)(wants to save)$";
+        width = "<50%";
+        height = "<50%";
+      })
     ];
   };
 }

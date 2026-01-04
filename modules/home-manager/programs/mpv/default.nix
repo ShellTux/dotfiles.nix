@@ -3,7 +3,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkDefault genAttrs;
+  inherit (lib) mkOption genAttrs;
   inherit (lib.types) bool;
 in
 {
@@ -22,7 +22,7 @@ in
   };
 
   config = {
-    xdg.mimeApps.defaultApplications = mkDefault (
+    xdg.mimeApps.defaultApplications = (
       genAttrs [
         "video/mp4"
         "video/webm"

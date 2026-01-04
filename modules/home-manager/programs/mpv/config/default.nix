@@ -38,8 +38,11 @@ in
     };
 
     wayland.windowManager.hyprland.settings.windowrule = [
-      (idleinhibit "focus" "class:mpv")
-      (opaque "class:mpv")
+      (idleinhibit {
+        match = "class mpv";
+        idle_inhibit = "focus";
+      })
+      (opaque { match = "class mpv"; })
     ];
   };
 }

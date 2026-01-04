@@ -23,7 +23,13 @@ let
         {
           sops.age.keyFile = "/var/lib/sops/age/keys.txt";
 
-          nixpkgs.overlays = [ (import ../overlays.nix { inherit inputs; }) ];
+          nixpkgs = {
+            overlays = [ (import ../overlays.nix { inherit inputs; }) ];
+            config.packageOverrides = pkgs: {
+              small = import inputs.nixpkgs-small { inherit system; };
+              stable = import inputs.nixpkgs-stable { inherit system; };
+            };
+          };
 
           home-manager = {
             useUserPackages = true;

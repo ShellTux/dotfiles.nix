@@ -35,7 +35,10 @@ in
     ];
 
     wayland.windowManager.hyprland.settings.windowrule = [
-      (idleinhibit "focus" "class:org.jellyfin.JellyfinDesktop")
+      (idleinhibit {
+        match = "class org.jellyfin.JellyfinDesktop";
+        idle_inhibit = "focus";
+      })
     ];
   };
 }

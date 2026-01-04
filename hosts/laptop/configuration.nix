@@ -85,8 +85,8 @@ in
     xfce.excludePackages = [
       # NOTE: Needed to not conflict with dunst dbus activation because they
       # both have the same bus name
-      pkgs.xfce.xfce4-notifyd
-      pkgs.xfce.xfce4-volumed-pulse
+      pkgs.xfce4-notifyd
+      pkgs.xfce4-volumed-pulse
     ];
 
   };
@@ -129,6 +129,7 @@ in
 
   networking = {
     networkmanager.enable = true;
+    stevenblack.enable = true;
   };
 
   powerManagement.enable = true;

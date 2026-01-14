@@ -20,7 +20,9 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    services.jellyfin-mpv-shim = mkDefault { };
+    services.jellyfin-mpv-shim = {
+      mpvConfig = mkDefault config.programs.mpv.config;
+    };
 
     home.packages = [ pkgs.jellyfin-mpv-shim ];
 

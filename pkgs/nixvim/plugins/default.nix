@@ -21,6 +21,7 @@
     ./notify
     ./nvim-snippets
     ./render-markdown
+    ./rustaceanvim
     ./screenkey
     ./telescope
     ./vim-easy-align
@@ -55,6 +56,7 @@
     nvim-autopairs.enable = true;
     nvim-snippets.enable = true;
     render-markdown.enable = true;
+    rustaceanvim.enable = true;
     telescope.enable = true;
     tmux-navigator.enable = true;
     todo-comments.enable = true;

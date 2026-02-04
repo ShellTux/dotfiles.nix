@@ -16,7 +16,6 @@
     marksman.enable = true;
     nil_ls.enable = true;
     pyright.enable = true;
-    rust_analyzer.enable = true;
     texlab.enable = true;
     tinymist.enable = true;
     ts_ls.enable = true;

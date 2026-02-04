@@ -10,6 +10,7 @@
     ./gitsigns
     ./indent-blankline
     ./jdtls
+    ./lalrpop-vim
     ./lastplace
     ./lsp
     ./lsp-lines

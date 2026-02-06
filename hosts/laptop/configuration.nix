@@ -116,7 +116,7 @@ in
     automatic-timezoned.enable = true;
     displayManager.sddm.enable = true;
     flatpak.enable = true;
-    guix.enable = true;
+    # guix.enable = true;
     locate.enable = true;
     thermald.enable = true;
     upower.enable = true;

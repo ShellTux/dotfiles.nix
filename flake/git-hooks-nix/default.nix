@@ -1,7 +1,7 @@
 _: {
   perSystem = _: {
     pre-commit.settings.hooks = {
-      nixfmt-rfc-style.enable = true;
+      nixfmt.enable = true;
       shellcheck.enable = true;
       # pre-commit-ensure-sops.enable = true;
       # ripsecrets.enable = true;

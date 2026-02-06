@@ -41,8 +41,8 @@ in
 
       extraConfig =
         let
-          crt = config.sops.secrets."caddy/tls/crt";
-          key = config.sops.secrets."caddy/tls/key";
+          crt = config.sops.secrets."tls/crt";
+          key = config.sops.secrets."tls/key";
         in
         ''
           # Snippets
@@ -77,12 +77,12 @@ in
     programs.rust-motd.settings.service_status.Caddy = "caddy";
 
     sops.secrets = {
-      "caddy/tls/crt" = {
+      "tls/crt" = {
         owner = config.services.caddy.user;
         restartUnits = [ "caddy.service" ];
       };
 
-      "caddy/tls/key" = {
+      "tls/key" = {
         owner = config.services.caddy.user;
         restartUnits = [ "caddy.service" ];
       };

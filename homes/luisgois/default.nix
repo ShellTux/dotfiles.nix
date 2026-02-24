@@ -40,6 +40,7 @@
       pkgs.rmpc
       pkgs.rsync
       pkgs.sl
+      pkgs.speedtest-cli
       pkgs.tealdeer
       pkgs.unar
       pkgs.vimv

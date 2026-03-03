@@ -48,7 +48,6 @@
     dunst.enable = true;
     easyeffects.enable = true;
     gammastep.enable = true;
-    # hyprshell.enable = true;
     mpd.enable = true;
     mpd-mpris.enable = true;
     mpd-notification.enable = true;

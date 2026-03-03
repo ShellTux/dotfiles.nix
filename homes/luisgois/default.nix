@@ -119,7 +119,6 @@
     easyeffects.enable = true;
     emacs.enable = true;
     gammastep.enable = true;
-    hyprshell.enable = true;
     jellyfin-mpv-shim.enable = true;
     mpd.enable = true;
     mpd-mpris.enable = true;

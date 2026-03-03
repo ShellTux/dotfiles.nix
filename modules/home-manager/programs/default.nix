@@ -19,6 +19,7 @@
     ./fd
     ./floorp
     ./fzf
+    ./gemini-cli
     ./ghostty
     ./git
     ./htop

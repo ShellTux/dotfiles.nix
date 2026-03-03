@@ -82,6 +82,7 @@
     fd.enable = true;
     floorp.enable = true;
     fzf.enable = true;
+    gemini-cli.enable = true;
     ghostty.enable = true;
     git.enable = true;
     htop.enable = true;

@@ -1,10 +1,12 @@
 {
   config,
+  options,
   lib,
   pkgs,
   ...
 }:
 let
+  inherit (builtins) concatStringsSep;
   inherit (lib)
     mkIf
     getExe
@@ -14,7 +16,7 @@ let
     mkMerge
     mkOption
     ;
-  inherit (lib.types) str;
+  inherit (lib.types) listOf str;
 
   fastfetch = getExe pkgs.fastfetch;
 
@@ -36,8 +38,14 @@ in
 
     extra = mkOption {
       description = "General configuration";
-      type = str;
-      default = "";
+      type = listOf str;
+      default = [
+        ''
+          autoload -Uz edit-command-line
+          zle -N edit-command-line
+          bindkey '^x^e' edit-command-line
+        ''
+      ];
     };
 
     afterExtra = mkOption {
@@ -50,18 +58,22 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    programs.zsh.initContent =
-      let
-        initExtraFirst = mkBefore cfg.init.extraFirst;
-        initExtraBeforeCompInit = mkOrder 550 cfg.init.extraBeforeCompInit;
-        initExtra = mkOrder 1000 cfg.init.extra;
-        initAfterExtra = mkAfter cfg.init.afterExtra;
-      in
-      mkMerge [
-        initExtraFirst
-        initExtraBeforeCompInit
-        initExtra
-        initAfterExtra
-      ];
+    programs.zsh = {
+      init.extra = options.programs.zsh.init.extra.default;
+
+      initContent =
+        let
+          initExtraFirst = mkBefore cfg.init.extraFirst;
+          initExtraBeforeCompInit = mkOrder 550 cfg.init.extraBeforeCompInit;
+          initExtra = mkOrder 1000 (concatStringsSep "\n" cfg.init.extra);
+          initAfterExtra = mkAfter cfg.init.afterExtra;
+        in
+        mkMerge [
+          initExtraFirst
+          initExtraBeforeCompInit
+          initExtra
+          initAfterExtra
+        ];
+    };
   };
 }

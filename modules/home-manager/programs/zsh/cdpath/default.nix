@@ -14,6 +14,7 @@ in
       "."
       "~/.local/src"
       config.xdg.configHome
+      "~/.config"
       "~"
       "~/.local"
       "/etc"

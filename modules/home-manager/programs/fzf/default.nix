@@ -43,9 +43,11 @@ in
       source ${./custom.sh}
     '';
 
-    programs.zsh.init.extra = ''
-      source ${./custom.sh}
-    '';
+    programs.zsh.init.extra = [
+      ''
+        source ${./custom.sh}
+      ''
+    ];
 
     home = {
       shellAliases = {

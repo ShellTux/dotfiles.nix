@@ -4,13 +4,13 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkDefault;
+  inherit (lib) mkIf;
 
   cfg = config.programs.zsh;
 in
 {
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    programs.zsh.syntaxHighlighting = mkDefault {
+    programs.zsh.syntaxHighlighting = {
       enable = true;
       highlighters = [
         "main"

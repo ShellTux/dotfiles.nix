@@ -6,6 +6,7 @@
 }:
 let
   inherit (builtins) attrValues;
+  inherit (inputs) dev-tools;
   inherit (inputs.nixpkgs.lib) nixosSystem;
   inherit (config.flake) nixosModules homeManagerModules packages;
 
@@ -44,6 +45,7 @@ let
                 ;
 
               flake-pkgs = packages.${system};
+              dev-tools = dev-tools.packages.${system};
             };
           };
         }

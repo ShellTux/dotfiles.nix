@@ -1,4 +1,4 @@
-{ pkgs, flake-pkgs, ... }:
+{ pkgs, dev-tools, ... }:
 {
   imports = [
     ./config
@@ -14,7 +14,7 @@
       pkgs.gimp3-with-plugins
     ]
     ++ [
-      flake-pkgs.nixvim
+      dev-tools.nixvim
     ];
   };
 

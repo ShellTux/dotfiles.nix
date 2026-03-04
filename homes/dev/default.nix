@@ -1,11 +1,11 @@
-{ flake-pkgs, ... }:
+{ dev-tools, ... }:
 {
   home = rec {
     username = "dev";
     homeDirectory = "/home/${username}";
     stateVersion = "25.05";
 
-    packages = [ flake-pkgs.nixvim ];
+    packages = [ dev-tools.nixvim ];
   };
 
   programs = {

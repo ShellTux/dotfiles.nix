@@ -1,6 +1,7 @@
 {
   pkgs,
   flake-pkgs,
+  dev-tools,
   ...
 }:
 {
@@ -49,6 +50,9 @@
       pkgs.xdg-ninja
     ]
     ++ [
+      dev-tools.nixvim
+    ]
+    ++ [
       flake-pkgs.brightness
       flake-pkgs.help
       flake-pkgs.ipa
@@ -56,7 +60,6 @@
       flake-pkgs.mounts
       # flake-pkgs.mpd-notification
       flake-pkgs.nix-out-paths
-      flake-pkgs.nixvim
       flake-pkgs.notify-music
       flake-pkgs.open
       flake-pkgs.repl

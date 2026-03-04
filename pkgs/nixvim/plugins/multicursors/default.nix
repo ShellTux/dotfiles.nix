@@ -1,6 +1,0 @@
-{ ... }:
-{
-  plugins.multicursors.settings = { };
-
-  keymaps = [ ];
-}

@@ -1,6 +1,0 @@
-{ ... }:
-{
-  match = {
-    ExtraWhitespace = "\\s\\+$";
-  };
-}

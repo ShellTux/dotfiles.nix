@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (inputs) nixpkgs;
+  inherit (inputs) nixpkgs dev-tools;
   inherit (inputs.home-manager.lib) homeManagerConfiguration;
   inherit (config.flake) homeManagerModules packages;
 
@@ -45,6 +45,7 @@ let
           ;
 
         flake-pkgs = packages.${system};
+        dev-tools = dev-tools.packages.${system};
       };
     };
 in

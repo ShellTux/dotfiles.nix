@@ -77,11 +77,11 @@
         "nixvim": "nixvim"
       },
       "locked": {
-        "lastModified": 1772618658,
-        "narHash": "sha256-09n8WFRKTeaMLsERdhv+zzQ1ZCmLgeceqbH9G8joSak=",
+        "lastModified": 1772697086,
+        "narHash": "sha256-uz8iArCjHNiDF4hpzlxo2r5oP7gsBOjN7qHS8xVwYQc=",
         "owner": "ShellTux",
         "repo": "dev-tools.nix",
-        "rev": "871af25722e858a9d993dd32d6675b6ae33782c6",
+        "rev": "d7eb78c552edbd354f85a40aee0570dc2123c9b0",
         "type": "github"
       },
       "original": {

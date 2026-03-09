@@ -4,6 +4,5 @@
     "fakenews"
     "gambling"
     "porn"
-    "social"
   ];
 }

@@ -9,10 +9,8 @@
     ./config
   ];
 
-  home = rec {
+  home = {
     username = "luisgois";
-    homeDirectory = "/home/${username}";
-    stateVersion = "26.05";
 
     packages = [
       pkgs.android-file-transfer

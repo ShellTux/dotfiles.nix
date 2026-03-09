@@ -4,10 +4,8 @@
     ./config
   ];
 
-  home = rec {
+  home = {
     username = "streamer";
-    homeDirectory = "/home/${username}";
-    stateVersion = "25.05";
 
     packages = [
       pkgs.droidcam

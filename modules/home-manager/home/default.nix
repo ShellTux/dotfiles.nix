@@ -1,9 +1,10 @@
 {
+  config,
   lib,
   ...
 }:
 let
-  inherit (lib) mkOption;
+  inherit (lib) mkOption mkDefault;
   inherit (lib.types) listOf str bool;
 in
 {
@@ -32,5 +33,10 @@ in
       default = [ ];
       example = [ "MANPAGER" ];
     };
+  };
+
+  config.home = {
+    stateVersion = mkDefault "26.05";
+    homeDirectory = mkDefault "/home/${config.home.username}";
   };
 }

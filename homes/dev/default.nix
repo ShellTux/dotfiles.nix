@@ -1,9 +1,7 @@
 { dev-tools, ... }:
 {
-  home = rec {
+  home = {
     username = "dev";
-    homeDirectory = "/home/${username}";
-    stateVersion = "25.05";
 
     packages = [ dev-tools.nixvim ];
   };

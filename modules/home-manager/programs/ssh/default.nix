@@ -19,6 +19,8 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    programs.ssh = { };
+    programs.ssh = {
+      enableDefaultConfig = false;
+    };
   };
 }

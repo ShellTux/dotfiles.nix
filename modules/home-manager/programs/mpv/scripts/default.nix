@@ -16,7 +16,7 @@ in
         inherit (pkgs) mpvScripts;
       in
       mkDefault [
-        mpvScripts.mpv-cheatsheet
+        mpvScripts.mpv-cheatsheet-ng
         mpvScripts.mpv-playlistmanager
         mpvScripts.quality-menu
         mpvScripts.thumbfast

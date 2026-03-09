@@ -45,7 +45,7 @@ in
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
     services.dunst = {
-      iconTheme = {
+      iconTheme = mkDefault {
         name = "Adwaita";
         package = pkgs.adwaita-icon-theme;
         size = "32x32";

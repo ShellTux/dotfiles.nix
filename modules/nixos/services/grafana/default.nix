@@ -56,35 +56,37 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    services.grafana = {
-      declarativePlugins = [ pkgs.grafanaPlugins.grafana-piechart-panel ];
-
-      settings.server = {
-        enable_gzip = mkDefault true;
-      };
-
-      provision = {
-        enable = true;
-
-        datasources.settings.datasources = [
-          {
-            name = "Prometheus";
-            isDefault = true;
-            type = "prometheus";
-            url = "http://127.0.0.1:${toString config.services.prometheus.port}";
-          }
-        ];
-
-        dashboards.settings.providers = [
-          {
-            name = "Node Exporter Full";
-            options.path = node-exporter-full;
-          }
-        ];
-      };
-    };
-
     services = {
+      grafana = {
+        declarativePlugins = [ pkgs.grafanaPlugins.grafana-piechart-panel ];
+
+        settings = {
+          security.secret_key = "$__file{${config.sops.secrets."grafana/secret-key".path}}";
+
+          server.enable_gzip = mkDefault true;
+        };
+
+        provision = {
+          enable = true;
+
+          datasources.settings.datasources = [
+            {
+              name = "Prometheus";
+              isDefault = true;
+              type = "prometheus";
+              url = "http://127.0.0.1:${toString config.services.prometheus.port}";
+            }
+          ];
+
+          dashboards.settings.providers = [
+            {
+              name = "Node Exporter Full";
+              options.path = node-exporter-full;
+            }
+          ];
+        };
+      };
+
       prometheus = {
         enable = true;
 
@@ -117,5 +119,7 @@ in
     };
 
     programs.rust-motd.settings.service_status.Grafana = "grafana";
+
+    sops.secrets."grafana/secret-key" = { };
   };
 }

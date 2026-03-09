@@ -19,9 +19,9 @@ in
   };
 
   config = mkIf (!cfg.disableModule) {
-    programs.ssh = mkDefault {
-      agentTimeout = "1h";
-      startAgent = true;
+    programs.ssh = {
+      agentTimeout = mkDefault "1h";
+      startAgent = !config.services.gnome.gcr-ssh-agent.enable;
     };
   };
 }

@@ -17,9 +17,9 @@ let
       templates = userDir "Modelos";
       videos = userDir "Vídeos";
       extraConfig = {
-        XDG_VAULT_DIR = userDir "Cofre";
-        XDG_MAIL_DIR = config.accounts.email.maildirBasePath or (userDir "Mail");
-        XDG_SERVER_DIR = "Servidor";
+        VAULT = userDir "Cofre";
+        MAIL = config.accounts.email.maildirBasePath or (userDir "Mail");
+        SERVER = "Servidor";
       };
     };
   };

@@ -55,6 +55,14 @@ in
           ];
         }
         {
+          mime = "inode/directory";
+          use = [
+            "open"
+            "reveal"
+            "play"
+          ];
+        }
+        {
           mime = "*";
           use = [
             "open"

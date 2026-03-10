@@ -23,8 +23,9 @@ in
       play = [
         {
           run = ''mpv "$@"'';
-          block = true;
+          block = false;
           for = "unix";
+          desc = " Mpv";
         }
       ];
       video = play;
@@ -40,16 +41,19 @@ in
           run = ''nvim "$@"'';
           block = true;
           for = "unix";
+          desc = " Neovim";
         }
         {
           run = ''vim "$@"'';
           block = true;
           for = "unix";
+          desc = " Vim";
         }
         {
           run = ''nano "$@"'';
           block = true;
           for = "unix";
+          desc = " Nano";
         }
       ];
 
@@ -58,20 +62,23 @@ in
           run = ''xdg-open "$@"'';
           desc = "Open";
         }
-      ];
+      ]
+      ++ play;
 
       image = [
         {
           run = ''imv "$@"'';
-          block = true;
+          block = false;
           for = "linux";
+          desc = "Imv";
         }
-      ];
+      ]
+      ++ play;
 
       extract = [
         {
           run = ''unar "$1"'';
-          desc = "Extract here";
+          desc = " Unar: Extract here";
           for = "unix";
         }
       ];

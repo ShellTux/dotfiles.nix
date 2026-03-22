@@ -1,0 +1,7 @@
+{ ... }:
+{
+  imports = [
+    ./cosmic
+    ./plasma6
+  ];
+}

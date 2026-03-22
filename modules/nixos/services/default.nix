@@ -5,6 +5,7 @@
     ./changedetection-io
     ./dashy
     ./deluge
+    ./desktopManager
     ./displayManager
     ./dnsmasq
     ./echoip

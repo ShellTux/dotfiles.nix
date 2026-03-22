@@ -95,6 +95,7 @@
     ncmpcpp.enable = true;
     newsboat.enable = true;
     nh.enable = true;
+    nix-index-database.comma.enable = true;
     nix-index.enable = true;
     nix-your-shell.enable = true;
     nushell.enable = true;
@@ -139,10 +140,6 @@
       enable = true;
       pyprland.enable = true;
     };
-  };
-
-  xsession.windowManager = {
-    awesome.enable = true;
   };
 
   sops.defaultSopsFile = ./secrets.yaml;

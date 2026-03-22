@@ -1,13 +1,8 @@
 {
   self,
   pkgs,
-  lib,
   ...
 }:
-let
-  inherit (builtins) elem;
-  inherit (lib) getName;
-in
 {
   imports = [
     ./config
@@ -37,30 +32,11 @@ in
       isNormalUser = true;
       initialPassword = "123456";
     };
-
-    streamer = {
-      isNormalUser = true;
-      initialPassword = "123456";
-    };
   };
 
   home-manager.users = {
-    luisgois = args: {
-      imports = [
-        "${self}/homes/luisgois"
-      ];
-    };
-    dev = args: {
-      imports = [
-        "${self}/homes/dev"
-      ];
-    };
-
-    streamer = args: {
-      imports = [
-        "${self}/homes/streamer"
-      ];
-    };
+    luisgois = _: { imports = [ "${self}/homes/luisgois" ]; };
+    dev = _: { imports = [ "${self}/homes/dev" ]; };
   };
 
   environment = {
@@ -91,16 +67,7 @@ in
 
   };
 
-  nixpkgs.config.allowUnfreePredicate =
-    pkg:
-    [
-      "stremio-server"
-      "stremio-shell"
-    ]
-    |> elem (getName pkg);
-
   programs = {
-    dwl.enable = true;
     htop.enable = true;
     hyprland.enable = true;
     less.enable = true;
@@ -114,6 +81,7 @@ in
 
   services = {
     automatic-timezoned.enable = true;
+    blueman.enable = true;
     displayManager.sddm.enable = true;
     flatpak.enable = true;
     # guix.enable = true;
@@ -121,10 +89,6 @@ in
     thermald.enable = true;
     upower.enable = true;
     xserver.enable = true;
-  };
-
-  services.xserver.desktopManager = {
-    xfce.enable = true;
   };
 
   networking = {

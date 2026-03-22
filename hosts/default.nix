@@ -19,37 +19,7 @@ let
       name,
       system,
       extraProfiles ? [ profiles.system.core ],
-      extraModules ? [
-        nixosModules.default
-        {
-          sops.age.keyFile = "/var/lib/sops/age/keys.txt";
-
-          nixpkgs = {
-            overlays = [ (import ../overlays.nix { inherit inputs; }) ];
-            config.packageOverrides = pkgs: {
-              small = import inputs.nixpkgs-small { inherit system; };
-              stable = import inputs.nixpkgs-stable { inherit system; };
-            };
-          };
-
-          home-manager = {
-            useUserPackages = true;
-            useGlobalPkgs = true;
-            sharedModules = attrValues homeManagerModules;
-            extraSpecialArgs = {
-              inherit
-                inputs
-                system
-                self
-                flake-lib
-                ;
-
-              flake-pkgs = packages.${system};
-              dev-tools = dev-tools.packages.${system};
-            };
-          };
-        }
-      ],
+      extraModules ? [ ],
       extraSpecialArgs ? { },
     }:
     nixosSystem {
@@ -57,10 +27,42 @@ let
         extraProfiles
         ++ extraModules
         ++ [
+          nixosModules.default
+
+          {
+            sops.age.keyFile = "/var/lib/sops/age/keys.txt";
+
+            nixpkgs = {
+              overlays = [ (import ../overlays.nix { inherit inputs; }) ];
+              config.packageOverrides = pkgs: {
+                small = import inputs.nixpkgs-small { inherit system; };
+                stable = import inputs.nixpkgs-stable { inherit system; };
+              };
+            };
+
+            home-manager = {
+              useUserPackages = true;
+              useGlobalPkgs = true;
+              sharedModules = attrValues homeManagerModules;
+              extraSpecialArgs = {
+                inherit
+                  inputs
+                  system
+                  self
+                  flake-lib
+                  ;
+
+                flake-pkgs = packages.${system};
+                dev-tools = dev-tools.packages.${system};
+              };
+            };
+          }
+
           {
             networking.hostName = name;
             nixpkgs.hostPlatform = system;
           }
+
           ./${name}
         ];
 

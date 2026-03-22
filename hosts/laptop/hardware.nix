@@ -4,12 +4,13 @@ let
 in
 {
   hardware = {
+    bluetooth.enable = true;
     cpu.brand = "intel";
     enableRedistributableFirmware = true;
     graphics.enable = true;
-    opentabletdriver.enable = true;
-    logitech.wireless.enable = true;
     logitech.wireless.enableGraphical = true;
+    logitech.wireless.enable = true;
+    opentabletdriver.enable = true;
   };
 
   # TODO: Migrate to disko

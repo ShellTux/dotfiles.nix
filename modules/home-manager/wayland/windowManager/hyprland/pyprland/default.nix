@@ -11,11 +11,12 @@ let
     mkOption
     mkEnableOption
     mkIf
-    getExe
+    getExe'
     ;
   inherit (lib.types) bool;
+  inherit (pkgs.stdenv.hostPlatform) system;
 
-  pypr = getExe inputs.pyprland.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  pypr = getExe' inputs.pyprland.packages.${system}.default "pypr";
 
   hypr-cfg = config.wayland.windowManager.hyprland;
   cfg = hypr-cfg.pyprland;
@@ -43,6 +44,6 @@ in
       "${pypr}"
     ];
 
-    xdg.configFile."hypr/pyprland.toml".text = readFile ./pyprland.toml;
+    xdg.configFile."pypr/config.toml".text = readFile ./pyprland.toml;
   };
 }

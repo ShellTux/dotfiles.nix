@@ -3,7 +3,7 @@
   home = rec {
     username = "USERNAME";
     homeDirectory = "/home/${username}";
-    stateVersion = "25.05";
+    stateVersion = null;
   };
 
   programs.home-manager.enable = true;

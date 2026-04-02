@@ -11,9 +11,11 @@ usage() {
 	exit 2
 }
 
+pctl="playerctl --ignore-player=brave"
+
 quiet=false
 notification=true
-cover="$(playerctl metadata mpris:artUrl 2>/dev/null || true)"
+cover="$($pctl metadata mpris:artUrl 2>/dev/null || true)"
 
 TEMP=$(getopt \
 	--options 'hnq' \
@@ -57,7 +59,7 @@ do
 	esac
 done
 
-progress="$(playerctl metadata --format='scale=0; {{volume * 100}} / 1' | bc --mathlib)"
+progress="$($pctl metadata --format='scale=0; {{volume * 100}} / 1' | bc --mathlib)"
 
 message="$(fetch-music-data)"
 

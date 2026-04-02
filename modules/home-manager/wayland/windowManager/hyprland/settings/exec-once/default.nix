@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   pkgs,
   ...
@@ -11,7 +10,6 @@ let
   gammastep = getExe pkgs.gammastep;
   networkmanagerapplet = getExe pkgs.networkmanagerapplet;
   qpwgraph = getExe pkgs.qpwgraph;
-  waybar = getExe config.programs.waybar.package;
 in
 {
   wayland.windowManager.hyprland.settings.exec-once = [
@@ -19,6 +17,5 @@ in
     "${gammastep}"
     "${networkmanagerapplet}"
     "${qpwgraph} --minimized"
-    "${waybar}"
   ];
 }

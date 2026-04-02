@@ -11,7 +11,6 @@ let
   brightness = getExe flake-pkgs.brightness;
   hyprshot = getExe pkgs.hyprshot;
   mpc = getExe pkgs.mpc;
-  pypr = getExe pkgs.pyprland;
   rofi = getExe pkgs.rofi;
   volume = getExe flake-pkgs.volume;
   wlogout = getExe pkgs.wlogout;
@@ -91,25 +90,6 @@ in
 
         # Zoom
         "$mainMod, Plus, exec, ${woomer}"
-
-        # Pypr
-        "$mainMod , Z, exec, ${pypr} zoom ++0.5"
-        "$mainMod SHIFT, Z, exec, ${pypr} zoom"
-
-        "$mainMod, B, exec, ${pypr} toggle btop"
-        "$mainMod, E, exec, ${pypr} toggle yazi"
-        "$mainMod, M, exec, ${pypr} toggle ncmpcpp"
-        "$mainMod, R, exec, ${pypr} toggle htop"
-        "$mainMod, N, exec, ${pypr} toggle nvtop"
-        "$mainMod, S, exec, ${pypr} toggle term"
-        "$mainMod, X, exec, ${pypr} toggle qalc"
-
-        "$mainMod, backslash, exec, ${pypr} toggle-dpms"
-
-        "$mainMod SHIFT, apostrophe, exec, ${pypr} menu"
-
-        # Toggle waybar
-        "$mainMod SHIFT, B, exec, pkill -SIGUSR1 waybar"
       ];
 
       bindm = [

@@ -7,9 +7,18 @@
   ...
 }:
 let
-  inherit (builtins) readFile;
-  inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types) bool listOf package;
+  inherit (builtins) readFile filter;
+  inherit (lib)
+    mkOption
+    mkIf
+    pipe
+    ;
+  inherit (lib.types)
+    bool
+    listOf
+    package
+    nullOr
+    ;
   inherit (self.packages.${system}) volume brightness;
 
   ncmpcpp = config.programs.ncmpcpp.package;
@@ -18,6 +27,7 @@ let
 in
 {
   imports = [
+    ./bar
     ./pyprland
     ./settings
     ./systemd
@@ -60,6 +70,22 @@ in
       ];
       example = [ ];
     };
+
+    bar = {
+      waybar = mkOption {
+        description = "Which waybar package to use. (Leave null to disable waybar)";
+        type = nullOr package;
+        default = null;
+        example = pkgs.waybar;
+      };
+
+      noctalia-shell = mkOption {
+        description = "Which noctalia-shell package";
+        type = nullOr package;
+        default = null;
+        example = pkgs.noctalia-shell;
+      };
+    };
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
@@ -69,9 +95,17 @@ in
       xwayland.enable = true;
     };
 
-    home.packages = cfg.extraPackages;
-
-    programs.hyprlock.enable = mkDefault true;
-    services.hypridle.enable = mkDefault true;
+    home.packages =
+      pipe
+        (
+          cfg.extraPackages
+          ++ [
+            cfg.bar.noctalia-shell
+            cfg.bar.waybar
+          ]
+        )
+        [
+          (filter (pkg: pkg != null))
+        ];
   };
 }

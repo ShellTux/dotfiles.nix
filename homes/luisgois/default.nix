@@ -128,7 +128,6 @@
     mpd-notification.enable = true;
     poweralertd.enable = true;
     ssh-agent.enable = true;
-    wpaperd.enable = true;
   };
 
   xdg.enable = true;
@@ -139,6 +138,7 @@
     hyprland = {
       enable = true;
       pyprland.enable = true;
+      bar.noctalia-shell = flake-pkgs.noctalia-shell;
     };
   };
 

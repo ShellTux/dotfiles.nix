@@ -13,6 +13,7 @@
       nixpkgs,
       nix-unit,
       treefmt-nix,
+      wrappers,
       ...
     }:
     # let
@@ -28,19 +29,17 @@
         ./lib
         ./modules
         ./pkgs
+        ./wrappers
       ]
       ++ [
         nix-unit.modules.flake.default
         treefmt-nix.flakeModule
         git-hooks-nix.flakeModule
+        wrappers.flakeModules.wrappers
       ];
 
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-        "aarch64-darwin"
-        "x86_64-darwin"
-      ];
+      systems = nixpkgs.lib.platforms.all;
+
     };
 
   inputs = {
@@ -140,6 +139,8 @@
     };
 
     pyprland.url = "github:hyprland-community/pyprland";
+
+    wrappers.url = "github:BirdeeHub/nix-wrapper-modules";
 
   };
 }

@@ -6,7 +6,5 @@ let
   inherit (lib) mkDefault;
 in
 {
-  wayland.windowManager.hyprland.systemd = mkDefault {
-    enable = true;
-  };
+  wayland.windowManager.hyprland.systemd.enable = mkDefault true;
 }

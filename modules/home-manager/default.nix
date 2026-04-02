@@ -32,6 +32,7 @@ in
       ./sops
       ./stylix
       ./wayland
+      ./wrappers
       ./xdg
     ];
 

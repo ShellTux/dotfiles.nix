@@ -11,16 +11,18 @@ do
   [ "$arg" = --help ] && usage
 done
 
-player_name="$(playerctl metadata --format='{{playerName}}')"
+pctl="playerctl --ignore-player=brave"
+
+player_name="$($pctl metadata --format='{{playerName}}')"
 
 case "$player_name" in
   mpd)
-    playerctl metadata --format='{{artist}} - {{title}}'
-    playerctl metadata --format='Album: {{album}}'
-    # playerctl metadata --format='Artist: {{artist}}'
+    $pctl metadata --format='{{artist}} - {{title}}'
+    $pctl metadata --format='Album: {{album}}'
+    # $pctl metadata --format='Artist: {{artist}}'
     mpc status | sed --quiet 2p | sed 's/playing/  /;s/paused/  /'
     echo
-    playerctl metadata --format='[ {{uc(playerName)}} ]'
+    $pctl metadata --format='[ {{uc(playerName)}} ]'
     mpc status \
         | sed -n '3p' \
         | sed 's|\s\{2,\}|;|g;s|: |;|g' \
@@ -37,9 +39,9 @@ case "$player_name" in
     mpc stats
     ;;
   *)
-    playerctl metadata --format='{{artist}} - {{title}}'
-    playerctl metadata --format='Album: {{album}}'
-    playerctl metadata --format='[ {{status}} ] {{duration(position)}}/{{duration(mpris:length)}}' | sed 's/Playing//;s/Paused//'
-    playerctl metadata --format='volume: {{volume * 100}}%'
+    $pctl metadata --format='{{artist}} - {{title}}'
+    $pctl metadata --format='Album: {{album}}'
+    $pctl metadata --format='[ {{status}} ] {{duration(position)}}/{{duration(mpris:length)}}' | sed 's/Playing//;s/Paused//'
+    $pctl metadata --format='volume: {{volume * 100}}%'
     ;;
 esac

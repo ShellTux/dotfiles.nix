@@ -39,11 +39,81 @@ _arguments "${_arguments_options[@]}" : \
 _arguments "${_arguments_options[@]}" : \
 '-h[Print help]' \
 '--help[Print help]' \
-':module_type:_default' \
+":: :_mknix__module_commands" \
+"*::: :->module" \
+&& ret=0
+
+    case $state in
+    (module)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:mknix-module-command-$line[1]:"
+        case $line[1] in
+            (nixos)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
 '*::names:_default' \
 && ret=0
 ;;
+(home-manager)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+'*::names:_default' \
+&& ret=0
+;;
+(wrapper)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+'*::names:_default' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+":: :_mknix__module__help_commands" \
+"*::: :->help" \
+&& ret=0
+
+    case $state in
+    (help)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:mknix-module-help-command-$line[1]:"
+        case $line[1] in
+            (nixos)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(home-manager)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(wrapper)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+        esac
+    ;;
+esac
+;;
 (package)
+_arguments "${_arguments_options[@]}" : \
+'-h[Print help]' \
+'--help[Print help]' \
+'*::names:_default' \
+&& ret=0
+;;
+(wrapper)
 _arguments "${_arguments_options[@]}" : \
 '-h[Print help]' \
 '--help[Print help]' \
@@ -75,9 +145,37 @@ _arguments "${_arguments_options[@]}" : \
 ;;
 (module)
 _arguments "${_arguments_options[@]}" : \
+":: :_mknix__help__module_commands" \
+"*::: :->module" \
+&& ret=0
+
+    case $state in
+    (module)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:mknix-help-module-command-$line[1]:"
+        case $line[1] in
+            (nixos)
+_arguments "${_arguments_options[@]}" : \
 && ret=0
 ;;
+(home-manager)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(wrapper)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
 (package)
+_arguments "${_arguments_options[@]}" : \
+&& ret=0
+;;
+(wrapper)
 _arguments "${_arguments_options[@]}" : \
 && ret=0
 ;;
@@ -104,6 +202,7 @@ _mknix_commands() {
 'home:' \
 'module:' \
 'package:' \
+'wrapper:' \
 'host:' \
 'help:Print this message or the help of the given subcommand(s)' \
     )
@@ -115,6 +214,7 @@ _mknix__help_commands() {
 'home:' \
 'module:' \
 'package:' \
+'wrapper:' \
 'host:' \
 'help:Print this message or the help of the given subcommand(s)' \
     )
@@ -137,13 +237,37 @@ _mknix__help__host_commands() {
 }
 (( $+functions[_mknix__help__module_commands] )) ||
 _mknix__help__module_commands() {
-    local commands; commands=()
+    local commands; commands=(
+'nixos:' \
+'home-manager:' \
+'wrapper:' \
+    )
     _describe -t commands 'mknix help module commands' commands "$@"
+}
+(( $+functions[_mknix__help__module__home-manager_commands] )) ||
+_mknix__help__module__home-manager_commands() {
+    local commands; commands=()
+    _describe -t commands 'mknix help module home-manager commands' commands "$@"
+}
+(( $+functions[_mknix__help__module__nixos_commands] )) ||
+_mknix__help__module__nixos_commands() {
+    local commands; commands=()
+    _describe -t commands 'mknix help module nixos commands' commands "$@"
+}
+(( $+functions[_mknix__help__module__wrapper_commands] )) ||
+_mknix__help__module__wrapper_commands() {
+    local commands; commands=()
+    _describe -t commands 'mknix help module wrapper commands' commands "$@"
 }
 (( $+functions[_mknix__help__package_commands] )) ||
 _mknix__help__package_commands() {
     local commands; commands=()
     _describe -t commands 'mknix help package commands' commands "$@"
+}
+(( $+functions[_mknix__help__wrapper_commands] )) ||
+_mknix__help__wrapper_commands() {
+    local commands; commands=()
+    _describe -t commands 'mknix help wrapper commands' commands "$@"
 }
 (( $+functions[_mknix__home_commands] )) ||
 _mknix__home_commands() {
@@ -157,13 +281,68 @@ _mknix__host_commands() {
 }
 (( $+functions[_mknix__module_commands] )) ||
 _mknix__module_commands() {
-    local commands; commands=()
+    local commands; commands=(
+'nixos:' \
+'home-manager:' \
+'wrapper:' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
     _describe -t commands 'mknix module commands' commands "$@"
+}
+(( $+functions[_mknix__module__help_commands] )) ||
+_mknix__module__help_commands() {
+    local commands; commands=(
+'nixos:' \
+'home-manager:' \
+'wrapper:' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'mknix module help commands' commands "$@"
+}
+(( $+functions[_mknix__module__help__help_commands] )) ||
+_mknix__module__help__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'mknix module help help commands' commands "$@"
+}
+(( $+functions[_mknix__module__help__home-manager_commands] )) ||
+_mknix__module__help__home-manager_commands() {
+    local commands; commands=()
+    _describe -t commands 'mknix module help home-manager commands' commands "$@"
+}
+(( $+functions[_mknix__module__help__nixos_commands] )) ||
+_mknix__module__help__nixos_commands() {
+    local commands; commands=()
+    _describe -t commands 'mknix module help nixos commands' commands "$@"
+}
+(( $+functions[_mknix__module__help__wrapper_commands] )) ||
+_mknix__module__help__wrapper_commands() {
+    local commands; commands=()
+    _describe -t commands 'mknix module help wrapper commands' commands "$@"
+}
+(( $+functions[_mknix__module__home-manager_commands] )) ||
+_mknix__module__home-manager_commands() {
+    local commands; commands=()
+    _describe -t commands 'mknix module home-manager commands' commands "$@"
+}
+(( $+functions[_mknix__module__nixos_commands] )) ||
+_mknix__module__nixos_commands() {
+    local commands; commands=()
+    _describe -t commands 'mknix module nixos commands' commands "$@"
+}
+(( $+functions[_mknix__module__wrapper_commands] )) ||
+_mknix__module__wrapper_commands() {
+    local commands; commands=()
+    _describe -t commands 'mknix module wrapper commands' commands "$@"
 }
 (( $+functions[_mknix__package_commands] )) ||
 _mknix__package_commands() {
     local commands; commands=()
     _describe -t commands 'mknix package commands' commands "$@"
+}
+(( $+functions[_mknix__wrapper_commands] )) ||
+_mknix__wrapper_commands() {
+    local commands; commands=()
+    _describe -t commands 'mknix wrapper commands' commands "$@"
 }
 
 if [ "$funcstack[1]" = "_mknix" ]; then

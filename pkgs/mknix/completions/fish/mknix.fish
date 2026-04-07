@@ -34,14 +34,31 @@ complete -c mknix -n "__fish_mknix_needs_command" -s h -l help -d 'Print help'
 complete -c mknix -n "__fish_mknix_needs_command" -f -a "home"
 complete -c mknix -n "__fish_mknix_needs_command" -f -a "module"
 complete -c mknix -n "__fish_mknix_needs_command" -f -a "package"
+complete -c mknix -n "__fish_mknix_needs_command" -f -a "wrapper"
 complete -c mknix -n "__fish_mknix_needs_command" -f -a "host"
 complete -c mknix -n "__fish_mknix_needs_command" -f -a "help" -d 'Print this message or the help of the given subcommand(s)'
 complete -c mknix -n "__fish_mknix_using_subcommand home" -s h -l help -d 'Print help'
-complete -c mknix -n "__fish_mknix_using_subcommand module" -s h -l help -d 'Print help'
+complete -c mknix -n "__fish_mknix_using_subcommand module; and not __fish_seen_subcommand_from nixos home-manager wrapper help" -s h -l help -d 'Print help'
+complete -c mknix -n "__fish_mknix_using_subcommand module; and not __fish_seen_subcommand_from nixos home-manager wrapper help" -f -a "nixos"
+complete -c mknix -n "__fish_mknix_using_subcommand module; and not __fish_seen_subcommand_from nixos home-manager wrapper help" -f -a "home-manager"
+complete -c mknix -n "__fish_mknix_using_subcommand module; and not __fish_seen_subcommand_from nixos home-manager wrapper help" -f -a "wrapper"
+complete -c mknix -n "__fish_mknix_using_subcommand module; and not __fish_seen_subcommand_from nixos home-manager wrapper help" -f -a "help" -d 'Print this message or the help of the given subcommand(s)'
+complete -c mknix -n "__fish_mknix_using_subcommand module; and __fish_seen_subcommand_from nixos" -s h -l help -d 'Print help'
+complete -c mknix -n "__fish_mknix_using_subcommand module; and __fish_seen_subcommand_from home-manager" -s h -l help -d 'Print help'
+complete -c mknix -n "__fish_mknix_using_subcommand module; and __fish_seen_subcommand_from wrapper" -s h -l help -d 'Print help'
+complete -c mknix -n "__fish_mknix_using_subcommand module; and __fish_seen_subcommand_from help" -f -a "nixos"
+complete -c mknix -n "__fish_mknix_using_subcommand module; and __fish_seen_subcommand_from help" -f -a "home-manager"
+complete -c mknix -n "__fish_mknix_using_subcommand module; and __fish_seen_subcommand_from help" -f -a "wrapper"
+complete -c mknix -n "__fish_mknix_using_subcommand module; and __fish_seen_subcommand_from help" -f -a "help" -d 'Print this message or the help of the given subcommand(s)'
 complete -c mknix -n "__fish_mknix_using_subcommand package" -s h -l help -d 'Print help'
+complete -c mknix -n "__fish_mknix_using_subcommand wrapper" -s h -l help -d 'Print help'
 complete -c mknix -n "__fish_mknix_using_subcommand host" -s h -l help -d 'Print help'
-complete -c mknix -n "__fish_mknix_using_subcommand help; and not __fish_seen_subcommand_from home module package host help" -f -a "home"
-complete -c mknix -n "__fish_mknix_using_subcommand help; and not __fish_seen_subcommand_from home module package host help" -f -a "module"
-complete -c mknix -n "__fish_mknix_using_subcommand help; and not __fish_seen_subcommand_from home module package host help" -f -a "package"
-complete -c mknix -n "__fish_mknix_using_subcommand help; and not __fish_seen_subcommand_from home module package host help" -f -a "host"
-complete -c mknix -n "__fish_mknix_using_subcommand help; and not __fish_seen_subcommand_from home module package host help" -f -a "help" -d 'Print this message or the help of the given subcommand(s)'
+complete -c mknix -n "__fish_mknix_using_subcommand help; and not __fish_seen_subcommand_from home module package wrapper host help" -f -a "home"
+complete -c mknix -n "__fish_mknix_using_subcommand help; and not __fish_seen_subcommand_from home module package wrapper host help" -f -a "module"
+complete -c mknix -n "__fish_mknix_using_subcommand help; and not __fish_seen_subcommand_from home module package wrapper host help" -f -a "package"
+complete -c mknix -n "__fish_mknix_using_subcommand help; and not __fish_seen_subcommand_from home module package wrapper host help" -f -a "wrapper"
+complete -c mknix -n "__fish_mknix_using_subcommand help; and not __fish_seen_subcommand_from home module package wrapper host help" -f -a "host"
+complete -c mknix -n "__fish_mknix_using_subcommand help; and not __fish_seen_subcommand_from home module package wrapper host help" -f -a "help" -d 'Print this message or the help of the given subcommand(s)'
+complete -c mknix -n "__fish_mknix_using_subcommand help; and __fish_seen_subcommand_from module" -f -a "nixos"
+complete -c mknix -n "__fish_mknix_using_subcommand help; and __fish_seen_subcommand_from module" -f -a "home-manager"
+complete -c mknix -n "__fish_mknix_using_subcommand help; and __fish_seen_subcommand_from module" -f -a "wrapper"

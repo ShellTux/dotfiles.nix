@@ -31,6 +31,7 @@ impl Display for God {
 }
 
 impl God {
+    #[must_use]
     pub fn to_host(&self) -> String {
         let words: Vec<&str> = self.name.split_whitespace().collect();
 
@@ -63,13 +64,14 @@ impl Default for GodsRepository {
         let json_str = include_str!("gods_data.json");
 
         Self {
-            data: serde_json::from_str(&json_str).unwrap(),
+            data: serde_json::from_str(json_str).unwrap(),
         }
     }
 }
 
 impl GodsRepository {
     // Load data from a JSON file
+    #[allow(clippy::missing_errors_doc)]
     pub fn new(file_path: &str) -> Result<Self, Box<dyn std::error::Error>> {
         let json_str = fs::read_to_string(file_path)?;
         let data: GodsData = serde_json::from_str(&json_str)?;
@@ -77,6 +79,7 @@ impl GodsRepository {
     }
 
     // Retrieve a random god from all religions
+    #[must_use]
     pub fn get_random_god(&self) -> Option<God> {
         let mut rng = rng();
 

@@ -9,7 +9,7 @@ in
 {
   imports = [
     ./config
-    ./extraInput
+    ./bindings
     ./profiles
     ./scripts
   ];

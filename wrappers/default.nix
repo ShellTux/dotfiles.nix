@@ -13,7 +13,11 @@ in
     imv = wrap ./imv;
     kitty = wrap ./kitty;
     mpv = wrap ./mpv;
-    vim = wrap ./vim;
     noctalia-shell = wrap ./noctalia-shell;
+    vim = wrap ./vim;
+    waybar = wrap ./waybar;
+    yazi = wrap ./yazi;
+    yt-dlp = wrap ./yt-dlp;
+    zathura = wrap ./zathura;
   };
 }

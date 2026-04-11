@@ -2,14 +2,14 @@
   config,
   lib,
   pkgs,
-  flake-lib,
+  lib',
   ...
 }:
 let
   inherit (builtins) elem;
   inherit (lib) mkOption mkIf mkDefault;
   inherit (lib.types) bool;
-  inherit (flake-lib.hyprland.windowrule) border_size;
+  inherit (lib'.flake.hyprland.windowrule) border_size;
 
   isInstalled = elem pkgs.wofi config.home.packages;
 

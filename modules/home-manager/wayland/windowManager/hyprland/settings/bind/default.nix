@@ -1,18 +1,18 @@
 {
+  self',
   lib,
   config,
   pkgs,
-  flake-pkgs,
   ...
 }:
 let
   inherit (lib) getExe mkIf;
 
-  brightness = getExe flake-pkgs.brightness;
+  brightness = getExe self'.packages.brightness;
   hyprshot = getExe pkgs.hyprshot;
   mpc = getExe pkgs.mpc;
   rofi = getExe pkgs.rofi;
-  volume = getExe flake-pkgs.volume;
+  volume = getExe self'.packages.volume;
   wlogout = getExe pkgs.wlogout;
   wofi = getExe pkgs.wofi;
   woomer = getExe pkgs.woomer;

@@ -1,13 +1,13 @@
 {
   config,
   lib,
-  flake-lib,
+  lib',
   ...
 }:
 let
   inherit (lib) mkOption mkIf mkDefault;
   inherit (lib.types) bool port str;
-  inherit (flake-lib.caddy) genVirtualHosts;
+  inherit (lib'.flake.caddy) genVirtualHosts;
 
   cfg = config.services.wiki-js;
 

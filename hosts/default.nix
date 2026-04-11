@@ -2,6 +2,7 @@
   self,
   inputs,
   config,
+  withSystem,
   ...
 }:
 let
@@ -10,9 +11,8 @@ let
   inherit (inputs.nixpkgs.lib) nixosSystem;
   inherit (config.flake) nixosModules homeManagerModules packages;
 
-  flake-lib = import ../lib.nix { inherit inputs self; };
-
   profiles = import "${self}/profiles";
+  lib' = self.lib;
 
   mkHost =
     {
@@ -22,62 +22,69 @@ let
       extraModules ? [ ],
       extraSpecialArgs ? { },
     }:
-    nixosSystem {
-      modules =
-        extraProfiles
-        ++ extraModules
-        ++ [
-          nixosModules.default
+    withSystem system (
+      {
+        inputs',
+        self',
+        ...
+      }:
+      nixosSystem {
+        modules =
+          extraProfiles
+          ++ extraModules
+          ++ [
+            nixosModules.default
 
-          {
-            sops.age.keyFile = "/var/lib/sops/age/keys.txt";
+            {
+              sops.age.keyFile = "/var/lib/sops/age/keys.txt";
 
-            nixpkgs = {
-              overlays = [ (import ../overlays.nix { inherit inputs; }) ];
-              config.packageOverrides = pkgs: {
-                small = import inputs.nixpkgs-small { inherit system; };
-                stable = import inputs.nixpkgs-stable { inherit system; };
+              nixpkgs = {
+                overlays = [ (import ../overlays.nix { inherit inputs; }) ];
+                config.packageOverrides = pkgs: {
+                  small = import inputs.nixpkgs-small { inherit system; };
+                  stable = import inputs.nixpkgs-stable { inherit system; };
+                };
               };
-            };
 
-            home-manager = {
-              useUserPackages = true;
-              useGlobalPkgs = true;
-              sharedModules = attrValues homeManagerModules;
-              extraSpecialArgs = {
-                inherit
-                  inputs
-                  system
-                  self
-                  flake-lib
-                  ;
+              home-manager = {
+                useUserPackages = true;
+                useGlobalPkgs = true;
+                sharedModules = attrValues homeManagerModules;
+                extraSpecialArgs = {
+                  inherit
+                    inputs
+                    system
+                    self
+                    self'
+                    lib'
+                    ;
 
-                flake-pkgs = packages.${system};
-                dev-tools = dev-tools.packages.${system};
+                  dev-tools = dev-tools.packages.${system};
+                };
               };
-            };
-          }
+            }
 
-          {
-            networking.hostName = name;
-            nixpkgs.hostPlatform = system;
-          }
+            {
+              networking.hostName = name;
+              nixpkgs.hostPlatform = system;
+            }
 
-          ./${name}
-        ];
+            ./${name}
+          ];
 
-      specialArgs = {
-        inherit
-          inputs
-          self
-          system
-          flake-lib
-          ;
-
-        flake-pkgs = packages.${system};
+        specialArgs = {
+          inherit
+            inputs
+            inputs'
+            self
+            self'
+            system
+            lib'
+            ;
+        }
+        // extraSpecialArgs;
       }
-      // extraSpecialArgs;
-    };
+    );
 in
 {
   flake.nixosConfigurations = {

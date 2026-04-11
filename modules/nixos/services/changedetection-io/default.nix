@@ -1,13 +1,13 @@
 {
   config,
   lib,
-  flake-lib,
+  lib',
   ...
 }:
 let
   inherit (lib) mkOption mkIf;
   inherit (lib.types) bool str port;
-  inherit (flake-lib.caddy) genVirtualHosts;
+  inherit (lib'.flake.caddy) genVirtualHosts;
 
   cfg = config.services.changedetection-io;
 in

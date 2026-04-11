@@ -2,14 +2,15 @@
   self,
   inputs,
   config,
+  withSystem,
   ...
 }:
 let
   inherit (inputs) nixpkgs dev-tools;
   inherit (inputs.home-manager.lib) homeManagerConfiguration;
-  inherit (config.flake) homeManagerModules packages;
+  inherit (config.flake) homeManagerModules;
 
-  flake-lib = import ../lib.nix { inherit inputs self; };
+  lib' = self.lib;
 
   mkHome =
     {
@@ -17,37 +18,42 @@ let
       system,
       extraModules ? [ homeManagerModules.default ],
     }:
-    homeManagerConfiguration {
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [ (import ../overlays.nix { inherit inputs; }) ];
-      };
+    withSystem system (
+      { inputs', self', ... }:
+      homeManagerConfiguration {
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ (import ../overlays.nix { inherit inputs; }) ];
+        };
 
-      modules = extraModules ++ [
-        {
-          nixpkgs = {
-            overlays = [ (import ../overlays.nix { inherit inputs; }) ];
-            config.packageOverrides = pkgs: {
-              small = import inputs.nixpkgs-small { inherit system; };
-              stable = import inputs.nixpkgs-stable { inherit system; };
+        modules = extraModules ++ [
+          {
+            nixpkgs = {
+              overlays = [ (import ../overlays.nix { inherit inputs; }) ];
+              config.packageOverrides = pkgs: {
+                small = import inputs.nixpkgs-small { inherit system; };
+                stable = import inputs.nixpkgs-stable { inherit system; };
+              };
             };
-          };
-        }
-        ./${name}
-      ];
+          }
+          ./${name}
+        ];
 
-      extraSpecialArgs = {
-        inherit
-          inputs
-          self
-          system
-          flake-lib
-          ;
+        extraSpecialArgs = {
+          inherit
+            inputs
+            inputs'
+            self
+            self'
+            system
+            lib'
+            ;
 
-        flake-pkgs = packages.${system};
-        dev-tools = dev-tools.packages.${system};
-      };
-    };
+          dev-tools = dev-tools.packages.${system};
+        };
+      }
+    );
+
 in
 {
   flake.homeConfigurations = {

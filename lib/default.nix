@@ -1,6 +1,12 @@
-{ inputs, self, ... }:
+inputs: final: prev:
+let
+  lib-import = path: import path { inherit inputs final prev; };
+in
 {
-  flake.overlays.lib = final: prev: { };
-
-  perSystem._module.args.lib = inputs.nixpkgs.lib.extend self.overlays.lib;
+  flake = {
+    caddy = lib-import ./caddy;
+    homepage-dashboard = lib-import ./homepage-dashboard;
+    hyprland = lib-import ./hyprland;
+    nginx = lib-import ./nginx;
+  };
 }

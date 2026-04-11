@@ -1,9 +1,13 @@
 {
+  self',
   pkgs,
-  flake-pkgs,
+  lib,
   dev-tools,
   ...
 }:
+let
+  inherit (lib) getExe;
+in
 {
   imports = [
     ./config
@@ -51,23 +55,30 @@
       dev-tools.nixvim
     ]
     ++ [
-      flake-pkgs.brightness
-      flake-pkgs.help
-      flake-pkgs.ipa
-      flake-pkgs.mktouch
-      flake-pkgs.mounts
-      # flake-pkgs.mpd-notification
-      flake-pkgs.nix-out-paths
-      flake-pkgs.notify-music
-      flake-pkgs.open
-      flake-pkgs.repl
-      flake-pkgs.swap
-      flake-pkgs.umounts
-      flake-pkgs.vman
-      flake-pkgs.volume
-      flake-pkgs.walld
-      flake-pkgs.wclip
+      self'.packages.brightness
+      self'.packages.help
+      self'.packages.ipa
+      self'.packages.mktouch
+      self'.packages.mounts
+      # self'.packages.mpd-notification
+      self'.packages.nix-out-paths
+      self'.packages.notify-music
+      self'.packages.open
+      self'.packages.repl
+      self'.packages.swap
+      self'.packages.umounts
+      self'.packages.vman
+      self'.packages.volume
+      self'.packages.walld
+      self'.packages.wclip
+    ]
+    ++ [
+      self'.packages.vim
     ];
+
+    sessionVariables = {
+      EDITOR = getExe self'.packages.vim;
+    };
   };
 
   programs = {
@@ -107,7 +118,6 @@
     thunderbird.enable = true;
     tmux.enable = true;
     translate-shell.enable = true;
-    vim.enable = true;
     waybar.enable = true;
     wezterm.enable = true;
     xournalpp.enable = true;
@@ -138,7 +148,7 @@
     hyprland = {
       enable = true;
       pyprland.enable = true;
-      bar.noctalia-shell = flake-pkgs.noctalia-shell;
+      bar.noctalia-shell = self'.packages.noctalia-shell;
     };
   };
 

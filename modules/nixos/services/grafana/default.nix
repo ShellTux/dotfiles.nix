@@ -2,14 +2,14 @@
   config,
   lib,
   pkgs,
-  flake-lib,
+  lib',
   ...
 }:
 let
   inherit (builtins) toString;
   inherit (lib) mkOption mkIf mkDefault;
   inherit (lib.types) bool port str;
-  inherit (flake-lib.caddy) genVirtualHosts;
+  inherit (lib'.flake.caddy) genVirtualHosts;
 
   # https://grafana.com/grafana/dashboards/1860
   node-exporter-full = pkgs.fetchurl {

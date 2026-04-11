@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  flake-lib,
+  lib',
   ...
 }:
 let
@@ -13,7 +13,7 @@ let
     literalExpression
     ;
   inherit (lib.types) bool listOf package;
-  inherit (flake-lib.hyprland.windowrule) float;
+  inherit (lib'.flake.hyprland.windowrule) float;
 
   cfg = config.programs.thunar;
 in

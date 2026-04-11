@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  flake-lib,
+  lib',
   ...
 }:
 let
@@ -12,7 +12,7 @@ let
     mkEnableOption
     ;
   inherit (lib.types) bool;
-  inherit (flake-lib.hyprland.windowrule) idleinhibit;
+  inherit (lib'.flake.hyprland.windowrule) idleinhibit;
 
   cfg = config.programs.jellyfin;
 in

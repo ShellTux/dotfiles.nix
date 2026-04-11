@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  flake-lib,
+  lib',
   ...
 }:
 let
@@ -12,7 +12,7 @@ let
     mapAttrs
     ;
   inherit (lib.types) bool listOf enum;
-  inherit (flake-lib.hyprland.windowrule) idleinhibit float size;
+  inherit (lib'.flake.hyprland.windowrule) idleinhibit float size;
 
   chromium-extensions = mapAttrs (extension: id: { inherit id; }) {
     bitwarden = "nngceckbapebfimnlniiiahkandclblb";

@@ -1,12 +1,12 @@
 {
   config,
   lib,
-  flake-lib,
+  lib',
   ...
 }:
 let
   inherit (lib) mkIf;
-  inherit (flake-lib.hyprland.windowrule) opaque idleinhibit;
+  inherit (lib'.flake.hyprland.windowrule) opaque idleinhibit;
 
   cfg = config.programs.mpv;
 in

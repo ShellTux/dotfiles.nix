@@ -1,4 +1,4 @@
-{ pkgs, flake-pkgs, ... }:
+{ self', pkgs, ... }:
 {
   imports = [
     ./config
@@ -40,7 +40,7 @@
       pkgs.vim
     ]
     ++ [
-      flake-pkgs.ipa
+      self'.packages.ipa
     ];
   };
 

@@ -1,7 +1,7 @@
 {
   config,
   lib,
-  flake-lib,
+  lib',
   ...
 }:
 let
@@ -14,8 +14,8 @@ let
     mapAttrsToList
     ;
   inherit (lib.types) bool str port;
-  inherit (flake-lib.homepage-dashboard) genService;
-  inherit (flake-lib.caddy) genVirtualHosts;
+  inherit (lib'.flake.homepage-dashboard) genService;
+  inherit (lib'.flake.caddy) genVirtualHosts;
 
   cfg = config.services.homepage-dashboard;
 in

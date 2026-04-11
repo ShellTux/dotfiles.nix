@@ -1,7 +1,7 @@
 {
   config,
   lib,
-  flake-lib,
+  lib',
   ...
 }:
 let
@@ -15,7 +15,7 @@ let
     toInt
     ;
   inherit (lib.types) bool str;
-  inherit (flake-lib.caddy) genVirtualHosts;
+  inherit (lib'.flake.caddy) genVirtualHosts;
 
   port = pipe cfg.listenAddress [
     (split ":")

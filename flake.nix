@@ -16,9 +16,6 @@
       wrappers,
       ...
     }:
-    # let
-    #   specialArgs.lib = nixpkgs.lib.extend (self: _: (import ./lib { inherit inputs self; }));
-    # in
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
         ./flake
@@ -26,7 +23,6 @@
       ++ [
         ./homes
         ./hosts
-        ./lib
         ./modules
         ./pkgs
         ./wrappers
@@ -37,6 +33,8 @@
         git-hooks-nix.flakeModule
         wrappers.flakeModules.wrappers
       ];
+
+      flake.lib = nixpkgs.lib.extend (import ./lib inputs);
 
       systems = [
         "x86_64-linux"

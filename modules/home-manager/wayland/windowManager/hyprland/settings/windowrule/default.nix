@@ -1,6 +1,6 @@
-{ flake-lib, ... }:
+{ lib', ... }:
 let
-  inherit (flake-lib.hyprland.windowrule)
+  inherit (lib'.flake.hyprland.windowrule)
     center
     float
     fullscreen

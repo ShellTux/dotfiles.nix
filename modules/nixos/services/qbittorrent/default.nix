@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  flake-lib,
+  lib',
   ...
 }:
 let
@@ -14,7 +14,7 @@ let
     nullOr
     port
     ;
-  inherit (flake-lib.caddy) genVirtualHosts;
+  inherit (lib'.flake.caddy) genVirtualHosts;
 
   cfg = config.services.qbittorrent;
 in

@@ -4,14 +4,14 @@
   lib,
   pkgs,
   system,
-  flake-lib,
+  lib',
   ...
 }:
 let
   inherit (lib) mkOption mkIf mkDefault;
   inherit (lib.types) bool;
   inherit (config.home) username;
-  inherit (flake-lib.hyprland.windowrule)
+  inherit (lib'.flake.hyprland.windowrule)
     float
     idleinhibit
     opaque

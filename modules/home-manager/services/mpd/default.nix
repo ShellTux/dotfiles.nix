@@ -1,8 +1,8 @@
 {
+  self',
   config,
   lib,
   pkgs,
-  flake-pkgs,
   ...
 }:
 let
@@ -24,7 +24,7 @@ in
       description = "Extra packages to install alongside enabling mpd service";
       type = listOf package;
       default = [
-        flake-pkgs.notify-music
+        self'.packages.notify-music
         pkgs.mpc
         pkgs.playerctl
         pkgs.rmpc

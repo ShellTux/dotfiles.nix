@@ -1,7 +1,7 @@
 {
   config,
   lib,
-  flake-lib,
+  lib',
   ...
 }:
 let
@@ -18,7 +18,7 @@ let
     port
     ;
 
-  inherit (flake-lib.caddy) genVirtualHosts;
+  inherit (lib'.flake.caddy) genVirtualHosts;
 
   cfg = config.services.jellyfin;
 in

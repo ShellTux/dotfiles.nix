@@ -1,14 +1,14 @@
 {
   config,
   lib,
-  flake-lib,
+  lib',
   pkgs,
   ...
 }:
 let
   inherit (lib) mkOption mkIf;
   inherit (lib.types) bool;
-  inherit (flake-lib.hyprland.windowrule) idleinhibit float size;
+  inherit (lib'.flake.hyprland.windowrule) idleinhibit float size;
 
   cfg = config.programs.brave;
 in

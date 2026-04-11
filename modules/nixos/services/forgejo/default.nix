@@ -1,7 +1,7 @@
 {
   config,
   lib,
-  flake-lib,
+  lib',
   ...
 }:
 let
@@ -13,7 +13,7 @@ let
     pipe
     ;
   inherit (lib.types) bool str port;
-  inherit (flake-lib.caddy) genVirtualHosts;
+  inherit (lib'.flake.caddy) genVirtualHosts;
 
   cfg = config.services.forgejo;
 in

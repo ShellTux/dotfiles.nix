@@ -1,7 +1,7 @@
 {
+  self',
   config,
   lib,
-  flake-pkgs,
   ...
 }:
 let
@@ -52,7 +52,7 @@ in
 
       Service = {
         Restart = "on-failure";
-        ExecStart = getExe flake-pkgs.mpd-notification;
+        ExecStart = getExe self'.packages.mpd-notification;
         TimeoutSec = 3;
       };
 

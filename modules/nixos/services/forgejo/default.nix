@@ -51,8 +51,8 @@ in
       let
         inherit (config.services.openssh.settings) AllowUsers AllowGroups;
 
-        AllowUsersString = ''[ ${concatStringsSep ", " AllowUsers} ]'';
-        AllowGroupsString = ''[ ${concatStringsSep ", " AllowGroups} ]'';
+        AllowUsersString = "[ ${concatStringsSep ", " AllowUsers} ]";
+        AllowGroupsString = "[ ${concatStringsSep ", " AllowGroups} ]";
 
         forgejo = config.users.users.${cfg.user};
 

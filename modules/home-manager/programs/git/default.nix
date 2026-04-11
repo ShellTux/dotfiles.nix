@@ -72,7 +72,7 @@ in
           d- = "${d}-";
           dc = "diff-copy";
           d = "diff";
-          diff-copy = ''!git diff-staged | ${wclip}'';
+          diff-copy = "!git diff-staged | ${wclip}";
           diff- = "!git -c interactive.diffFilter='less --tabs=4 -RFX' diff";
           diff-last = "!git diff HEAD~1 HEAD";
           diff-staged = "diff --staged";
@@ -90,7 +90,7 @@ in
           history = "!${fshow}";
           ignore = "!${curl} -sL https://www.toptal.com/developers/gitignore/api/$@";
           last = "!git log -1 HEAD";
-          lg1 = ''log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all'';
+          lg1 = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all";
           lg2 = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n'' %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'";
           lg = ''!git log --pretty=format:"%C(magenta)%h%Creset -%C(red)%d%Creset %s %C(dim green)(%cr) [%an]" --abbrev-commit -30'';
           open = "visit";

@@ -38,7 +38,8 @@ in
         "/var/spool"
         "/nix/store"
         "/nix/var/log/nix"
-      ] ++ cfg.extraPrunePaths;
+      ]
+      ++ cfg.extraPrunePaths;
     };
   };
 }

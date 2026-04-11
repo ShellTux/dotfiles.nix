@@ -52,6 +52,7 @@
       pkgs.fastfetch
       pkgs.htop
       pkgs.lolcat
+      pkgs.moreutils
       pkgs.sshfs
       pkgs.tldr
       pkgs.tmux

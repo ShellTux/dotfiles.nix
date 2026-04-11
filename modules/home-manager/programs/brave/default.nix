@@ -2,34 +2,13 @@
   config,
   lib,
   flake-lib,
+  pkgs,
   ...
 }:
 let
-  inherit (lib)
-    mkOption
-    mkIf
-    mapAttrs
-    ;
+  inherit (lib) mkOption mkIf;
   inherit (lib.types) bool;
   inherit (flake-lib.hyprland.windowrule) idleinhibit float size;
-
-  # TODO: Make this globally accesible to all diferent modules on chromium browsers
-  chromium-extensions = mapAttrs (extension: id: { inherit id; }) {
-    augmented-steam = "dnhpnfgdlenaccegplpojghhmaamnnfp";
-    bitwarden = "nngceckbapebfimnlniiiahkandclblb";
-    dark-reader = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
-    DeArrow = "enamippconapkdmgfgjchkhakpfinmaj";
-    enhancer-for-youtube = "ponfpcnoihfmfllpaingbgckeeldkhle";
-    ff2mpv = "ephjcajbkgplkjmelpglennepbpmdpjg";
-    material-icons-for-github = "bggfcpfjbdkhfhfmkjpbhnkhnpjjeomc";
-    protondb-for-steam = "ngonfifpkpeefnhelnfdkficaiihklid";
-    return-youtube-dislike = "gebbhagfogifgggkldgodflihgfeippi";
-    search-by-image = "cnojnbdhbhnkbcieeekonklommdnndci";
-    sponsorblock-for-youtube = "mnjggcdmjocbbbhaepdhchncahnbgone";
-    ublock-origin = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
-    vimium = "dbepggeogbaibhgnhhndojpepiihcmeb";
-    xbrowsersync = "lcbjdhceifofjlpecfpeimnnphbcjgnc";
-  };
 
   cfg = config.programs.brave;
 in
@@ -49,20 +28,21 @@ in
       ];
 
       extensions = [
-        chromium-extensions.augmented-steam
-        chromium-extensions.bitwarden
-        chromium-extensions.dark-reader
-        chromium-extensions.DeArrow
-        chromium-extensions.enhancer-for-youtube
-        chromium-extensions.ff2mpv
-        chromium-extensions.material-icons-for-github
-        chromium-extensions.protondb-for-steam
-        chromium-extensions.return-youtube-dislike
-        chromium-extensions.search-by-image
-        chromium-extensions.sponsorblock-for-youtube
-        chromium-extensions.ublock-origin
-        chromium-extensions.vimium
-        chromium-extensions.xbrowsersync
+        pkgs.brave.extensions.augmented-steam
+        pkgs.brave.extensions.bitwarden
+        pkgs.brave.extensions.dark-reader
+        pkgs.brave.extensions.DeArrow
+        pkgs.brave.extensions.enhancer-for-youtube
+        pkgs.brave.extensions.ff2mpv
+        pkgs.brave.extensions.material-icons-for-github
+        pkgs.brave.extensions.protondb-for-steam
+        pkgs.brave.extensions.return-youtube-dislike
+        pkgs.brave.extensions.search-by-image
+        pkgs.brave.extensions.sponsorblock-for-youtube
+        pkgs.brave.extensions.ublock-origin
+        pkgs.brave.extensions.vimium
+        pkgs.brave.extensions.xbrowsersync
+        pkgs.brave.extensions.zotero-connector
       ];
     };
 

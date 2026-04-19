@@ -6,5 +6,4 @@
 let
   inherit (lib) mkIf;
 in
-mkIf (config.flavour == "none") {
-}
+mkIf (config.flavour == "none") { }

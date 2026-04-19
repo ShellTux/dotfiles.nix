@@ -1,19 +1,11 @@
-{
-  wlib,
-  lib,
-  ...
-}:
+{ lib, ... }:
 let
   inherit (lib) mkOption;
   inherit (lib.types) enum;
 in
 {
   imports = [
-    wlib.wrapperModules.yazi
-  ]
-  ++ [
-    # Flavours
-    ./default
+    ./none
     ./config1
   ];
 

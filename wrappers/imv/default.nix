@@ -1,15 +1,13 @@
-{
-  config,
-  wlib,
-  lib,
-  ...
-}:
+{ lib, ... }:
 let
   inherit (lib) mkOption;
   inherit (lib.types) enum;
 in
 {
-  imports = [ wlib.wrapperModules.imv ];
+  imports = [
+    ./none
+    ./config1
+  ];
 
   options = {
     flavour = mkOption {
@@ -26,18 +24,5 @@ in
     };
   };
 
-  config = {
-    settings =
-      if config.flavour == "none" then
-        { }
-      else if config.flavour == "config1" then
-        {
-          options = {
-            overlay = true;
-            overlay_text = ''[$imv_current_index/$imv_file_count] [$imv_widthx$imv_height] [$imv_scale%] [$imv_scaling_mode] $(basename "$imv_current_file")'';
-          };
-        }
-      else
-        null;
-  };
+  config = { };
 }

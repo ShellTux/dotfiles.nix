@@ -1,17 +1,13 @@
-{
-  config,
-  pkgs,
-  wlib,
-  lib,
-  ...
-}:
+{ lib, ... }:
 let
-  inherit (builtins) readFile;
   inherit (lib) mkOption;
   inherit (lib.types) enum;
 in
 {
-  imports = [ wlib.wrapperModules.vim ];
+  imports = [
+    ./none
+    ./config1
+  ];
 
   options = {
     flavour = mkOption {
@@ -28,27 +24,5 @@ in
     };
   };
 
-  config = {
-    plugins =
-      let
-        inherit (pkgs) vimPlugins;
-      in
-      if config.flavour == "none" then
-        [ ]
-      else if config.flavour == "config1" then
-        [
-          vimPlugins.auto-pairs
-          vimPlugins.vim-airline
-        ]
-      else
-        null;
-
-    vimrc =
-      if config.flavour == "none" then
-        ""
-      else if config.flavour == "config1" then
-        readFile ./vimrc
-      else
-        null;
-  };
+  config = { };
 }

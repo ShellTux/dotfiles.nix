@@ -1,10 +1,4 @@
-{
-  config,
-  pkgs,
-  wlib,
-  lib,
-  ...
-}:
+{ pkgs, lib, ... }:
 let
   inherit (lib) mkOption;
   inherit (lib.types)
@@ -15,7 +9,10 @@ let
     ;
 in
 {
-  imports = [ wlib.modules.default ];
+  imports = [
+    ./none
+    ./config1
+  ];
 
   options = {
     flavour = mkOption {
@@ -46,16 +43,6 @@ in
   };
 
   config = {
-    flags =
-      if config.flavour == "none" then
-        {
-          "--hidden" = config.hidden;
-        }
-      else if config.flavour == "config1" then
-        { }
-      else
-        null;
-
     flagSeparator = "=";
     package = pkgs.fd;
   };

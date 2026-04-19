@@ -1,23 +1,45 @@
-{ ... }:
+{ lib, ... }:
 let
-  wrap = path: _: { imports = [ path ]; };
+  inherit (builtins) baseNameOf listToAttrs map;
+  inherit (lib) pipe;
 in
 {
-  flake.wrappers = {
-    btop = wrap ./btop;
-    eza = wrap ./eza;
-    fastfetch = wrap ./fastfetch;
-    fd = wrap ./fd;
-    git = wrap ./git;
-    htop = wrap ./htop;
-    imv = wrap ./imv;
-    kitty = wrap ./kitty;
-    mpv = wrap ./mpv;
-    noctalia-shell = wrap ./noctalia-shell;
-    vim = wrap ./vim;
-    waybar = wrap ./waybar;
-    yazi = wrap ./yazi;
-    yt-dlp = wrap ./yt-dlp;
-    zathura = wrap ./zathura;
-  };
+  flake.wrappers =
+    pipe
+      [
+        ./bat
+        ./btop
+        ./eza
+        ./fastfetch
+        ./fd
+        ./git
+        ./htop
+        ./imv
+        ./kitty
+        ./mpv
+        ./noctalia-shell
+        ./vim
+        ./waybar
+        ./yazi
+        ./yt-dlp
+        ./zathura
+        # ./zsh
+      ]
+      [
+        (map (path: rec {
+          name = baseNameOf path;
+          value.imports = [
+            path
+            (
+              { wlib, ... }:
+              {
+                imports = [
+                  (if wlib.wrapperModules ? ${name} then wlib.wrapperModules.${name} else wlib.modules.default)
+                ];
+              }
+            )
+          ];
+        }))
+        listToAttrs
+      ];
 }

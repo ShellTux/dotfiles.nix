@@ -1,17 +1,17 @@
 {
-  config,
   pkgs,
-  wlib,
   lib,
   ...
 }:
 let
-  inherit (builtins) concatStringsSep;
-  inherit (lib) mkOption mkDefault;
+  inherit (lib) mkOption;
   inherit (lib.types) bool enum listOf;
 in
 {
-  imports = [ wlib.modules.default ];
+  imports = [
+    ./none
+    ./config1
+  ];
 
   options = {
     flavour = mkOption {
@@ -74,34 +74,6 @@ in
   };
 
   config = {
-    flags =
-      if config.flavour == "none" then
-        {
-          "--across" = true;
-          "--binary" = true;
-          "--color" = config.color;
-          "--color-scale" = concatStringsSep "," config.color-scale;
-          "--git" = config.git;
-          "--group-directories-first" = true;
-          "--group" = true;
-          "--header" = true;
-          "--icons" = config.icons;
-        }
-      else if config.flavour == "config1" then
-        {
-          "--across" = true;
-          "--binary" = true;
-          "--color" = "auto";
-          "--color-scale" = "all";
-          "--git" = true;
-          "--group-directories-first" = true;
-          "--group" = true;
-          "--header" = true;
-          "--icons" = "auto";
-        }
-      else
-        null;
-    flagSeparator = "=";
     package = pkgs.eza;
   };
 }

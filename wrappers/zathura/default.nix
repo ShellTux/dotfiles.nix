@@ -1,19 +1,12 @@
-{
-  wlib,
-  lib,
-  ...
-}:
+{ lib, ... }:
 let
   inherit (lib) mkOption;
   inherit (lib.types) enum;
 in
 {
   imports = [
-    wlib.wrapperModules.zathura
-  ]
-  ++ [
     # Flavours
-    ./default
+    ./none
     ./config1
   ];
 

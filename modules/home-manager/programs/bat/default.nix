@@ -19,11 +19,11 @@ in
     };
   };
 
-  config = mkIf (cfg.enable && !cfg.disableModule) (mkDefault {
+  config = mkIf (cfg.enable && !cfg.disableModule) {
     programs.bat = {
       config = {
         pager = "less --RAW-CONTROL-CHARS --quit-if-one-screen --mouse";
-        theme = "TwoDark";
+        theme = mkDefault "TwoDark";
         map-syntax = [
           "*.ino:C++"
           ".ignore:Git Ignore"
@@ -49,9 +49,9 @@ in
         bathelp = "bat --plain --language=help";
       };
       sessionVariables = {
-        MANPAGER = "sh -c 'col --no-backspaces --spaces | bat --language man --plain'";
-        MANROFFOPT = "-c";
+        MANPAGER = mkDefault "sh -c 'col --no-backspaces --spaces | bat --language man --plain'";
+        MANROFFOPT = mkDefault "-c";
       };
     };
-  });
+  };
 }

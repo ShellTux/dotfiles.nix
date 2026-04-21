@@ -18,7 +18,7 @@ let
     {
       name,
       system,
-      extraModules ? [ homeManagerModules.default ],
+      extraModules ? [ ],
     }:
     let
       overlays = [ self.overlays.default ] ++ optional (self.overlays ? ${name}) self.overlays.${name};
@@ -29,6 +29,7 @@ let
         pkgs = import nixpkgs { inherit system; };
 
         modules = extraModules ++ [
+          homeManagerModules.default
           {
             nixpkgs = {
               inherit overlays;

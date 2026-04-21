@@ -11,7 +11,7 @@ let
   inherit (lib) optional;
   inherit (inputs) dev-tools;
   inherit (inputs.nixpkgs.lib) nixosSystem;
-  inherit (config.flake) nixosModules homeManagerModules packages;
+  inherit (config.flake) nixosModules homeManagerModules;
 
   profiles = import "${self}/profiles";
   lib' = self.lib;

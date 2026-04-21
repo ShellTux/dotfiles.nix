@@ -73,7 +73,15 @@ in
       self'.packages.wclip
     ]
     ++ [
+      self'.packages.btop
+      self'.packages.fastfetch
+      self'.packages.fd
+      self'.packages.htop
+      self'.packages.kitty
       self'.packages.vim
+      self'.packages.waybar
+      self'.packages.yazi
+      self'.packages.yt-dlp
     ];
 
     sessionVariables = {
@@ -85,23 +93,17 @@ in
     bash.enable = true;
     bat.enable = true;
     brave.enable = true;
-    btop.enable = true;
     diff-so-fancy.enable = true;
     direnv.enable = true;
     emacs.enable = true;
     eza.enable = true;
-    fastfetch.enable = true;
-    fd.enable = true;
     floorp.enable = true;
     fzf.enable = true;
     gemini-cli.enable = true;
     ghostty.enable = true;
-    git.enable = true;
-    htop.enable = true;
     imv.enable = true;
     jellyfin.enable = true;
     jq.enable = true;
-    kitty.enable = true;
     mpv.enable = true;
     ncmpcpp.enable = true;
     newsboat.enable = true;
@@ -118,11 +120,8 @@ in
     thunderbird.enable = true;
     tmux.enable = true;
     translate-shell.enable = true;
-    waybar.enable = true;
     wezterm.enable = true;
     xournalpp.enable = true;
-    yazi.enable = true;
-    yt-dlp.enable = true;
     zathura.enable = true;
     zsh.enable = true;
   };

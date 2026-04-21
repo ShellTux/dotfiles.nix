@@ -1,27 +1,19 @@
 {
-  self,
+  self',
   config,
   lib,
   pkgs,
-  system,
   ...
 }:
 let
   inherit (builtins) readFile filter;
-  inherit (lib)
-    mkOption
-    mkIf
-    pipe
-    ;
+  inherit (lib) mkOption mkIf optional;
   inherit (lib.types)
     bool
     listOf
     package
     nullOr
     ;
-  inherit (self.packages.${system}) volume brightness;
-
-  ncmpcpp = config.programs.ncmpcpp.package;
 
   cfg = config.wayland.windowManager.hyprland;
 in
@@ -44,7 +36,7 @@ in
       description = "Useful extra packages to install along side with hyprland";
       type = listOf package;
       default = [
-        pkgs.kitty
+        self'.packages.kitty
         pkgs.libnotify
         pkgs.pavucontrol
         pkgs.pw-volume
@@ -54,33 +46,33 @@ in
       ]
       ++ [
         # Pyprland
-        pkgs.btop
-        pkgs.htop
+        self'.packages.btop
+        self'.packages.htop
         pkgs.hyprpicker
         pkgs.hyprshot
         pkgs.libqalculate
         pkgs.pyprland
         pkgs.satty
       ]
-      ++ (if config.programs.yazi.enable then [ ] else [ pkgs.yazi ])
+      ++ optional (!config.programs.yazi.enable) self'.packages.yazi
       ++ [
-        ncmpcpp
-        brightness
-        volume
+        self'.packages.ncmpcpp
+        self'.packages.brightness
+        self'.packages.volume
       ];
       example = [ ];
     };
 
     bar = {
       waybar = mkOption {
-        description = "Which waybar package to use. (Leave null to disable waybar)";
+        description = "Which waybar package to use. (Leave null to disable)";
         type = nullOr package;
         default = null;
         example = pkgs.waybar;
       };
 
       noctalia-shell = mkOption {
-        description = "Which noctalia-shell package";
+        description = "Which noctalia-shell package to use. (Leave null to disable)";
         type = nullOr package;
         default = null;
         example = pkgs.noctalia-shell;
@@ -95,17 +87,12 @@ in
       xwayland.enable = true;
     };
 
-    home.packages =
-      pipe
-        (
-          cfg.extraPackages
-          ++ [
-            cfg.bar.noctalia-shell
-            cfg.bar.waybar
-          ]
-        )
-        [
-          (filter (pkg: pkg != null))
-        ];
+    home.packages = filter (pkg: pkg != null) (
+      cfg.extraPackages
+      ++ [
+        cfg.bar.noctalia-shell
+        cfg.bar.waybar
+      ]
+    );
   };
 }

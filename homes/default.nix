@@ -2,10 +2,12 @@
   self,
   inputs,
   config,
+  lib,
   withSystem,
   ...
 }:
 let
+  inherit (lib) optional;
   inherit (inputs) nixpkgs dev-tools;
   inherit (inputs.home-manager.lib) homeManagerConfiguration;
   inherit (config.flake) homeManagerModules;
@@ -18,21 +20,22 @@ let
       system,
       extraModules ? [ homeManagerModules.default ],
     }:
+    let
+      overlays = [ self.overlays.default ] ++ optional (self.overlays ? ${name}) self.overlays.${name};
+    in
     withSystem system (
       { inputs', self', ... }:
       homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [ (import ../overlays.nix { inherit inputs; }) ];
-        };
+        pkgs = import nixpkgs { inherit system; };
 
         modules = extraModules ++ [
           {
             nixpkgs = {
-              overlays = [ (import ../overlays.nix { inherit inputs; }) ];
+              inherit overlays;
+
               config.packageOverrides = pkgs: {
-                small = import inputs.nixpkgs-small { inherit system; };
-                stable = import inputs.nixpkgs-stable { inherit system; };
+                small = import inputs.nixpkgs-small { inherit system overlays; };
+                stable = import inputs.nixpkgs-stable { inherit system overlays; };
               };
             };
           }

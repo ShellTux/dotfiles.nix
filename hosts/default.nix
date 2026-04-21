@@ -2,11 +2,13 @@
   self,
   inputs,
   config,
+  lib,
   withSystem,
   ...
 }:
 let
   inherit (builtins) attrValues;
+  inherit (lib) optional;
   inherit (inputs) dev-tools;
   inherit (inputs.nixpkgs.lib) nixosSystem;
   inherit (config.flake) nixosModules homeManagerModules packages;
@@ -22,6 +24,9 @@ let
       extraModules ? [ ],
       extraSpecialArgs ? { },
     }:
+    let
+      overlays = [ self.overlays.default ] ++ optional (self.overlays ? ${name}) self.overlays.${name};
+    in
     withSystem system (
       {
         inputs',
@@ -39,10 +44,11 @@ let
               sops.age.keyFile = "/var/lib/sops/age/keys.txt";
 
               nixpkgs = {
-                overlays = [ (import ../overlays.nix { inherit inputs; }) ];
+                inherit overlays;
+
                 config.packageOverrides = pkgs: {
-                  small = import inputs.nixpkgs-small { inherit system; };
-                  stable = import inputs.nixpkgs-stable { inherit system; };
+                  small = import inputs.nixpkgs-small { inherit system overlays; };
+                  stable = import inputs.nixpkgs-stable { inherit system overlays; };
                 };
               };
 

@@ -44,6 +44,7 @@ in
       pkgs.rsync
       pkgs.sl
       pkgs.speedtest-cli
+      pkgs.supersonic
       pkgs.tealdeer
       pkgs.unar
       pkgs.vimv

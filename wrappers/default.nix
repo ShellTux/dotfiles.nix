@@ -18,6 +18,7 @@ in
         ./kitty
         ./mpv
         ./noctalia-shell
+        ./rofi
         ./vim
         ./waybar
         ./yazi

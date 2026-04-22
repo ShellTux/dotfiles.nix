@@ -6,8 +6,11 @@ in
 pipe
   [
     ./caddy
+    ./dirs
+    ./dirsNames
     ./homepage-dashboard
     ./hyprland
+    ./mkFlavourOption
     ./nginx
   ]
   [

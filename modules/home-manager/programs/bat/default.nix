@@ -1,57 +1,9 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ lib', ... }:
 let
-  inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types) bool;
-
-  cfg = config.programs.bat;
+  inherit (lib'.flake) mkFlavourOption dirs;
 in
 {
-  options.programs.bat = {
-    disableModule = mkOption {
-      description = "Whether to disable this module configuration";
-      type = bool;
-      default = false;
-    };
-  };
+  imports = dirs ./flavours;
 
-  config = mkIf (cfg.enable && !cfg.disableModule) {
-    programs.bat = {
-      config = {
-        pager = "less --RAW-CONTROL-CHARS --quit-if-one-screen --mouse";
-        theme = mkDefault "TwoDark";
-        map-syntax = [
-          "*.ino:C++"
-          ".ignore:Git Ignore"
-          "aliasrc:Bourne Again Shell (bash)"
-          "bash_profile:Bourne Again Shell (bash)"
-          "bashrc:Bourne Again Shell (bash)"
-          "*.conf:INI"
-          "dunstrc:INI"
-        ];
-      };
-
-      extraPackages = [
-        pkgs.bat-extras.batdiff
-        pkgs.bat-extras.batgrep
-        pkgs.bat-extras.batman
-        pkgs.bat-extras.batpipe
-        pkgs.bat-extras.batwatch
-      ];
-    };
-
-    home = {
-      shellAliases = {
-        bathelp = "bat --plain --language=help";
-      };
-      sessionVariables = {
-        MANPAGER = mkDefault "sh -c 'col --no-backspaces --spaces | bat --language man --plain'";
-        MANROFFOPT = mkDefault "-c";
-      };
-    };
-  };
+  options.programs.bat.flavour = mkFlavourOption ./flavours "config1";
 }

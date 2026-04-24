@@ -20,6 +20,7 @@ in
       pkgs.android-file-transfer
       pkgs.ani-cli
       pkgs.anki
+      pkgs.autenticacao-gov-pt-bin
       pkgs.bc
       pkgs.calcurse
       pkgs.dua
@@ -31,6 +32,7 @@ in
       pkgs.gtkhash
       pkgs.kdePackages.dolphin
       pkgs.libqalculate
+      pkgs.libreoffice
       pkgs.mediainfo
       pkgs.mediainfo-gui
       pkgs.nemo-with-extensions

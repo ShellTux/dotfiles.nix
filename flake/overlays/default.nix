@@ -52,6 +52,34 @@
               temurin-bin.jdk-21
             ];
         };
+
+        terminals = {
+          inherit (pkgs)
+            alacritty
+            cool-retro-term
+            foot
+            ghostty
+            gnome-terminal
+            kitty
+            lxterminal
+            st
+            wezterm
+            xfce4-terminal
+            xterm
+            ;
+          inherit (pkgs.kdePackages) konsole;
+        };
+
+        browsers = {
+          inherit (pkgs)
+            brave
+            chromium
+            firefox
+            librewolf
+            qutebrowser
+            tor-browser
+            ;
+        };
       };
 
       packages = {

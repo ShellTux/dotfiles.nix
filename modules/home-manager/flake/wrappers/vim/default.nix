@@ -1,0 +1,9 @@
+{ config, lib, ... }:
+let
+  inherit (lib) mkIf;
+
+  cfg = config.flake.wrappers.vim;
+in
+mkIf cfg.enable {
+  home.packages = [ cfg.package ];
+}

@@ -22,6 +22,7 @@ in
     ]
     ++ [
       ./accounts
+      ./flake
       ./gtk
       ./home
       ./nix

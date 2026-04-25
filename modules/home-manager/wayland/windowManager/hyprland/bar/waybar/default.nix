@@ -1,8 +1,14 @@
-{ config, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   inherit (lib) mkIf mkDefault getExe;
 
   waybar = getExe cfg.bar.waybar;
+  wofi = getExe pkgs.wofi;
 
   cfg = config.wayland.windowManager.hyprland;
 in
@@ -14,6 +20,7 @@ in
       ];
 
       bind = [
+        "$mainMod, P, exec, ${wofi} --allow-images --show drun"
         # Toggle waybar
         "$mainMod SHIFT, B, exec, pkill -SIGUSR1 waybar"
       ];

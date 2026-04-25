@@ -14,7 +14,6 @@ let
   rofi = getExe pkgs.rofi;
   volume = getExe self'.packages.volume;
   wlogout = getExe pkgs.wlogout;
-  wofi = getExe pkgs.wofi;
   woomer = getExe pkgs.woomer;
 
   hyprshot_dir = "${config.xdg.userDirs.pictures}/hyprshot/";
@@ -27,7 +26,6 @@ in
       bind = [
         "$mainMod, Return, exec, $TERMINAL"
         "$mainMod, C, killactive, "
-        "$mainMod, P, exec, ${wofi} --allow-images --show drun"
         "$mainMod SHIFT, Q, exec, hyprctl dispatch exit"
 
         "$mainMod, Space, togglefloating, "

@@ -1,51 +1,46 @@
 {
+  self',
   lib,
   pkgs,
   config,
   ...
 }:
 let
-  inherit (builtins) elem;
+  inherit (builtins) attrValues;
   inherit (lib)
-    mkPackageOption
-    filterAttrs
     mkOption
     genAttrs
+    pipe
+    unique
     ;
   inherit (lib.types) enum;
 
-  terminals = filterAttrs (
-    pkg: drv:
-    elem pkg [
-      "alacritty"
-      "foot"
-      "ghostty"
-      "kitty"
-      "st"
+  terminals =
+    pipe pkgs.terminals [
+      attrValues
+      unique
     ]
-  ) pkgs;
+    ++ [ self'.packages.kitty ];
 
-  browsers = filterAttrs (
-    pkg: drv:
-    elem pkg [
-      "brave"
-      "firefox"
-      "floorp"
-      "librewolf"
-      "tor-browser"
-    ]
-  ) pkgs;
+  browsers = pipe pkgs.browsers [
+    attrValues
+    unique
+  ];
+
+  cfg = config.default;
 in
 {
   options.default = {
-    terminal = mkPackageOption terminals "default terminal" {
-      default = "kitty";
-      example = "ghostty";
+    terminal = mkOption {
+      description = "Which default terminal to pick.";
+      type = enum terminals;
+      default = self'.packages.kitty;
     };
 
-    browser = mkPackageOption browsers "default browser" {
-      default = "brave";
-      example = "librewolf";
+    browser = mkOption {
+      description = "Which default browser to pick.";
+      type = enum browsers;
+      default = pkgs.brave;
     };
 
     base16-colorscheme = mkOption {
@@ -340,6 +335,6 @@ in
       "x-scheme-handler/http"
       "x-scheme-handler/https"
       "x-scheme-handler/unknown"
-    ] (_: "${config.default.browser.pname}.desktop");
+    ] (_: "${cfg.browser.pname}.desktop");
   };
 }

@@ -1,4 +1,4 @@
-{ pkgs, self', ... }:
+{ pkgs, ... }:
 {
   imports = [
     ./config
@@ -10,11 +10,10 @@
     packages = [
       pkgs.droidcam
       pkgs.gimp3-with-plugins
-    ]
-    ++ [
-      self'.packages.nixvim
     ];
   };
+
+  flake.nixvim.enable = true;
 
   programs = {
     bash.enable = true;

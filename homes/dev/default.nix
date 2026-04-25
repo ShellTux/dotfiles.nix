@@ -1,10 +1,12 @@
-{ self', ... }:
+{ ... }:
 {
   home = {
     username = "dev";
 
-    packages = [ self'.packages.nixvim ];
+    packages = [ ];
   };
+
+  flake.nixvim.enable = true;
 
   programs = {
     bash.enable = true;

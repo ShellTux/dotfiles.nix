@@ -53,7 +53,6 @@
       self'.packages.mounts
       # self'.packages.mpd-notification
       self'.packages.nix-out-paths
-      self'.packages.nixvim
       self'.packages.notify-music
       self'.packages.open
       self'.packages.repl
@@ -66,18 +65,22 @@
     ];
   };
 
-  flake.wrappers = {
-    bat.enable = true;
-    btop.enable = true;
-    eza.enable = true;
-    fastfetch.enable = true;
-    fd.enable = true;
-    htop.enable = true;
-    kitty.enable = true;
-    mpv.enable = true;
-    vim.enable = true;
-    yazi.enable = true;
-    yt-dlp.enable = true;
+  flake = {
+    nixvim.enable = true;
+
+    wrappers = {
+      bat.enable = true;
+      btop.enable = true;
+      eza.enable = true;
+      fastfetch.enable = true;
+      fd.enable = true;
+      htop.enable = true;
+      kitty.enable = true;
+      mpv.enable = true;
+      vim.enable = true;
+      yazi.enable = true;
+      yt-dlp.enable = true;
+    };
   };
 
   programs = {

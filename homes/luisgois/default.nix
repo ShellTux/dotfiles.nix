@@ -1,4 +1,5 @@
 {
+  config,
   self',
   pkgs,
   lib,
@@ -74,40 +75,39 @@ in
       self'.packages.volume
       self'.packages.walld
       self'.packages.wclip
-    ]
-    ++ [
-      self'.packages.btop
-      self'.packages.fastfetch
-      self'.packages.fd
-      self'.packages.htop
-      self'.packages.kitty
-      self'.packages.vim
-      self'.packages.waybar
-      self'.packages.yazi
-      self'.packages.yt-dlp
     ];
 
     sessionVariables = {
-      EDITOR = getExe self'.packages.vim;
+      EDITOR = getExe config.flake.wrappers.vim.package;
     };
+  };
+
+  flake.wrappers = {
+    bat.enable = true;
+    btop.enable = true;
+    eza.enable = true;
+    fastfetch.enable = true;
+    fd.enable = true;
+    htop.enable = true;
+    kitty.enable = true;
+    mpv.enable = true;
+    vim.enable = true;
+    yazi.enable = true;
+    yt-dlp.enable = true;
   };
 
   programs = {
     bash.enable = true;
-    bat.enable = true;
     brave.enable = true;
     diff-so-fancy.enable = true;
     direnv.enable = true;
     emacs.enable = true;
-    eza.enable = true;
     floorp.enable = true;
     fzf.enable = true;
     gemini-cli.enable = true;
     ghostty.enable = true;
-    imv.enable = true;
     jellyfin.enable = true;
     jq.enable = true;
-    mpv.enable = true;
     ncmpcpp.enable = true;
     newsboat.enable = true;
     nh.enable = true;

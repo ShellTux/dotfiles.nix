@@ -36,7 +36,7 @@ in
       description = "Useful extra packages to install along side with hyprland";
       type = listOf package;
       default = [
-        self'.packages.kitty
+        # self'.packages.kitty
         pkgs.libnotify
         pkgs.pavucontrol
         pkgs.pw-volume

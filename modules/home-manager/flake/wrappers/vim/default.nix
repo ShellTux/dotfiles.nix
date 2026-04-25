@@ -16,6 +16,8 @@ in
   config.home = mkIf cfg.enable {
     packages = [ cfg.package ];
 
-    sessionVariables.EDITOR = mkIf cfg.defaultEditor (getExe cfg.package);
+    sessionVariables = mkIf cfg.defaultEditor {
+      EDITOR = getExe cfg.package;
+    };
   };
 }

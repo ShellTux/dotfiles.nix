@@ -86,5 +86,8 @@ mkIf (config.flavour == "config1") {
     "${tmux-prefix}>z" = "combine : toggle_layout stack : scroll_prompt_to_bottom";
     "${tmux-prefix}>[" = "show_scrollback";
     "${tmux-prefix}>]" = "paste_from_clipboard";
+
+    "alt+left" = "send_text all \\x1bb";
+    "alt+right" = "send_text all \\x1bf";
   };
 }

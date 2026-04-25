@@ -54,8 +54,19 @@ let
 
               home-manager = {
                 useUserPackages = true;
-                useGlobalPkgs = true;
-                sharedModules = attrValues homeManagerModules;
+
+                sharedModules = attrValues homeManagerModules ++ [
+                  {
+                    nixpkgs = {
+                      inherit overlays;
+
+                      config.packageOverrides = pkgs: {
+                        small = import inputs.nixpkgs-small { inherit system overlays; };
+                        stable = import inputs.nixpkgs-stable { inherit system overlays; };
+                      };
+                    };
+                  }
+                ];
                 extraSpecialArgs = {
                   inherit
                     inputs

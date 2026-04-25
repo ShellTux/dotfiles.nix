@@ -4,9 +4,9 @@
   ...
 }:
 let
-  inherit (lib) getExe mkIf;
+  inherit (lib) getExe getName mkIf;
 
-  terminal = getExe config.default.terminal;
+  terminal = getName config.default.terminal;
   browser = getExe config.default.browser;
 
   cfg = config.wayland.windowManager.hyprland;

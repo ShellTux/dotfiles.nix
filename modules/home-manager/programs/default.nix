@@ -1,8 +1,21 @@
+{ ... }:
+let
+  home-manager-program-import =
+    path:
+    { config, lib', ... }:
+    let
+      inherit (lib'.flake) mkFlavourOption;
+
+      name = baseNameOf path;
+    in
+    {
+      imports = [ path ];
+
+      options.programs.${name}.flavour = mkFlavourOption "${path}/flavours" "config1";
+    };
+in
 {
-  ...
-}:
-{
-  imports = [
+  imports = map home-manager-program-import [ ./bat ] ++ [
     ./aerc
     ./alacritty
     ./bash

@@ -9,6 +9,18 @@
     }:
     let
       inherit (pkgs) callPackage;
+
+      nixvim' = inputs'.nixvim.legacyPackages;
+
+      nixvimModule = {
+        inherit pkgs system;
+        module = import ./nixvim;
+        extraSpecialArgs = {
+          inherit pkgs;
+          leader-key = " ";
+          noice.enable = true;
+        };
+      };
     in
     {
       packages = rec {
@@ -26,6 +38,7 @@
         mounts = callPackage ./mounts { };
         mpd-notification = callPackage ./mpd-notification { inherit notify-music; };
         nix-out-paths = callPackage ./nix-out-paths { };
+        nixvim = nixvim'.makeNixvimWithModule nixvimModule;
         notify-music = callPackage ./notify-music { inherit fetch-music-data; };
         open = callPackage ./open { };
         prismlauncher = callPackage ./prismlauncher { };

@@ -8,7 +8,7 @@
 }:
 let
   inherit (lib) optional;
-  inherit (inputs) nixpkgs dev-tools;
+  inherit (inputs) nixpkgs;
   inherit (inputs.home-manager.lib) homeManagerConfiguration;
   inherit (config.flake) homeManagerModules;
 
@@ -52,8 +52,6 @@ let
             system
             lib'
             ;
-
-          dev-tools = dev-tools.packages.${system};
         };
       }
     );

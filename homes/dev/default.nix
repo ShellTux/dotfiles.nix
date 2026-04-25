@@ -1,9 +1,9 @@
-{ dev-tools, ... }:
+{ self', ... }:
 {
   home = {
     username = "dev";
 
-    packages = [ dev-tools.nixvim ];
+    packages = [ self'.packages.nixvim ];
   };
 
   programs = {

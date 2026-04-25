@@ -1,9 +1,4 @@
-{
-  self',
-  pkgs,
-  dev-tools,
-  ...
-}:
+{ self', pkgs, ... }:
 {
   imports = [
     ./config
@@ -51,9 +46,6 @@
       pkgs.xdg-ninja
     ]
     ++ [
-      dev-tools.nixvim
-    ]
-    ++ [
       self'.packages.brightness
       self'.packages.help
       self'.packages.ipa
@@ -61,6 +53,7 @@
       self'.packages.mounts
       # self'.packages.mpd-notification
       self'.packages.nix-out-paths
+      self'.packages.nixvim
       self'.packages.notify-music
       self'.packages.open
       self'.packages.repl

@@ -9,7 +9,6 @@
 let
   inherit (builtins) attrValues;
   inherit (lib) optional;
-  inherit (inputs) dev-tools;
   inherit (inputs.nixpkgs.lib) nixosSystem;
   inherit (config.flake) nixosModules homeManagerModules;
 
@@ -75,8 +74,6 @@ let
                     self'
                     lib'
                     ;
-
-                  dev-tools = dev-tools.packages.${system};
                 };
               };
             }

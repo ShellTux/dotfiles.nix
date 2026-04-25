@@ -1,4 +1,4 @@
-{ pkgs, dev-tools, ... }:
+{ pkgs, self', ... }:
 {
   imports = [
     ./config
@@ -12,7 +12,7 @@
       pkgs.gimp3-with-plugins
     ]
     ++ [
-      dev-tools.nixvim
+      self'.packages.nixvim
     ];
   };
 

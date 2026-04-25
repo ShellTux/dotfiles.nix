@@ -1,9 +1,23 @@
 { config, lib, ... }:
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkOption getExe;
+  inherit (lib.types) bool;
 
   cfg = config.flake.wrappers.vim;
 in
-mkIf cfg.enable {
-  home.packages = [ cfg.package ];
+{
+  options.flake.wrappers.vim.defaultEditor = mkOption {
+    type = bool;
+    description = "Whether to enable vim as the default editor.";
+    default = false;
+    example = true;
+  };
+
+  config.home = mkIf cfg.enable {
+    packages = [ cfg.package ];
+
+    sessionVariables = mkIf cfg.defaultEditor {
+      EDITOR = getExe cfg.package;
+    };
+  };
 }

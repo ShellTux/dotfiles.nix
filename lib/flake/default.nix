@@ -11,6 +11,7 @@ pipe
     ./homepage-dashboard
     ./hyprland
     ./mkFlavourOption
+    ./mkIfFlavour
     ./nginx
   ]
   [

@@ -1,14 +1,9 @@
 {
-  config,
   self',
   pkgs,
-  lib,
   dev-tools,
   ...
 }:
-let
-  inherit (lib) getExe;
-in
 {
   imports = [
     ./config
@@ -76,10 +71,6 @@ in
       self'.packages.walld
       self'.packages.wclip
     ];
-
-    sessionVariables = {
-      EDITOR = getExe config.flake.wrappers.vim.package;
-    };
   };
 
   flake.wrappers = {

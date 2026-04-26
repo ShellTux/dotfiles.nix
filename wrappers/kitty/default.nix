@@ -1,7 +1,7 @@
 { pkgs, lib, ... }:
 let
   inherit (lib) mkOption;
-  inherit (lib.types) enum;
+  inherit (lib.types) enum str;
 in
 {
   imports = [
@@ -21,6 +21,13 @@ in
         - `none`: No configuration, allowed to change
         - `config1`: Not allowed to change.
       '';
+    };
+
+    leader = mkOption {
+      type = str;
+      default = "ctrl+space";
+      example = "ctrl+b";
+      description = "The prefix key for kitty tab and window management.";
     };
   };
 

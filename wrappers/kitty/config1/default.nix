@@ -6,8 +6,7 @@
 }:
 let
   inherit (lib) mkIf;
-
-  tmux-prefix = "ctrl+space";
+  inherit (config) leader;
 in
 mkIf (config.flavour == "config1") {
   settings = {
@@ -50,22 +49,22 @@ mkIf (config.flavour == "config1") {
   extraPackages = [ pkgs.jetbrains-mono ];
 
   keybindings = {
-    "${tmux-prefix}>c" = "new_tab";
-    "${tmux-prefix}>n" = "next_tab";
-    "${tmux-prefix}>p" = "previous_tab";
-    "${tmux-prefix}>," = "set_tab_title";
+    "${leader}>c" = "new_tab";
+    "${leader}>n" = "next_tab";
+    "${leader}>p" = "previous_tab";
+    "${leader}>," = "set_tab_title";
     "shift+down" = "new_tab";
     "shift+left" = "previous_tab";
     "shift+right" = "next_tab";
 
-    "${tmux-prefix}>|" = "launch --location=vsplit --cwd=current";
-    "${tmux-prefix}>%" = "launch --location=vsplit --cwd=current";
-    "${tmux-prefix}>-" = "launch --location=hsplit --cwd=current";
+    "${leader}>|" = "launch --location=vsplit --cwd=current";
+    "${leader}>%" = "launch --location=vsplit --cwd=current";
+    "${leader}>-" = "launch --location=hsplit --cwd=current";
 
-    "${tmux-prefix}>h" = "neighboring_window left";
-    "${tmux-prefix}>j" = "neighboring_window down";
-    "${tmux-prefix}>k" = "neighboring_window up";
-    "${tmux-prefix}>l" = "neighboring_window right";
+    "${leader}>h" = "neighboring_window left";
+    "${leader}>j" = "neighboring_window down";
+    "${leader}>k" = "neighboring_window up";
+    "${leader}>l" = "neighboring_window right";
     "ctrl+h" = "neighboring_window left";
     "ctrl+j" = "neighboring_window down";
     "ctrl+k" = "neighboring_window up";
@@ -73,19 +72,19 @@ mkIf (config.flavour == "config1") {
     "ctrl+left" = "move_tab_backward";
     "ctrl+right" = "move_tab_forward";
 
-    "${tmux-prefix}>alt+h" = "resize_window narrower";
-    "${tmux-prefix}>alt+l" = "resize_window wider";
-    "${tmux-prefix}>alt+j" = "resize_window shorter";
-    "${tmux-prefix}>alt+k" = "resize_window taller";
-    "${tmux-prefix}>shift+h" = "resize_window narrower 3";
-    "${tmux-prefix}>shift+l" = "resize_window wider 3";
-    "${tmux-prefix}>shift+j" = "resize_window shorter 3";
-    "${tmux-prefix}>shift+k" = "resize_window taller 3";
-    "${tmux-prefix}>=" = "resize_window reset";
+    "${leader}>alt+h" = "resize_window narrower";
+    "${leader}>alt+l" = "resize_window wider";
+    "${leader}>alt+j" = "resize_window shorter";
+    "${leader}>alt+k" = "resize_window taller";
+    "${leader}>shift+h" = "resize_window narrower 3";
+    "${leader}>shift+l" = "resize_window wider 3";
+    "${leader}>shift+j" = "resize_window shorter 3";
+    "${leader}>shift+k" = "resize_window taller 3";
+    "${leader}>=" = "resize_window reset";
 
-    "${tmux-prefix}>z" = "combine : toggle_layout stack : scroll_prompt_to_bottom";
-    "${tmux-prefix}>[" = "show_scrollback";
-    "${tmux-prefix}>]" = "paste_from_clipboard";
+    "${leader}>z" = "combine : toggle_layout stack : scroll_prompt_to_bottom";
+    "${leader}>[" = "show_scrollback";
+    "${leader}>]" = "paste_from_clipboard";
 
     "alt+left" = "send_text all \\x1bb";
     "alt+right" = "send_text all \\x1bf";

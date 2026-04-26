@@ -72,6 +72,7 @@ mkIf (config.flavour == "config1") {
     "ctrl+l" = "neighboring_window right";
     "ctrl+left" = "move_tab_backward";
     "ctrl+right" = "move_tab_forward";
+    "${leader}>x" = "close_window";
 
     "${leader}>alt+h" = "resize_window narrower";
     "${leader}>alt+l" = "resize_window wider";

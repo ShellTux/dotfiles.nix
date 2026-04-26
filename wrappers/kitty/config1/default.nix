@@ -92,7 +92,7 @@ mkIf (config.flavour == "config1") {
     "alt+right" = "send_text all \\x1bf";
   }
   // pipe (range 1 9) [
-    (map (tab: toString tab))
+    (map toString)
     (map (tab: {
       name = "${leader}>${tab}";
       value = "goto_tab ${tab}";

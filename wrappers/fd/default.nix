@@ -1,12 +1,7 @@
 { pkgs, lib, ... }:
 let
   inherit (lib) mkOption;
-  inherit (lib.types)
-    bool
-    enum
-    listOf
-    str
-    ;
+  inherit (lib.types) bool listOf str;
 in
 {
   imports = [
@@ -15,15 +10,6 @@ in
   ];
 
   options = {
-    flavour = mkOption {
-      type = enum [
-        "none"
-        "config1"
-      ];
-      default = "config1";
-      example = "none";
-    };
-
     hidden = mkOption {
       type = bool;
       default = false;

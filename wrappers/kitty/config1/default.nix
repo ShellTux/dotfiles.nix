@@ -5,7 +5,8 @@
   ...
 }:
 let
-  inherit (lib) mkIf;
+  inherit (builtins) listToAttrs;
+  inherit (lib) mkIf pipe range;
   inherit (config) leader;
 in
 mkIf (config.flavour == "config1") {
@@ -88,5 +89,13 @@ mkIf (config.flavour == "config1") {
 
     "alt+left" = "send_text all \\x1bb";
     "alt+right" = "send_text all \\x1bf";
-  };
+  }
+  // pipe (range 1 9) [
+    (map (tab: toString tab))
+    (map (tab: {
+      name = "${leader}>${tab}";
+      value = "goto_tab ${tab}";
+    }))
+    listToAttrs
+  ];
 }

@@ -75,6 +75,7 @@
       fastfetch.enable = true;
       fd.enable = true;
       htop.enable = true;
+      imv.enable = true;
       kitty.enable = true;
       mpv.enable = true;
       vim.enable = true;

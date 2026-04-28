@@ -45,6 +45,7 @@ in
       ./vim
       ./yazi
       ./yt-dlp
+      ./zathura
     ]
     ++ [ ./overlays ];
 

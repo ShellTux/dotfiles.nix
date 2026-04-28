@@ -1,0 +1,15 @@
+[mgr]
+prepend_keymap = [
+    { run = "escape", on = [ "<esc>" ] },
+    { run = "quit", on = [ "q" ] },
+    { run = "close", on = [ "<C-q>" ], desc = "Close the current tab" },
+    { run = 'shell "$SHELL" --block', on = [ "!" ], desc = "Open shell here" }
+]
+
+[input]
+prepend_keymap = [
+    { run = "close", on = [ "<c-q>" ] },
+    { run = "close --submit", on = [ "<enter>" ] },
+    { run = "escape", on = [ "<esc>" ] },
+    { run = "backspace", on = [ "<backspace>" ] }
+]

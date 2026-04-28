@@ -5,10 +5,21 @@
   ...
 }@inputs:
 let
-  inherit (lib) mkIf;
+  inherit (builtins) readFile fromTOML;
+  inherit (lib) mkIf pipe;
+
+  toml2nix =
+    path:
+    pipe path [
+      readFile
+      fromTOML
+    ];
 in
 mkIf (config.flavour == "config1") {
-  settings.yazi = import ./settings { inherit inputs; };
+  settings = {
+    keymap = toml2nix ./keymap.toml;
+    yazi = toml2nix ./yazi.toml;
+  };
 
   extraPackages = [
     pkgs.exiftool

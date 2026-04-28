@@ -1,0 +1,43 @@
+[mgr]
+scrolloff = 255
+
+[opener]
+video = [
+  { run = 'mpv %s', block = false, orphan = true, for = "unix", desc = " Mpv" },
+]
+edit = [
+  { run = '$EDITOR %s', block = true, for = "unix" },
+  { run = 'nvim %s', block = true, for = "unix", desc = " Neovim" },
+  { run = 'vim %s', block = true, for = "unix", desc = " Vim" },
+]
+open = [
+  { run = 'xdg-open %s', for = "linux", desc = "Open" },
+]
+image = [
+  { run = 'imv %s', block = false, for = "unix", desc = " Imv" },
+]
+extract = [
+  { run = 'unar %s1', for = "unix", desc = " Unar: Extract here" },
+]
+
+[open]
+prepend_rules = [
+  { url = "*.json", use = [ "edit" ] },
+  { url = "*.html", use = [ "open", "edit" ] },
+  { url = "*.xopp", use = [ "open", "extract", "reveal"] },
+]
+rules = [
+  { mime = "text/*", use = [ "edit", "reveal" ] },
+  { mime = "image/*", use = [ "image", "reveal" ] },
+  { mime = "video/*", use = [ "video", "reveal" ] },
+  { mime = "audio/*", use = [ "audio", "reveal" ] },
+  { mime = "application/json", use = [ "edit", "reveal" ] },
+  { mime = "application/{gzip,zip,x-tar,x-bzip,x-bzip2,x-7z-compressed,x-rar,xz}", use = [ "extract", "reveal" ] },
+  { mime = "{inode/directory,folder/*}", use = [ "open", "reveal", "video", "image" ] },
+]
+append_rules = [
+  { url = "*", use = [ "open", "reveal" ] },
+]
+
+[input]
+cursor_blink = true

@@ -5,6 +5,7 @@
     ./mpv
     ./newsboat
     ./ssh
+    ./thunderbird
     ./vim
   ];
 }

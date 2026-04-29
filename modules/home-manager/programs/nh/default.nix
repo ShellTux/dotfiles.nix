@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  inputs',
   ...
 }:
 let
@@ -19,8 +20,9 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    programs.nh = mkDefault {
-      flake = "github:ShellTux/dotfiles.nix";
+    programs.nh = {
+      flake = mkDefault "github:ShellTux/dotfiles.nix";
+      package = mkDefault inputs'.nh.packages.nh;
     };
   };
 }

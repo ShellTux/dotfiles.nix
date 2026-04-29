@@ -47,10 +47,10 @@ let
           inherit
             inputs
             inputs'
+            lib'
             self
             self'
             system
-            lib'
             ;
         };
       }

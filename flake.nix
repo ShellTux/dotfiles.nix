@@ -140,5 +140,10 @@
 
     wrappers.url = "github:BirdeeHub/nix-wrapper-modules";
 
+    nh = {
+      url = "github:nix-community/nh";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 }

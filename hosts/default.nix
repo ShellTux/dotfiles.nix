@@ -69,10 +69,11 @@ let
                 extraSpecialArgs = {
                   inherit
                     inputs
-                    system
+                    inputs'
+                    lib'
                     self
                     self'
-                    lib'
+                    system
                     ;
                 };
               };

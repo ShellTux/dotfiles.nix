@@ -44,6 +44,7 @@ in
     ./man
     ./mpv
     ./ncmpcpp
+    ./neovide
     ./newsboat
     ./nh
     ./nixvim

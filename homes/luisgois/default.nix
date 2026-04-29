@@ -98,6 +98,7 @@
     jellyfin.enable = true;
     jq.enable = true;
     ncmpcpp.enable = true;
+    neovide.enable = true;
     newsboat.enable = true;
     nh.enable = true;
     nix-index-database.comma.enable = true;

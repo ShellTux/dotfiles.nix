@@ -51,6 +51,7 @@ mkIf (config.flavour == "config1") {
 
   keybindings = {
     "${leader}>c" = "new_tab";
+    "${leader}>shift+c" = "launch --type=tab --cwd=current";
     "${leader}>n" = "next_tab";
     "${leader}>p" = "previous_tab";
     "${leader}>," = "set_tab_title";

@@ -8,8 +8,6 @@ let
 
   cfg = config.programs.yazi;
 in
-{
-  programs.yazi = mkIf (cfg.enable && !cfg.disableModule) {
-    theme = { };
-  };
+mkIf (cfg.enable && cfg.flavour == "config1") {
+  programs.yazi.theme = { };
 }

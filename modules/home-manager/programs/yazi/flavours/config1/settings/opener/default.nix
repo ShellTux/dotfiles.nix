@@ -9,8 +9,8 @@ let
 
   cfg = config.programs.yazi;
 in
-{
-  programs.yazi = mkIf (cfg.enable && !cfg.disableModule) {
+mkIf (cfg.enable && cfg.flavour == "config1") {
+  programs.yazi = {
 
     extraPackages = [
       pkgs.exiftool

@@ -23,7 +23,6 @@ in
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
     stylix = mkDefault {
-
       base16Scheme = base16Scheme "catppuccin-mocha";
       polarity = "dark";
       imageScalingMode = "stretch";

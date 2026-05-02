@@ -25,8 +25,8 @@ in
   };
 
   config = mkIf (!cfg.disableModule) {
-    boot = mkDefault {
-      kernelPackages = pkgs.linuxPackages_latest;
+    boot = {
+      kernelPackages = mkDefault pkgs.linuxPackages_latest;
       kernelParams = [
         "quiet"
         "splash"
@@ -38,7 +38,7 @@ in
         "udev.log_priority=3"
       ];
 
-      consoleLogLevel = 0;
+      consoleLogLevel = mkDefault 0;
     };
   };
 }

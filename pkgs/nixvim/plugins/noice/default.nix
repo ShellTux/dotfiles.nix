@@ -1,5 +1,13 @@
 { ... }:
 {
+  keymaps = [
+    {
+      key = "<leader>nd";
+      action = "<cmd>NoiceDismiss<cr>";
+      options.desc = "Dismiss Noice Notifications";
+    }
+  ];
+
   plugins.noice.settings.views = {
     cmdline_popup = {
       position = {

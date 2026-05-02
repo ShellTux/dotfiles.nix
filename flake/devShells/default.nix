@@ -42,7 +42,6 @@ _: {
           pkgs.git-secrets
           # pkgs.guestfs-tools
           pkgs.just
-          pkgs.nh
           pkgs.nix-index
           pkgs.nixos-rebuild
           pkgs.openssl
@@ -55,8 +54,9 @@ _: {
           pkgs.yq
         ]
         ++ [
-          inputs'.nixos-anywhere.packages.nixos-anywhere
           inputs'.home-manager.packages.home-manager
+          inputs'.nh.packages.nh
+          inputs'.nixos-anywhere.packages.nixos-anywhere
           inputs'.nix-unit.packages.nix-unit
         ]
         ++ additionalPackages

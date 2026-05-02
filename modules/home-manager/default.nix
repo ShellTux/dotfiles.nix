@@ -26,7 +26,6 @@ in
       ./gtk
       ./home
       ./nix
-      ./options
       ./programs
       ./qt
       ./services

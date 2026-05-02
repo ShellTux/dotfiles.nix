@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ./defaultApplications
     ./nixvim
     ./wrappers
   ];

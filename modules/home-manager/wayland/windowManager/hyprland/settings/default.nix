@@ -6,8 +6,8 @@
 let
   inherit (lib) getExe getName mkIf;
 
-  terminal = getName config.default.terminal;
-  browser = getExe config.default.browser;
+  terminal = getName config.flake.defaultApplications.terminal;
+  browser = getExe config.flake.defaultApplications.browser;
 
   cfg = config.wayland.windowManager.hyprland;
 in

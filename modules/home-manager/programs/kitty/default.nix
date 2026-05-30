@@ -4,48 +4,15 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types) bool;
-
-  tmux-prefix = "ctrl+space";
-  tmux-keybindings = {
-    "${tmux-prefix}>c" = "new_tab";
-    "${tmux-prefix}>n" = "next_tab";
-    "${tmux-prefix}>p" = "previous_tab";
-    "${tmux-prefix}>," = "set_tab_title";
-    "shift+down" = "new_tab";
-    "shift+left" = "previous_tab";
-    "shift+right" = "next_tab";
-
-    "${tmux-prefix}>|" = "launch --location=vsplit --cwd=current";
-    "${tmux-prefix}>%" = "launch --location=vsplit --cwd=current";
-    "${tmux-prefix}>-" = "launch --location=hsplit --cwd=current";
-
-    "${tmux-prefix}>h" = "neighboring_window left";
-    "${tmux-prefix}>j" = "neighboring_window down";
-    "${tmux-prefix}>k" = "neighboring_window up";
-    "${tmux-prefix}>l" = "neighboring_window right";
-    "ctrl+h" = "neighboring_window left";
-    "ctrl+j" = "neighboring_window down";
-    "ctrl+k" = "neighboring_window up";
-    "ctrl+l" = "neighboring_window right";
-    "ctrl+left" = "move_tab_backward";
-    "ctrl+right" = "move_tab_forward";
-
-    "${tmux-prefix}>alt+h" = "resize_window narrower";
-    "${tmux-prefix}>alt+l" = "resize_window wider";
-    "${tmux-prefix}>alt+j" = "resize_window shorter";
-    "${tmux-prefix}>alt+k" = "resize_window taller";
-    "${tmux-prefix}>shift+h" = "resize_window narrower 3";
-    "${tmux-prefix}>shift+l" = "resize_window wider 3";
-    "${tmux-prefix}>shift+j" = "resize_window shorter 3";
-    "${tmux-prefix}>shift+k" = "resize_window taller 3";
-    "${tmux-prefix}>=" = "resize_window reset";
-
-    "${tmux-prefix}>z" = "combine : toggle_layout stack : scroll_prompt_to_bottom";
-    "${tmux-prefix}>[" = "show_scrollback";
-    "${tmux-prefix}>]" = "paste_from_clipboard";
-  };
+  inherit (builtins) listToAttrs;
+  inherit (lib)
+    mkOption
+    mkIf
+    mkDefault
+    pipe
+    range
+    ;
+  inherit (lib.types) bool str;
 
   cfg = config.programs.kitty;
 in
@@ -55,6 +22,13 @@ in
       description = "Whether to disable this module configuration";
       type = bool;
       default = false;
+    };
+
+    leader-key = mkOption {
+      type = str;
+      default = "ctrl+space";
+      example = "ctrl+b";
+      description = "Kitty leader prefix key";
     };
   };
 
@@ -85,12 +59,60 @@ in
             \ -c "nnoremap Y y$"
             \ -c "tnoremap i ZQ"'';
         shell_integration = "no-cursor";
+        tab_bar_style = "powerline";
+        tab_title_template = "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{tab.last_focused_progress_percent}{index}: {tab.active_wd.split('/')[-1]} ({tab.active_exe})";
         update_check_interval = 0;
         # Nerd Fonts Version: 3.2.1
         symbol_map = "U+e000-U+e00a,U+e0a0-U+e0a2,U+e0b0-U+e0b3,U+e0a3-U+e0a3,U+e0b4-U+e0c8,U+e0cc-U+e0d2,U+e0d4-U+e0d4,U+e0d6-U+e0d7,U+e5fa-U+e6b2,U+e700-U+e7c5,U+f000-U+f2e0,U+e200-U+e2a9,U+f400-U+f4a8,U+2665-U+2665,U+26A1-U+26A1,U+f27c-U+f27c,U+f300-U+f372,U+23fb-U+23fe,U+2b58-U+2b58,U+f0001-U+f0010,U+e300-U+e3eb Symbols Nerd Font";
       };
 
-      keybindings = tmux-keybindings;
+      keybindings = {
+        "${cfg.leader-key}>c" = "new_tab";
+        "${cfg.leader-key}>shift+c" = "launch --type=tab --cwd=current";
+        "${cfg.leader-key}>n" = "next_tab";
+        "${cfg.leader-key}>p" = "previous_tab";
+        "${cfg.leader-key}>," = "set_tab_title";
+        "shift+down" = "new_tab";
+        "shift+left" = "previous_tab";
+        "shift+right" = "next_tab";
+
+        "${cfg.leader-key}>|" = "launch --location=vsplit --cwd=current";
+        "${cfg.leader-key}>%" = "launch --location=vsplit --cwd=current";
+        "${cfg.leader-key}>-" = "launch --location=hsplit --cwd=current";
+
+        "${cfg.leader-key}>h" = "neighboring_window left";
+        "${cfg.leader-key}>j" = "neighboring_window down";
+        "${cfg.leader-key}>k" = "neighboring_window up";
+        "${cfg.leader-key}>l" = "neighboring_window right";
+        "ctrl+h" = "neighboring_window left";
+        "ctrl+j" = "neighboring_window down";
+        "ctrl+k" = "neighboring_window up";
+        "ctrl+l" = "neighboring_window right";
+        "ctrl+left" = "move_tab_backward";
+        "ctrl+right" = "move_tab_forward";
+
+        "${cfg.leader-key}>alt+h" = "resize_window narrower";
+        "${cfg.leader-key}>alt+l" = "resize_window wider";
+        "${cfg.leader-key}>alt+j" = "resize_window shorter";
+        "${cfg.leader-key}>alt+k" = "resize_window taller";
+        "${cfg.leader-key}>shift+h" = "resize_window narrower 3";
+        "${cfg.leader-key}>shift+l" = "resize_window wider 3";
+        "${cfg.leader-key}>shift+j" = "resize_window shorter 3";
+        "${cfg.leader-key}>shift+k" = "resize_window taller 3";
+        "${cfg.leader-key}>=" = "resize_window reset";
+
+        "${cfg.leader-key}>z" = "combine : toggle_layout stack : scroll_prompt_to_bottom";
+        "${cfg.leader-key}>[" = "show_scrollback";
+        "${cfg.leader-key}>]" = "paste_from_clipboard";
+      }
+      // pipe (range 1 9) [
+        (map toString)
+        (map (tab: {
+          name = "${cfg.leader-key}>${tab}";
+          value = "goto_tab ${tab}";
+        }))
+        listToAttrs
+      ];
     };
   };
 }

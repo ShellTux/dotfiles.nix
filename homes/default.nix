@@ -19,14 +19,20 @@ let
       name,
       system,
       extraModules ? [ ],
+      extraOverlays ? [ ],
+      path ? ./${name},
     }:
     let
-      overlays = [ self.overlays.default ] ++ optional (self.overlays ? ${name}) self.overlays.${name};
+      overlays = [
+        self.overlays.default
+      ]
+      ++ optional (self.overlays ? ${name}) self.overlays.${name}
+      ++ extraOverlays;
     in
     withSystem system (
       { inputs', self', ... }:
       homeManagerConfiguration {
-        pkgs = import nixpkgs { inherit system; };
+        pkgs = import nixpkgs { inherit system overlays; };
 
         modules = extraModules ++ [
           homeManagerModules.default
@@ -40,7 +46,7 @@ let
               };
             };
           }
-          ./${name}
+          path
         ];
 
         extraSpecialArgs = {

@@ -22,9 +22,15 @@ let
       extraProfiles ? [ profiles.system.core ],
       extraModules ? [ ],
       extraSpecialArgs ? { },
+      extraOverlays ? [ ],
+      path ? ./${name},
     }:
     let
-      overlays = [ self.overlays.default ] ++ optional (self.overlays ? ${name}) self.overlays.${name};
+      overlays = [
+        self.overlays.default
+      ]
+      ++ optional (self.overlays ? ${name}) self.overlays.${name}
+      ++ extraOverlays;
     in
     withSystem system (
       {
@@ -84,7 +90,7 @@ let
               nixpkgs.hostPlatform = system;
             }
 
-            ./${name}
+            path
           ];
 
         specialArgs = {

@@ -12,11 +12,10 @@ _: {
     let
       inherit (builtins) attrValues elem;
       inherit (pkgs) mkShell;
-      inherit (lib) getExe filterAttrs;
+      inherit (lib) getExe filterAttrs pipe;
 
-      additionalPackages =
-        config.packages
-        |> filterAttrs (
+      additionalPackages = pipe config.packages [
+        (filterAttrs (
           key: value:
           (elem key [
             "dotfiles-check"
@@ -25,8 +24,9 @@ _: {
             "vm"
             "wg-conf"
           ])
-        )
-        |> attrValues;
+        ))
+        attrValues
+      ];
 
       onefetch = getExe pkgs.onefetch;
     in

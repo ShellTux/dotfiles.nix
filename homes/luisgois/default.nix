@@ -74,6 +74,7 @@
       eza.enable = true;
       fastfetch.enable = true;
       fd.enable = true;
+      git.enable = true;
       htop.enable = true;
       imv.enable = true;
       kitty.enable = true;
@@ -88,7 +89,6 @@
   programs = {
     bash.enable = true;
     brave.enable = true;
-    diff-so-fancy.enable = true;
     direnv.enable = true;
     emacs.enable = true;
     floorp.enable = true;

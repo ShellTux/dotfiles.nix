@@ -36,7 +36,6 @@ _: {
 
         packages = [
           pkgs.age
-          pkgs.git
           pkgs.git-crypt
           pkgs.gitleaks
           pkgs.git-secrets

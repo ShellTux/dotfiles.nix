@@ -1,7 +1,6 @@
 { ... }:
 {
   imports = [
-    ./git
-    ./vim
+    ./includes.crypt.nix
   ];
 }

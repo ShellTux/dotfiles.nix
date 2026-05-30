@@ -1,9 +1,8 @@
 {
-  inputs,
+  inputs',
   config,
   lib,
   pkgs,
-  system,
   lib',
   ...
 }:
@@ -18,7 +17,7 @@ let
     pin
     ;
 
-  fa = inputs.firefox-addons.packages.${system};
+  fa = inputs'.firefox-addons.packages;
 
   cfg = config.programs.floorp;
 in

@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) mkIf mkDefault;
+  inherit (lib)
+    mkIf
+    mkDefault
+    pipe
+    range
+    ;
   inherit (cfg) leader-key;
   inherit (inputs) ghostty-cursor-shaders;
 
@@ -19,15 +24,18 @@ mkIf (cfg.enable && cfg.flavour == "config1") {
 
     settings = {
       auto-update = "off";
-      cursor-style = "bar";
+      cursor-style = mkDefault "block";
+      custom-shader = mkDefault "${ghostty-cursor-shaders}/cursor_warp.glsl";
       font-size = mkDefault 12;
+      gtk-tabs-location = "bottom";
       gtk-titlebar = false;
       mouse-hide-while-typing = true;
       resize-overlay = "never";
+      tab-inherit-working-directory = false;
       term = "xterm-ghostty";
       theme = mkDefault "tokyonight_moon";
       window-decoration = false;
-      custom-shader = mkDefault "${ghostty-cursor-shaders}/cursor_warp.glsl";
+      window-inherit-working-directory = false;
 
       keybind = [
         "ctrl+page_up=unbind"
@@ -64,6 +72,20 @@ mkIf (cfg.enable && cfg.flavour == "config1") {
         "${leader-key}>z=toggle_split_zoom"
 
         "ctrl+shift+u=unbind"
+
+        "ctrl+shift+c=copy_to_clipboard"
+        "ctrl+shift+v=paste_from_clipboard"
+
+        "alt+left=esc:b"
+        "alt+right=esc:f"
+
+        "ctrl+plus=increase_font_size:1"
+        "ctrl+kp_subtract=decrease_font_size:1"
+        "ctrl+kp_multiply=reset_font_size"
+      ]
+      ++ pipe (range 1 9) [
+        (map toString)
+        (map (tab: "${leader-key}>${tab}=goto_tab:${tab}"))
       ];
     };
   };

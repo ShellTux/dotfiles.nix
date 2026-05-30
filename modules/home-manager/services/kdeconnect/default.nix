@@ -15,8 +15,8 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    services.kdeconnect = mkDefault {
-      indicator = true;
+    services.kdeconnect = {
+      indicator = mkDefault true;
     };
   };
 }

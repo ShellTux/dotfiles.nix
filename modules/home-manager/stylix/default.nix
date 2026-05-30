@@ -22,17 +22,17 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    stylix = mkDefault {
+    stylix = {
       base16Scheme = base16Scheme "catppuccin-mocha";
       polarity = "dark";
       imageScalingMode = "stretch";
 
       fonts = {
-        monospace = {
+        monospace = mkDefault {
           package = pkgs.jetbrains-mono;
           name = "JetBrains Mono";
         };
-        sansSerif = {
+        sansSerif = mkDefault {
           package = pkgs.nerd-fonts.jetbrains-mono;
           name = "JetBrainsMono Nerd Font Propo";
         };

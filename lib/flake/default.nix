@@ -15,6 +15,7 @@ pipe
     ./mkIfFlavour
     ./nginx
     ./restic
+    ./systemd
   ]
   [
     (map (path: {

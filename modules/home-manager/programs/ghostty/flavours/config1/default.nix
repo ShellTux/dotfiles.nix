@@ -48,6 +48,9 @@ mkIf (cfg.enable && cfg.flavour == "config1") {
         "shift+left=previous_tab"
         "shift+right=next_tab"
 
+        "ctrl+left=move_tab:-1"
+        "ctrl+right=move_tab:1"
+
         "${leader-key}>h=goto_split:left"
         "${leader-key}>j=goto_split:bottom"
         "${leader-key}>k=goto_split:top"

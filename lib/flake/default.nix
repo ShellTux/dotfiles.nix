@@ -8,6 +8,7 @@ pipe
     ./caddy
     ./dirs
     ./dirsNames
+    ./firefox
     ./homepage-dashboard
     ./hyprland
     ./mkFlavourOption

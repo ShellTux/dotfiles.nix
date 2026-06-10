@@ -14,6 +14,7 @@ pipe
     ./mkFlavourOption
     ./mkIfFlavour
     ./nginx
+    ./restic
   ]
   [
     (map (path: {

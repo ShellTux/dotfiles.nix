@@ -16,6 +16,26 @@ in
 mkIf (config.flavour == "config1") {
   settings = {
     branch.sort = "-committerdate";
+    color = {
+      ui = true;
+      diff-highlight = {
+        oldNormal = "red bold";
+        oldHighlight = "red bold 52";
+        newNormal = "green bold";
+        newHighlight = "green bold 22";
+      };
+
+      diff = {
+        meta = "11";
+        frag = "magenta bold";
+        func = "146 bold";
+        commit = "yellow bold";
+        old = "red bold";
+        new = "green bold";
+        whitespace = "red reverse";
+      };
+
+    };
     column.ui = "auto";
     commit = {
       template = "${./template}";
@@ -24,6 +44,7 @@ mkIf (config.flavour == "config1") {
     core = {
       editor = "nvim";
       autocrlf = "input";
+      pager = "diff-so-fancy | less --tabs=4 -RF";
     };
     diff = {
       algorithm = "histogram";
@@ -33,6 +54,8 @@ mkIf (config.flavour == "config1") {
     };
     help.autoCorrect = "prompt";
     init.defaultBranch = "main";
+    interactive.diffFilter = "diff-so-fancy --patch";
+    pager.diff = "diff-so-fancy | less --tabs=4 --RAW-CONTROL-CHARS --quit-if-one-screen --no-init --chop-long-lines --pattern='^(Date|added|deleted|modified):'";
     rerere = {
       enable = true;
       autoupdate = true;
@@ -93,4 +116,8 @@ mkIf (config.flavour == "config1") {
       yolo = ''!git commit --message="$(curl --silent https://whatthecommit.com/index.txt)"'';
     };
   };
+
+  runtimePkgs = [
+    pkgs.diff-so-fancy
+  ];
 }

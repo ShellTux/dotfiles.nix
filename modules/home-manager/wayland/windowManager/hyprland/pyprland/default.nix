@@ -61,7 +61,6 @@ in
         "SUPER + E".dsp.exec_cmd = [ "${pypr} toggle yazi" ];
         "SUPER + M".dsp.exec_cmd = [ "${pypr} toggle ncmpcpp" ];
         "SUPER + R".dsp.exec_cmd = [ "${pypr} toggle htop" ];
-        "SUPER + N".dsp.exec_cmd = [ "${pypr} toggle nvtop" ];
         "SUPER + S".dsp.exec_cmd = [ "${pypr} toggle term" ];
         "SUPER + X".dsp.exec_cmd = [ "${pypr} toggle qalc" ];
 

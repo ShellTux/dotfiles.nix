@@ -1,6 +1,6 @@
 { ... }:
 {
   imports = [
-    ./matchBlocks.crypt.nix
+    ./settings.crypt.nix
   ];
 }

@@ -47,7 +47,7 @@ mkIf (config.flavour == "config1") {
     size = 12;
   };
 
-  extraPackages = [ pkgs.jetbrains-mono ];
+  runtimePkgs = [ pkgs.jetbrains-mono ];
 
   keybindings = {
     "${leader}>c" = "new_tab";

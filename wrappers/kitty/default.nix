@@ -19,6 +19,6 @@ in
   };
 
   config = {
-    extraPackages = [ pkgs.nerd-fonts.symbols-only ];
+    runtimePkgs = [ pkgs.nerd-fonts.symbols-only ];
   };
 }

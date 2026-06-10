@@ -17,6 +17,17 @@
           };
         }
       );
+
+    luisgois =
+      final: prev:
+      withSystem prev.stdenv.hostPlatform.system (
+        { ... }:
+        {
+          rofi = prev.rofi.override {
+            plugins = [ final.rofi-emoji ];
+          };
+        }
+      );
   };
 
   perSystem =

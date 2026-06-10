@@ -2,18 +2,21 @@
   self',
   config,
   lib,
+  lib',
   pkgs,
   ...
 }:
 let
-  inherit (builtins) readFile filter;
+  inherit (builtins) filter;
   inherit (lib) mkOption mkIf optional;
   inherit (lib.types)
     bool
     listOf
     package
     nullOr
+    str
     ;
+  inherit (lib'.flake.hyprland.lua) mkOnStart;
 
   cfg = config.wayland.windowManager.hyprland;
 in
@@ -78,13 +81,18 @@ in
         example = pkgs.noctalia-shell;
       };
     };
+
+    exec-once = mkOption {
+      type = listOf str;
+      default = [ ];
+    };
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
     wayland.windowManager.hyprland = {
-      extraConfig = readFile ./hyprland.conf;
-
       xwayland.enable = true;
+
+      settings.on = mkOnStart cfg.exec-once;
     };
 
     home.packages = filter (pkg: pkg != null) (

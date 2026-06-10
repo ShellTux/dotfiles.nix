@@ -60,7 +60,6 @@
     telescope.enable = true;
     tmux-navigator.enable = true;
     todo-comments.enable = true;
-    transparent.enable = true;
     treesitter.enable = true;
     twilight.enable = true;
     typst-vim.enable = true;

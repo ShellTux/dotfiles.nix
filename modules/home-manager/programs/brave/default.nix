@@ -8,7 +8,11 @@
 let
   inherit (lib) mkOption mkIf;
   inherit (lib.types) bool;
-  inherit (lib'.flake.hyprland.windowrule) idleinhibit float size;
+  inherit (lib'.flake.hyprland.lua)
+    mkWindowRuleIdleInhibit
+    mkWindowRuleFloat
+    mkWindowRuleSize
+    ;
 
   cfg = config.programs.brave;
 in
@@ -46,27 +50,26 @@ in
       ];
     };
 
-    wayland.windowManager.hyprland.settings.windowrule = [
-      (idleinhibit {
-        match = "title (.*)(YouTube)(.*)";
-        idle_inhibit = "focus";
-      })
-      (idleinhibit {
-        match = "class ^(brave)$";
-        idle_inhibit = "fullscreen";
-      })
-      (float { match = "initial_title ^(Save File)$"; })
-      (size {
-        match = "initial_title ^(Save File)$";
-        width = "<50%";
-        height = "<50%";
-      })
-      (float { match = "initial_title (.*)(wants to save)$"; })
-      (size {
-        match = "initial_title (.*)(wants to save)$";
-        width = "<50%";
-        height = "<50%";
-      })
-    ];
+    wayland.windowManager.hyprland.settings.window_rule =
+      map (mkWindowRuleIdleInhibit "focus") [
+        { match = "title (.*)(YouTube)(.*)"; }
+      ]
+      ++ map (mkWindowRuleIdleInhibit "fullscreen") [
+        { match = "class ^(brave)$"; }
+      ]
+      ++ map mkWindowRuleFloat [
+        { match.initial_title = "^(Save File)$"; }
+        { match.initial_title = "(.*)(wants to save)$"; }
+      ]
+      ++
+        map
+          (mkWindowRuleSize [
+            "<50%"
+            "<50%"
+          ])
+          [
+            { match.initial_title = "^(Save File)$"; }
+            { match.initial_title = "(.*)(wants to save)$"; }
+          ];
   };
 }

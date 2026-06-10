@@ -1,12 +1,21 @@
 {
   self',
   lib,
+  lib',
   config,
   pkgs,
   ...
 }:
 let
-  inherit (lib) getExe mkIf;
+  inherit (builtins) listToAttrs;
+  inherit (lib)
+    getExe
+    mkIf
+    mod
+    pipe
+    range
+    ;
+  inherit (lib'.flake.hyprland.lua) mkBinds mkOptsBinds;
 
   brightness = getExe self'.packages.brightness;
   hyprshot = getExe pkgs.hyprshot;
@@ -22,101 +31,93 @@ let
 in
 {
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    wayland.windowManager.hyprland.settings = {
-      bind = [
-        "$mainMod, Return, exec, $TERMINAL"
-        "$mainMod, C, killactive, "
-        "$mainMod SHIFT, Q, exec, hyprctl dispatch exit"
-
-        "$mainMod, Space, togglefloating, "
-        "$altMod, Tab, cyclenext, "
-        "$mainMod, F, fullscreen, 0"
-
-        "$mainMod, H, movefocus, l"
-        "$mainMod, L, movefocus, r"
-        "$mainMod, K, movefocus, u"
-        "$mainMod, J, movefocus, d"
-
-        # Switch workspaces with mainMod + [0-9]"
-        "$mainMod, 1, workspace, 1"
-        "$mainMod, 2, workspace, 2"
-        "$mainMod, 3, workspace, 3"
-        "$mainMod, 4, workspace, 4"
-        "$mainMod, 5, workspace, 5"
-        "$mainMod, 6, workspace, 6"
-        "$mainMod, 7, workspace, 7"
-        "$mainMod, 8, workspace, 8"
-        "$mainMod, 9, workspace, 9"
-        "$mainMod, 0, workspace, 10"
-        "$mainMod, right, workspace, e+1"
-        "$mainMod, left, workspace, e-1"
-        "$mainMod, U, focusurgentorlast"
-        "$mainMod, TAB, focusurgentorlast"
+    wayland.windowManager.hyprland.settings.bind =
+      mkBinds {
+        "SUPER + Return".dsp.exec_cmd = [ "\" .. TERMINAL .. \"" ];
+        "SUPER + C".dsp.window.close = [ ];
+        "SUPER + SHIFT + Q".dsp.exit = [ ];
+        "SUPER + Space".dsp.window.float = [ { action = "toggle"; } ];
+        "SUPER + H".dsp.focus = [ { direction = "left"; } ];
+        "SUPER + L".dsp.focus = [ { direction = "right"; } ];
+        "SUPER + K".dsp.focus = [ { direction = "up"; } ];
+        "SUPER + J".dsp.focus = [ { direction = "down"; } ];
+        "SUPER + right".dsp.focus = [ { workspace = "e+1"; } ];
+        "SUPER + left".dsp.focus = [ { workspace = "e-1"; } ];
 
         # Move active window to a workspace with mainMod + SHIFT + [0-9]
-        "$mainMod SHIFT, 1, movetoworkspace, 1"
-        "$mainMod SHIFT, 2, movetoworkspace, 2"
-        "$mainMod SHIFT, 3, movetoworkspace, 3"
-        "$mainMod SHIFT, 4, movetoworkspace, 4"
-        "$mainMod SHIFT, 5, movetoworkspace, 5"
-        "$mainMod SHIFT, 6, movetoworkspace, 6"
-        "$mainMod SHIFT, 7, movetoworkspace, 7"
-        "$mainMod SHIFT, 8, movetoworkspace, 8"
-        "$mainMod SHIFT, 9, movetoworkspace, 9"
-        "$mainMod SHIFT, 0, movetoworkspace, 10"
-        "$mainMod CTRL SHIFT, right, movetoworkspace, e+1"
-        "$mainMod CTRL SHIFT, left, movetoworkspace, e-1"
-
-        "$mainMod SHIFT, Tab, movecurrentworkspacetomonitor, +1"
+        "SUPER + SHIFT + right".dsp.window.move = [ { workspace = "e+1"; } ];
+        "SUPER + SHIFT + left".dsp.window.move = [ { workspace = "e-1"; } ];
 
         # Screenshots
-        ", PRINT, exec, ${hyprshot} --mode=output --output-folder='${hyprshot_dir}'"
-        "$mainMod, PRINT, exec, ${hyprshot} --mode=window --output-folder='${hyprshot_dir}'"
-        "$mainMod SHIFT, PRINT, exec, ${hyprshot} --mode=region --output-folder='${hyprshot_dir}'"
+        "PRINT".dsp.exec_cmd = [ "${hyprshot} --mode=output --output-folder='${hyprshot_dir}'" ];
+        "SUPER + PRINT".dsp.exec_cmd = [ "${hyprshot} --mode=window --output-folder='${hyprshot_dir}'" ];
+        "SUPER + SHIFT + PRINT".dsp.exec_cmd = [
+          "${hyprshot} --mode=region --output-folder='${hyprshot_dir}'"
+        ];
 
         # Emojis
-        "$mainMod, period, exec, ${rofi} -show emoji"
+        "SUPER + period".dsp.exec_cmd = [ "${rofi} -show emoji" ];
 
         # wlogout
-        "$mainMod, F4, exec, ${wlogout} --protocol layer-shell"
+        "SUPER + F4".dsp.exec_cmd = [ "${wlogout} --protocol layer-shell" ];
 
         # Pin Window (Sticky)
-        "$mainMod ALT, S, pin, active"
+        "SUPER + ALT + S".dsp.window.pin = [ { action = "active"; } ];
 
         # Monocle
-        "$mainMod SHIFT, m, exec, hyprctl dispatch fullscreen 1"
+        "SUPER + SHIFT + M".dsp.window.fullscreen = [ { action = "toggle"; } ];
 
         # Zoom
-        "$mainMod, Plus, exec, ${woomer}"
-      ];
+        "SUPER + Plus".dsp.exec_cmd = [ woomer ];
 
-      bindm = [
-        "$mainMod, mouse:272, movewindow"
-        "$mainMod, mouse:273, resizewindow"
-
-        # Center floating window
-        "$mainMod, mouse:274, centerwindow"
-      ];
-
-      bindl = [
+        # "ALT + TAB".dsp.window = [ ];
+        # "SUPER + F".dsp.window = [ ];
+        # "SUPER + U".dsp.focus = [ { urgent_or_last = true; } ];
+        # "SUPER + TAB".dsp.focus = [ { urgent_or_last = true; } ];
+      }
+      ++ pipe (range 1 10) [
+        (map (number: {
+          name = "SUPER + ${toString (mod number 10)}";
+          value.dsp.focus = [ { workspace = number; } ];
+        }))
+        listToAttrs
+        mkBinds
+      ]
+      ++ pipe (range 1 10) [
+        (map (number: {
+          name = "SUPER + SHIFT + ${toString (mod number 10)}";
+          value.dsp.window.move = [ { workspace = number; } ];
+        }))
+        listToAttrs
+        mkBinds
+      ]
+      ++ mkOptsBinds { locked = true; } {
         # Music
-        ", XF86AudioPlay, exec, ${mpc} toggle"
-        ", XF86AudioPrev, exec, ${mpc} prev"
-        ", XF86AudioNext, exec, ${mpc} next"
-      ];
+        "XF86AudioPlay".dsp.exec_cmd = [ "${mpc} toggle" ];
+        "XF86AudioNext".dsp.exec_cmd = [ "${mpc} next" ];
+        "XF86AudioPrev".dsp.exec_cmd = [ "${mpc} prev" ];
+      }
+      ++
+        mkOptsBinds
+          {
+            locked = true;
+            repeating = true;
+          }
+          {
+            # Volume
+            "XF86AudioRaiseVolume".dsp.exec_cmd = [ "${volume} 5 +" ];
+            "XF86AudioLowerVolume".dsp.exec_cmd = [ "${volume} 5 -" ];
+            "SHIFT + XF86AudioRaiseVolume".dsp.exec_cmd = [ "${volume} 1 +" ];
+            "SHIFT + XF86AudioLowerVolume".dsp.exec_cmd = [ "${volume} 1 -" ];
 
-      bindle = [
-        # Volume
-        ", XF86AudioRaiseVolume, exec, ${volume} 5 +"
-        ", XF86AudioLowerVolume, exec, ${volume} 5 -"
-        "SHIFT, XF86AudioRaiseVolume, exec, ${volume} 1 +"
-        "SHIFT, XF86AudioLowerVolume, exec, ${volume} 1 -"
-        ", XF86AudioMute, exec, ${volume} toggle-mute"
-
-        # Brightness
-        ", XF86MonBrightnessUp,    exec, ${brightness} 5 +"
-        ", XF86MonBrightnessDown,  exec, ${brightness} 5 -"
-      ];
-    };
+            # Brightness
+            "XF86MonBrightnessUp".dsp.exec_cmd = [ "${brightness} 5 +" ];
+            "XF86MonBrightnessDown".dsp.exec_cmd = [ "${brightness} 5 -" ];
+          }
+      ++ mkOptsBinds { mouse = true; } {
+        "SUPER + mouse:272".dsp.window.drag = [ ];
+        "SUPER + mouse:273".dsp.window.resize = [ ];
+        "SUPER + mouse:274".dsp.window.center = [ ];
+      };
   };
 }

@@ -21,7 +21,7 @@ mkIf (config.flavour == "config1") {
     yazi = toml2nix ./yazi.toml;
   };
 
-  extraPackages = [
+  runtimePkgs = [
     pkgs.exiftool
     pkgs.imv
     pkgs.mpv

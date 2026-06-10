@@ -14,7 +14,7 @@ mkIf (config.flavour == "config1") {
     fromJSON
   ];
 
-  extraPackages = [
+  runtimePkgs = [
     pkgs.curl
     pkgs.ffmpeg
     pkgs.gifski

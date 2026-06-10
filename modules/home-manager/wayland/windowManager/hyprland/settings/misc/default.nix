@@ -1,6 +1,6 @@
 { ... }:
 {
-  wayland.windowManager.hyprland.settings.misc = {
+  wayland.windowManager.hyprland.settings.config.misc = {
     enable_swallow = true;
     swallow_regex = "^(Alacritty|kitty|St)$";
     # HACK: swallow_exception_regex only works assuming parent window to be

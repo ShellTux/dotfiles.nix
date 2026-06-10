@@ -13,7 +13,7 @@ let
     literalExpression
     ;
   inherit (lib.types) bool listOf package;
-  inherit (lib'.flake.hyprland.windowrule) float;
+  inherit (lib'.flake.hyprland.lua) mkWindowRuleFloat;
 
   cfg = config.programs.thunar;
 in
@@ -50,11 +50,11 @@ in
       })
     ];
 
-    wayland.windowManager.hyprland.settings.windowrule = [
-      (float { match = "initial_title (Rename:.*)"; })
-      (float { match = "initial_title (Renomear:.*)"; })
-      (float { match = "initial_title (File Operation Progress.*)"; })
-      (float { match = "initial_title (Progresso da operação do ficheiro.*)"; })
+    wayland.windowManager.hyprland.settings.window_rule = map mkWindowRuleFloat [
+      { match.initial_title = "(Rename:.*)"; }
+      { match.initial_title = "(Renomear:.*)"; }
+      { match.initial_title = "(File Operation Progress.*)"; }
+      { match.initial_title = "(Progresso da operação do ficheiro.*)"; }
     ];
   };
 }

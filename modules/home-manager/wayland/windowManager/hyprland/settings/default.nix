@@ -1,10 +1,12 @@
 {
   config,
   lib,
+  lib',
   ...
 }:
 let
   inherit (lib) getExe getName mkIf;
+  inherit (lib'.flake.hyprland.lua) mkVars;
 
   terminal = getName config.flake.defaultApplications.terminal;
   browser = getExe config.flake.defaultApplications.browser;
@@ -16,7 +18,6 @@ in
     ./bind
     ./decoration
     ./env
-    ./exec
     ./exec-once
     ./general
     ./gestures
@@ -27,12 +28,12 @@ in
   ];
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    wayland.windowManager.hyprland.settings = {
-      "$altMod" = "ALT";
-      "$mainMod" = "SUPER";
-      "$TERMINAL" = terminal;
-      "$BROWSER" = browser;
-      "$SCRATCHPAD" = terminal;
+    wayland.windowManager.hyprland.settings = mkVars {
+      altMod = "ALT";
+      mainMod = "SUPER";
+      TERMINAL = terminal;
+      BROWSER = browser;
+      SCRATCHPAD = terminal;
     };
   };
 }

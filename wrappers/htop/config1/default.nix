@@ -8,7 +8,7 @@ let
   inherit (lib) mkIf;
 in
 mkIf (config.flavour == "config1") {
-  extraPackages = [ pkgs.lm_sensors ];
+  runtimePkgs = [ pkgs.lm_sensors ];
 
   settings = {
     config_reader_min_version = 3;

@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  lib',
   pkgs,
   inputs,
   ...
@@ -14,6 +15,7 @@ let
     getExe'
     ;
   inherit (lib.types) bool package;
+  inherit (lib'.flake.hyprland.lua) mkBinds;
   inherit (pkgs.stdenv.hostPlatform) system;
 
   hypr-cfg = config.wayland.windowManager.hyprland;
@@ -45,28 +47,28 @@ in
       }
     ];
 
-    wayland.windowManager.hyprland.settings = {
+    wayland.windowManager.hyprland = {
       exec-once = [
         "${pypr}"
       ];
 
-      bind = [
+      settings.bind = mkBinds {
         # Pypr
-        "$mainMod , Z, exec, ${pypr} zoom ++0.5"
-        "$mainMod SHIFT, Z, exec, ${pypr} zoom"
+        "SUPER + Z".dsp.exec_cmd = [ "${pypr} zoom ++0.5" ];
+        "SUPER + SHIFT + Z".dsp.exec_cmd = [ "${pypr} zoom" ];
 
-        "$mainMod, B, exec, ${pypr} toggle btop"
-        "$mainMod, E, exec, ${pypr} toggle yazi"
-        "$mainMod, M, exec, ${pypr} toggle ncmpcpp"
-        "$mainMod, R, exec, ${pypr} toggle htop"
-        "$mainMod, N, exec, ${pypr} toggle nvtop"
-        "$mainMod, S, exec, ${pypr} toggle term"
-        "$mainMod, X, exec, ${pypr} toggle qalc"
+        "SUPER + B".dsp.exec_cmd = [ "${pypr} toggle btop" ];
+        "SUPER + E".dsp.exec_cmd = [ "${pypr} toggle yazi" ];
+        "SUPER + M".dsp.exec_cmd = [ "${pypr} toggle ncmpcpp" ];
+        "SUPER + R".dsp.exec_cmd = [ "${pypr} toggle htop" ];
+        "SUPER + N".dsp.exec_cmd = [ "${pypr} toggle nvtop" ];
+        "SUPER + S".dsp.exec_cmd = [ "${pypr} toggle term" ];
+        "SUPER + X".dsp.exec_cmd = [ "${pypr} toggle qalc" ];
 
-        "$mainMod, backslash, exec, ${pypr} toggle-dpms"
+        "SUPER + backslash".dsp.exec_cmd = [ "${pypr} toggle-dpms" ];
 
-        "$mainMod SHIFT, apostrophe, exec, ${pypr} menu"
-      ];
+        "SUPER + SHIFT + apostrophe".dsp.exec_cmd = [ "${pypr} menu" ];
+      };
     };
 
     xdg.configFile."pypr/config.toml".text = readFile ./pyprland.toml;

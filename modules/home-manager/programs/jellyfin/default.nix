@@ -12,7 +12,7 @@ let
     mkEnableOption
     ;
   inherit (lib.types) bool;
-  inherit (lib'.flake.hyprland.windowrule) idleinhibit;
+  inherit (lib'.flake.hyprland.lua) mkWindowRuleIdleInhibit;
 
   cfg = config.programs.jellyfin;
 in
@@ -34,11 +34,8 @@ in
       pkgs.jellyfin-desktop
     ];
 
-    wayland.windowManager.hyprland.settings.windowrule = [
-      (idleinhibit {
-        match = "class org.jellyfin.JellyfinDesktop";
-        idle_inhibit = "focus";
-      })
+    wayland.windowManager.hyprland.settings.window_rule = map (mkWindowRuleIdleInhibit "focus") [
+      { match.class = "org.jellyfin.JellyfinDesktop"; }
     ];
   };
 }

@@ -8,7 +8,7 @@ let
   inherit (lib) mkIf mkDefault;
 in
 mkIf (config.flavour == "config1") {
-  extraPackages = [ pkgs.jetbrains-mono ];
+  runtimePkgs = [ pkgs.jetbrains-mono ];
 
   settings = {
     font = "JetBrains Mono 14";

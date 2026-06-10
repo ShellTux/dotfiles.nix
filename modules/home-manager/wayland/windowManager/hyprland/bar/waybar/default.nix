@@ -2,10 +2,12 @@
   config,
   pkgs,
   lib,
+  lib',
   ...
 }:
 let
   inherit (lib) mkIf mkDefault getExe;
+  inherit (lib'.flake.hyprland.lua) mkBinds;
 
   waybar = getExe cfg.bar.waybar;
   wofi = getExe pkgs.wofi;
@@ -14,16 +16,17 @@ let
 in
 {
   config = mkIf (cfg.enable && !cfg.disableModule && cfg.bar.waybar != null) {
-    wayland.windowManager.hyprland.settings = {
+    wayland.windowManager.hyprland = {
       exec-once = [
         "${waybar}"
       ];
 
-      bind = [
-        "$mainMod, P, exec, ${wofi} --allow-images --show drun"
+      settings.bind = mkBinds {
+        "SUPER + P".dsp.exec_cmd = [ "${wofi} --allow-images --show drun" ];
+
         # Toggle waybar
-        "$mainMod SHIFT, B, exec, pkill -SIGUSR1 waybar"
-      ];
+        "SUPER + SHIFT + B".dsp.exec_cmd = [ "pkill -SIGUSR1 waybar" ];
+      };
     };
 
     programs.hyprlock.enable = mkDefault true;

@@ -5,7 +5,7 @@
     ./config1
   ];
 
-  config.extraPackages = [
+  config.runtimePkgs = [
     pkgs.curl
     pkgs.grim
     pkgs.imagemagick

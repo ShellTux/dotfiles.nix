@@ -6,10 +6,10 @@ let
   inherit (lib) mkDefault;
 in
 {
-  wayland.windowManager.hyprland.settings.decoration = {
+  wayland.windowManager.hyprland.settings.config.decoration = {
     blur = {
       enabled = true;
-      new_optimizations = "on";
+      new_optimizations = true;
       passes = 1;
       size = 3;
     };

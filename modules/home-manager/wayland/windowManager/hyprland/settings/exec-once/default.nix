@@ -12,7 +12,7 @@ let
   qpwgraph = getExe pkgs.qpwgraph;
 in
 {
-  wayland.windowManager.hyprland.settings.exec-once = [
+  wayland.windowManager.hyprland.exec-once = [
     "${firewall-applet}"
     "${gammastep}"
     "${networkmanagerapplet}"

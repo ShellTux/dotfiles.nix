@@ -3,7 +3,7 @@
   config,
   pkgs,
   ...
-}@inputs:
+}:
 let
   inherit (builtins) readFile fromTOML;
   inherit (lib) mkIf pipe;

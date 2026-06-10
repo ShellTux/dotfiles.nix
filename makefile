@@ -27,7 +27,15 @@ command    := switch
 extra-args :=
 .PHONY: home-manager
 home-manager:
-	home-manager $(command) $(extra-args) --flake .
+ifeq ($(target), localhost)
+	home-manager $(command) \
+		$(extra-args) \
+		--flake $(uri)\#$(profile)
+else
+	home-manager $(command) \
+		$(extra-args) \
+		--flake $(uri)\#$(profile)
+endif
 
 .PHONY: test
 test:

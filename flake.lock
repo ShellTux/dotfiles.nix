@@ -718,6 +718,26 @@
         "type": "github"
       }
     },
+    "nix-vscode-extensions": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1781151998,
+        "narHash": "sha256-1DbxdcsxzTq143bDph1ueqlcmbSfbBPdiPoxY65oCGU=",
+        "owner": "nix-community",
+        "repo": "nix-vscode-extensions",
+        "rev": "0affb83e82ab2f7b34f3a2e4789a32190fe870e4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nix-vscode-extensions",
+        "type": "github"
+      }
+    },
     "nixos-anywhere": {
       "inputs": {
         "disko": "disko_2",
@@ -1123,6 +1143,7 @@
         "nix-index-database": "nix-index-database",
         "nix-topology": "nix-topology",
         "nix-unit": "nix-unit",
+        "nix-vscode-extensions": "nix-vscode-extensions",
         "nixos-anywhere": "nixos-anywhere",
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-small": "nixpkgs-small",

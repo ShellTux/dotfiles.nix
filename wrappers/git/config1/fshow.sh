@@ -2,16 +2,19 @@
 # shellcheck disable=2142
 
 _gitLogLineToHash="echo {} | grep -o '[a-f0-9]\{7\}' | head -1"
-_viewGitLogLine="$_gitLogLineToHash | xargs -I % sh -c 'git show --color=always % | diff-so-fancy'"
+_viewGitLogDiff="$_gitLogLineToHash | xargs -I % sh -c 'git show --color=always % | diff-so-fancy'"
+_viewGitLogStat="$_gitLogLineToHash | xargs -I % sh -c 'git show --stat --color=always %'"
 
 if command -v diff-so-fancy >/dev/null 2>/dev/null
 then
 	git log --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr% C(auto)%an" "$@" |
 		fzf --no-sort --reverse --tiebreak=index --no-multi \
-		--ansi --preview="$_viewGitLogLine" \
-		--header "enter to view, alt-y to copy hash" \
-		--bind "enter:execute:$_viewGitLogLine   | less -R" \
-		--bind "alt-y:execute:$_gitLogLineToHash | wl-copy"
+		--ansi --preview="$_viewGitLogDiff" \
+		--header "enter to view, alt-y to copy hash, alt-s to show stat, alt-d to show diff" \
+		--bind "enter:execute:$_viewGitLogDiff   | less -R" \
+		--bind "alt-y:execute:$_gitLogLineToHash | wl-copy" \
+		--bind "alt-s:change-preview:$_viewGitLogStat" \
+		--bind "alt-d:change-preview:$_viewGitLogDiff"
 
 else
 	git log --graph --color=always \

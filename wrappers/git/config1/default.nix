@@ -12,9 +12,13 @@ let
   fshow = getExe (callPackage ./fshow.nix { });
   onefetch = getExe pkgs.onefetch;
   xdg-open = getExe' pkgs.xdg-utils "xdg-open";
+
+  pager.diff = getExe (callPackage ./diffPager { });
 in
 mkIf (config.flavour == "config1") {
   settings = {
+    inherit pager;
+
     branch.sort = "-committerdate";
     color = {
       ui = true;
@@ -55,7 +59,6 @@ mkIf (config.flavour == "config1") {
     help.autoCorrect = "prompt";
     init.defaultBranch = "main";
     interactive.diffFilter = "diff-so-fancy --patch";
-    pager.diff = "diff-so-fancy | less --tabs=4 --RAW-CONTROL-CHARS --quit-if-one-screen --no-init --chop-long-lines --pattern='^(Date|added|deleted|modified):'";
     rerere = {
       enable = true;
       autoupdate = true;
@@ -75,7 +78,7 @@ mkIf (config.flavour == "config1") {
       d- = "${d}-";
       dc = "diff-copy";
       d = "diff";
-      diff- = "!git -c interactive.diffFilter='less --tabs=4 -RFX' diff";
+      diff- = "!git -c pager.diff='less --tabs=4 -RFX' -c interactive.diffFilter='less --tabs=4 -RFX' diff";
       diff-last = "!git diff HEAD~1 HEAD";
       diff-staged = "diff --staged";
       diff-staged- = "diff- --staged";
@@ -88,13 +91,13 @@ mkIf (config.flavour == "config1") {
       dw = "diff-word";
       forget = "update-index --assume-unchanged";
       graph = "log --graph";
-      h = "history";
-      history = "!${fshow}";
       ignore = "!${curl} -sL https://www.toptal.com/developers/gitignore/api/$@";
       last = "!git log -1 HEAD";
       lg1 = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all";
       lg2 = "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(auto)%d%C(reset)%n'' %C(white)%s%C(reset) %C(dim white)- %an%C(reset)'";
       lg = ''!git log --pretty=format:"%C(magenta)%h%Creset -%C(red)%d%Creset %s %C(dim green)(%cr) [%an]" --abbrev-commit -30'';
+      lh = "log-history";
+      log-history = "!${fshow}";
       open = "visit";
       patch = "!git --no-pager diff --no-color";
       project-summary = "summary";

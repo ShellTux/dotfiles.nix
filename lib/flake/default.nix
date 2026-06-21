@@ -15,6 +15,7 @@ pipe
     ./mkIfFlavour
     ./nginx
     ./restic
+    ./sql
     ./systemd
   ]
   [

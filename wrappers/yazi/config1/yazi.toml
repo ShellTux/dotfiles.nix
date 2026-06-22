@@ -1,6 +1,15 @@
 [mgr]
 scrolloff = 255
 
+[[mgr.prepend_keymap]]
+on   = [ "c", "m" ]
+run  = "plugin chmod"
+desc = "Chmod on selected files"
+
+[[mgr.prepend_keymap]]
+on  = "M"
+run = "plugin mount"
+
 [opener]
 video = [
   { run = 'mpv %s', block = false, orphan = true, for = "unix", desc = " Mpv" },
@@ -41,3 +50,21 @@ append_rules = [
 
 [input]
 cursor_blink = true
+
+[[plugin.prepend_fetchers]]
+url   = "*"
+run   = "git"
+group = "git"
+
+[[plugin.prepend_fetchers]]
+url   = "*/"
+run   = "git"
+group = "git"
+
+[[plugin.prepend_previewers]]
+mime = "application/{,g}zip"
+run  = "lsar"
+
+[[plugin.prepend_previewers]]
+mime = "application/{tar,bzip*,7z*,xz,rar}"
+run  = "lsar"

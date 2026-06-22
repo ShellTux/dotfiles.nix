@@ -18,7 +18,29 @@ in
 mkIf (config.flavour == "config1") {
   settings = {
     keymap = toml2nix ./keymap.toml;
+    theme = toml2nix ./theme.toml;
     yazi = toml2nix ./yazi.toml;
+  };
+
+  constructFiles."init.lua" = {
+    content = readFile ./init.lua;
+    relPath = "yazi-config/init.lua";
+  };
+
+  plugins = {
+    inherit (pkgs.yaziPlugins)
+      bypass
+      git
+      githead
+      glow
+      gvfs
+      lsar
+      office
+      ouch
+      piper
+      smart-paste
+      sshfs
+      ;
   };
 
   runtimePkgs = [

@@ -1,10 +1,11 @@
 {
   stdenvNoCC,
   fetchFromGitHub,
-  libsForQt5,
+  qt5,
 }:
 let
   inherit (stdenvNoCC) mkDerivation;
+  inherit (qt5) qtmultimedia qtquickcontrols;
 in
 mkDerivation rec {
   name = "sddm-lain-wired-theme";
@@ -21,8 +22,8 @@ mkDerivation rec {
   dontBuild = true;
 
   buildInputs = [
-    libsForQt5.qt5.qtmultimedia
-    libsForQt5.qtquickcontrols
+    qtmultimedia
+    qtquickcontrols
   ];
 
   installPhase = ''
@@ -32,7 +33,7 @@ mkDerivation rec {
 
   postFixup = ''
     mkdir -p $out/nix-support
-    echo ${libsForQt5.qt5.qtmultimedia} >> $out/nix-support/propagated-user-env-packages
-    echo ${libsForQt5.qtquickcontrols} >> $out/nix-support/propagated-user-env-packages
+    echo ${qtmultimedia} >> $out/nix-support/propagated-user-env-packages
+    echo ${qtquickcontrols} >> $out/nix-support/propagated-user-env-packages
   '';
 }

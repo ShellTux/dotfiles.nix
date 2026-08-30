@@ -2,14 +2,17 @@
 {
   imports = [
     ./aide
+    ./authelia
     ./caddy
     ./changedetection-io
+    ./cksfv
     ./dashy
     ./deluge
     ./desktopManager
     ./displayManager
     ./dnsmasq
     ./echoip
+    ./fail2ban
     ./flatpak
     ./forgejo
     ./glance

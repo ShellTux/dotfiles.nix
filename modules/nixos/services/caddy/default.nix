@@ -1,92 +1,84 @@
 {
   config,
   lib,
+  lib',
+  pkgs,
   ...
 }:
 let
-  inherit (builtins) attrNames filter;
-  inherit (lib)
-    mkOption
-    mkIf
-    substring
-    toIntBase10
-    hasPrefix
+  inherit (builtins)
+    attrNames
+    lessThan
+    match
+    sort
     ;
-  inherit (lib.types) bool;
+  inherit (lib)
+    flatten
+    mkIf
+    mkOption
+    pipe
+    toIntBase10
+    ;
+  inherit (lib.lists) unique;
+  inherit (lib.types) bool attrs;
+  inherit (lib'.flake.caddy) mkProxiesOption;
 
-  caddyPorts =
-    config.services.caddy.virtualHosts
-    |> attrNames
-    |> filter (vh: vh |> hasPrefix ":")
-    |> map (vh: vh |> substring 1 999999 |> toIntBase10);
+  caddyPorts = pipe cfg.virtualHosts [
+    attrNames
+    (map (match ".*:([0-9]+)"))
+    (map (m: if m == null then [ "443" ] else m))
+    flatten
+    unique
+    (map toIntBase10)
+    (sort lessThan)
+  ];
 
   cfg = config.services.caddy;
 in
 {
+  imports = [
+    ./authelia
+    ./snippets
+    ./virtualHosts
+  ];
+
   options.services.caddy = {
     disableModule = mkOption {
       description = "Whether to disable this module configuration";
       type = bool;
       default = false;
     };
+
+    secrets.options = mkOption {
+      internal = true;
+      type = attrs;
+      default = {
+        owner = cfg.user;
+        restartUnits = [ "caddy.service" ];
+      };
+    };
+
+    proxies = mkProxiesOption { inherit (config.networking) naming; };
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
     services.caddy = {
-      globalConfig = ''
-        email admin@email.caddy
-        http_port 8080
-        https_port 8443
-      '';
-
-      extraConfig =
-        let
-          crt = config.sops.secrets."tls/crt";
-          key = config.sops.secrets."tls/key";
-        in
-        ''
-          # Snippets
-
-          (https) {
-            tls ${crt.path} ${key.path}
-          }
-
-          (reverse-proxy) {
-              reverse_proxy {args[0]}:{args[1]} {
-                  # @error status 500 502 503
-                  # handle_response @error {
-                  #    respond "Not found"
-                  # }
-              }
-          }
-        '';
-
-      virtualHosts = {
-        ":9900".extraConfig = ''
-          respond "Hello world from 9900"
-        '';
-
-        ":9901".extraConfig = ''
-          import https
-          import reverse-proxy 127.0.0.1 9900
-        '';
+      package = pkgs.caddy.withPlugins {
+        plugins = [ "github.com/caddy-dns/duckdns@v0.5.0" ];
+        hash = "sha256-BI72FyEpCKTyQ9lRlVcRsPLSyXlfwdOae57KhVTH/M8=";
       };
+
+      environmentFile = config.sops.secrets."services/caddy/environmentFile".path;
     };
 
     networking.firewall.allowedTCPPorts = caddyPorts;
+
     programs.rust-motd.settings.service_status.Caddy = "caddy";
 
     sops.secrets = {
-      "tls/crt" = {
-        owner = config.services.caddy.user;
-        restartUnits = [ "caddy.service" ];
-      };
-
-      "tls/key" = {
-        owner = config.services.caddy.user;
-        restartUnits = [ "caddy.service" ];
-      };
+      "tls/crt" = cfg.secrets.options;
+      "tls/key" = cfg.secrets.options;
+      "services/caddy/environmentFile" = cfg.secrets.options;
     };
-
   };
 }

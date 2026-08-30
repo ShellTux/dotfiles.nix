@@ -7,13 +7,13 @@
 let
   inherit (builtins) elem concatStringsSep any;
   inherit (lib)
-    mkOption
     mkIf
-    head
+    mkOption
     pipe
+    mkDefault
     ;
-  inherit (lib.types) bool str port;
-  inherit (lib'.flake.caddy) genVirtualHosts;
+  inherit (lib.types) bool;
+  inherit (lib'.flake.caddy) mkProxyOption;
 
   cfg = config.services.forgejo;
 in
@@ -25,24 +25,10 @@ in
       default = false;
     };
 
-    subdomain = mkOption {
-      description = "subdomain";
-      type = str;
-      default = "forgejo";
-    };
-
-    reverse-proxy.port = {
-      external = mkOption {
-        description = "Reverse Proxy external port";
-        type = port;
-        default = 9910;
-      };
-
-      internal = mkOption {
-        description = "Reverse Proxy internal port";
-        type = port;
-        default = 50610;
-      };
+    proxy = mkProxyOption {
+      inherit (config.networking) naming;
+      name = "forgejo";
+      upstream.port = cfg.settings.server.HTTP_PORT;
     };
   };
 
@@ -73,26 +59,37 @@ in
           !allowedGroup
         ) ''Forgejo group "${forgejo.group}" is not allowed in ssh AllowGroups: ${AllowGroupsString}'')
       ];
-    services.forgejo = {
-      lfs.enable = true;
-
-      settings = {
-        server = {
-          HTTP_PORT = cfg.reverse-proxy.port.internal;
-          ROOT_URL = "https://${cfg.subdomain}.${config.server.domain}:${toString cfg.reverse-proxy.port.external}";
-          SSH_PORT = head config.services.openssh.ports;
-        };
-        # domain = config.server.domain;
-        # session.COOKIE_SECURE = true;
-      };
-    };
 
     services = {
+      forgejo = {
+        lfs.enable = true;
+
+        settings = {
+          DEFAULT = {
+            APP_SLOGAN = "Este código é uma merda porque foi eu que escrevi";
+          };
+
+          service = {
+            DISABLE_REGISTRATION = mkDefault true;
+            SHOW_REGISTRATION_BUTTON = mkDefault false;
+            DEFAULT_KEEP_EMAIL_PRIVATE = mkDefault true;
+            VALID_SITE_URL_SCHEMES = mkDefault "https";
+          };
+
+          server = {
+            ROOT_URL = cfg.proxy.homepage-dashboard.href;
+            #   SSH_PORT = head config.services.openssh.ports;
+          };
+
+          other = {
+            SHOW_FOOTER_VERSION = mkDefault true;
+          };
+        };
+      };
+
       openssh.settings.AcceptEnv = [ "GIT_PROTOCOL" ];
 
-      caddy.virtualHosts = genVirtualHosts {
-        inherit (cfg) subdomain reverse-proxy;
-      };
+      caddy.proxies = [ cfg.proxy ];
     };
 
     users = {

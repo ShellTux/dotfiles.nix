@@ -7,13 +7,8 @@
 }:
 let
   inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types)
-    bool
-    str
-    path
-    port
-    ;
-  inherit (lib'.flake.caddy) genVirtualHosts;
+  inherit (lib.types) bool path;
+  inherit (lib'.flake.caddy) mkProxyOption;
 
   cfg = config.services.deluge;
 in
@@ -25,24 +20,10 @@ in
       default = false;
     };
 
-    subdomain = mkOption {
-      description = "Subdomain";
-      type = str;
-      default = "deluge";
-    };
-
-    reverse-proxy.port = {
-      external = mkOption {
-        description = "Reverse Proxy external port";
-        type = port;
-        default = 9906;
-      };
-
-      internal = mkOption {
-        description = "Reverse Proxy internal port";
-        type = port;
-        default = cfg.web.port;
-      };
+    proxy = mkProxyOption {
+      inherit (config.networking) naming;
+      name = "deluge";
+      upstream.port = cfg.web.port;
     };
 
     downloadPath = mkOption {
@@ -64,9 +45,7 @@ in
       web.enable = true;
     };
 
-    services.caddy.virtualHosts = genVirtualHosts {
-      inherit (cfg) subdomain reverse-proxy;
-    };
+    services.caddy.proxies = [ cfg.proxy ];
 
     programs.rust-motd.settings.service_status.Deluge = "delugeweb";
 

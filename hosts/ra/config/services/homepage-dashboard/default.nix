@@ -2,6 +2,7 @@
 {
   imports = [
     ./bookmarks.crypt.nix
-    ./widget.crypt.nix
+    ./services.crypt.nix
+    ./widgets.crypt.nix
   ];
 }

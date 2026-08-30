@@ -8,8 +8,8 @@
 let
   inherit (builtins) toString;
   inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types) bool port str;
-  inherit (lib'.flake.caddy) genVirtualHosts;
+  inherit (lib.types) bool;
+  inherit (lib'.flake.caddy) mkProxyOption;
 
   # https://grafana.com/grafana/dashboards/1860
   node-exporter-full = pkgs.fetchurl {
@@ -34,24 +34,10 @@ in
       default = false;
     };
 
-    subdomain = mkOption {
-      description = "subdomain";
-      type = str;
-      default = "grafana";
-    };
-
-    reverse-proxy.port = {
-      external = mkOption {
-        description = "Reverse Proxy external port";
-        type = port;
-        default = 9915;
-      };
-
-      internal = mkOption {
-        description = "Reverse Proxy internal port";
-        type = port;
-        default = cfg.settings.server.http_port;
-      };
+    proxy = mkProxyOption {
+      inherit (config.networking) naming;
+      name = "grafana";
+      upstream.port = cfg.settings.server.http_port;
     };
   };
 
@@ -63,7 +49,10 @@ in
         settings = {
           security.secret_key = "$__file{${config.sops.secrets."grafana/secret-key".path}}";
 
-          server.enable_gzip = mkDefault true;
+          server = {
+            enable_gzip = mkDefault true;
+            http_port = mkDefault 50854;
+          };
         };
 
         provision = {
@@ -113,9 +102,7 @@ in
         };
       };
 
-      caddy.virtualHosts = genVirtualHosts {
-        inherit (cfg) subdomain reverse-proxy;
-      };
+      caddy.proxies = [ cfg.proxy ];
     };
 
     programs.rust-motd.settings.service_status.Grafana = "grafana";

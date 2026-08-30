@@ -26,7 +26,6 @@ in
       ./hardware
       ./networking
       ./nix
-      ./options
       ./programs
       ./security
       ./services

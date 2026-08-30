@@ -93,7 +93,6 @@
     emacs.enable = true;
     floorp.enable = true;
     fzf.enable = true;
-    gemini-cli.enable = true;
     ghostty.enable = true;
     jellyfin.enable = true;
     jq.enable = true;
@@ -106,6 +105,7 @@
     nix-your-shell.enable = true;
     nushell.enable = true;
     oh-my-posh.enable = true;
+    onlyoffice.enable = true;
     rofi.enable = true;
     ssh.enable = true;
     tealdeer.enable = true;

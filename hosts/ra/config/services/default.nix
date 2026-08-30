@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ./aide
     ./caddy
     ./dnsmasq
     ./grafana

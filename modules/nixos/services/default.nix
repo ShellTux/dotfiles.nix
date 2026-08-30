@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ./authelia
     ./caddy
     ./changedetection-io
     ./dashy

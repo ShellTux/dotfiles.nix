@@ -5,9 +5,9 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types) bool str port;
-  inherit (lib'.flake.caddy) genVirtualHosts;
+  inherit (lib) mkOption mkIf;
+  inherit (lib.types) bool;
+  inherit (lib'.flake.caddy) mkProxyOption;
 
   cfg = config.services.kavita;
 in
@@ -19,32 +19,16 @@ in
       default = false;
     };
 
-    subdomain = mkOption {
-      description = "subdomain";
-      type = str;
-      default = "kavita";
-    };
-
-    reverse-proxy.port = {
-      external = mkOption {
-        description = "Reverse Proxy external port";
-        type = port;
-        default = 9911;
-      };
-
-      internal = mkOption {
-        description = "Reverse Proxy internal port";
-        type = port;
-        default = cfg.settings.Port;
-      };
+    proxy = mkProxyOption {
+      inherit (config.networking) naming;
+      name = "kavita";
+      upstream.port = cfg.port;
     };
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
     services.kavita = { };
 
-    services.caddy.virtualHosts = genVirtualHosts {
-      inherit (cfg) subdomain reverse-proxy;
-    };
+    services.caddy.proxies = [ cfg.proxy ];
   };
 }

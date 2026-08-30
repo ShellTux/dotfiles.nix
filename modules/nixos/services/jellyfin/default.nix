@@ -18,7 +18,7 @@ let
     port
     ;
 
-  inherit (lib'.flake.caddy) genVirtualHosts;
+  inherit (lib'.flake.caddy) mkProxyOption;
 
   cfg = config.services.jellyfin;
 in
@@ -36,25 +36,13 @@ in
       default = 8096;
     };
 
-    subdomain = mkOption {
-      description = "subdomain";
-      type = str;
-      default = "jellyfin";
+    proxy = mkProxyOption {
+      inherit (config.networking) naming;
+      name = "jellyfin";
+      upstream.port = cfg.port;
     };
 
-    reverse-proxy.port = {
-      external = mkOption {
-        description = "Reverse Proxy external port";
-        type = port;
-        default = 9904;
-      };
-
-      internal = mkOption {
-        description = "Reverse Proxy internal port";
-        type = port;
-        default = cfg.port;
-      };
-    };
+    # TODO: add module to readonly bind mount drive
 
     backupDir = mkOption {
       type = nullOr str;
@@ -77,9 +65,7 @@ in
 
     services.jellyfin = mkDefault { };
 
-    services.caddy.virtualHosts = genVirtualHosts {
-      inherit (cfg) subdomain reverse-proxy;
-    };
+    services.caddy.proxies = [ cfg.proxy ];
 
     # TODO: backup jellyfin
     # systemd.services.backup-jellyfin = mkIf (cfg.backupDir != null) {

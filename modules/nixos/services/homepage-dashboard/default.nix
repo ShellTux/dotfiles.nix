@@ -5,17 +5,9 @@
   ...
 }:
 let
-  inherit (lib)
-    mkOption
-    mkIf
-    mkEnableOption
-    pipe
-    filterAttrs
-    mapAttrsToList
-    ;
-  inherit (lib.types) bool str port;
-  inherit (lib'.flake.homepage-dashboard) genService;
-  inherit (lib'.flake.caddy) genVirtualHosts;
+  inherit (lib) mkOption mkIf mkDefault;
+  inherit (lib.types) bool;
+  inherit (lib'.flake.caddy) mkProxyOption;
 
   cfg = config.services.homepage-dashboard;
 in
@@ -27,37 +19,11 @@ in
       default = false;
     };
 
-    subdomain = mkOption {
-      description = "subdomain";
-      type = str;
-      default = "homepage";
-    };
-
-    reverse-proxy.port = {
-      external = mkOption {
-        description = "Reverse Proxy external port";
-        type = port;
-        default = 9902;
-      };
-
-      internal = mkOption {
-        description = "Reverse Proxy internal port";
-        type = port;
-        default = cfg.listenPort;
-      };
-    };
-
-    widget = {
-      changedetection-io = mkEnableOption "Wether to enable changedetection-io widget";
-      deluge = mkEnableOption "Wether to enable deluge widget";
-      forgejo = mkEnableOption "Wether to enable forgejo widget";
-      grafana = mkEnableOption "Wether to enable grafana widget";
-      immich = mkEnableOption "Wether to enable immich widget";
-      jellyfin = mkEnableOption "Wether to enable jellyfin widget";
-      kavita = mkEnableOption "Wether to enable kavita widget";
-      photoprism = mkEnableOption "Wether to enable photoprism widget";
-      qbittorrent = mkEnableOption "Wether to enable qbittorrent widget";
-      vaultwarden = mkEnableOption "Wether to enable vaultwarden widget";
+    proxy = mkProxyOption {
+      inherit (config.networking) naming;
+      name = "home";
+      upstream.port = cfg.listenPort;
+      host.rootRedir = true;
     };
   };
 
@@ -65,55 +31,52 @@ in
     services.homepage-dashboard = {
       allowedHosts = "*";
 
-      settings = import ./settings.nix;
-      widgets = import ./widgets.nix;
-      bookmarks = import ./bookmarks.nix;
-
-      services =
-        let
-          genSection = section: services: {
-            ${section} = pipe services [
-              (filterAttrs (sName: sConfig: sConfig.enable))
-              (mapAttrsToList (
-                service: serviceConfig: {
-                  inherit service;
-                  inherit (serviceConfig) enable subdomain reverse-proxy;
-
-                  widgetEnabled = cfg.widget.${service};
+      bookmarks = mkDefault [
+        {
+          Developer = [
+            {
+              Github = [
+                {
+                  abbr = "GH";
+                  href = "https://github.com/";
                 }
-              ))
-              (map genService)
-            ];
-          };
+              ];
+            }
+          ];
+        }
+        {
+          Entertainment = [
+            {
+              YouTube = [
+                {
+                  abbr = "YT";
+                  href = "https://youtube.com/";
+                }
+              ];
+            }
+          ];
+        }
+      ];
 
-          inherit (config.services)
-            changedetection-io
-            deluge
-            forgejo
-            gitea
-            grafana
-            immich
-            jellyfin
-            photoprism
-            qbittorrent
-            uptime-kuma
-            vaultwarden
-            ;
-        in
-        [
-          (genSection "Media Streaming" { inherit jellyfin; })
-          (genSection "Photo Gallery" { inherit photoprism immich; })
-          (genSection "Download Manager" { inherit qbittorrent deluge; })
-          (genSection "Security and Authentication" { inherit vaultwarden; })
-          (genSection "Development and Collaboration" { inherit forgejo gitea; })
-          (genSection "Monitoring and Analytics" { inherit changedetection-io grafana uptime-kuma; })
-        ];
+      widgets = mkDefault [
+        {
+          resources = {
+            cpu = true;
+            disk = "/";
+            memory = true;
+          };
+        }
+        {
+          search = {
+            provider = "duckduckgo";
+            target = "_blank";
+          };
+        }
+      ];
     };
 
     programs.rust-motd.settings.service_status.Homepage = "homepage-dashboard";
 
-    services.caddy.virtualHosts = genVirtualHosts {
-      inherit (cfg) subdomain reverse-proxy;
-    };
+    services.caddy.proxies = [ cfg.proxy ];
   };
 }

@@ -7,14 +7,8 @@
 }:
 let
   inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types)
-    bool
-    str
-    path
-    nullOr
-    port
-    ;
-  inherit (lib'.flake.caddy) genVirtualHosts;
+  inherit (lib.types) bool path nullOr;
+  inherit (lib'.flake.caddy) mkProxyOption;
 
   cfg = config.services.qbittorrent;
 in
@@ -26,24 +20,10 @@ in
       default = false;
     };
 
-    subdomain = mkOption {
-      description = "Subdomain";
-      type = str;
-      default = "qbittorrent";
-    };
-
-    reverse-proxy.port = {
-      external = mkOption {
-        description = "Reverse Proxy external port";
-        type = port;
-        default = 9905;
-      };
-
-      internal = mkOption {
-        description = "Reverse Proxy internal port";
-        type = port;
-        default = cfg.webuiPort;
-      };
+    proxy = mkProxyOption {
+      inherit (config.server) domain;
+      name = "qbittorrent";
+      upstream.port = cfg.webuiPort;
     };
 
     downloadPath = mkOption {
@@ -79,9 +59,7 @@ in
       webuiPort = 9839;
     };
 
-    services.caddy.virtualHosts = genVirtualHosts {
-      inherit (cfg) subdomain reverse-proxy;
-    };
+    services.caddy.proxies = [ cfg.proxy ];
 
     programs.rust-motd.settings.service_status.Qbittorrent = "qbittorrent";
 

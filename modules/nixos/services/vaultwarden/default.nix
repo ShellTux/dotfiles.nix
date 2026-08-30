@@ -5,9 +5,9 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types) bool str port;
-  inherit (lib'.flake.caddy) genVirtualHosts;
+  inherit (lib) mkOption mkIf;
+  inherit (lib.types) bool;
+  inherit (lib'.flake.caddy) mkProxyOption;
 
   cfg = config.services.vaultwarden;
 in
@@ -19,24 +19,10 @@ in
       default = false;
     };
 
-    subdomain = mkOption {
-      description = "Subdomain";
-      type = str;
-      default = "vaultwarden";
-    };
-
-    reverse-proxy.port = {
-      external = mkOption {
-        description = "Reverse Proxy external port";
-        type = port;
-        default = 9903;
-      };
-
-      internal = mkOption {
-        description = "Reverse Proxy internal port";
-        type = port;
-        default = cfg.config.ROCKET_PORT;
-      };
+    proxy = mkProxyOption {
+      inherit (config.networking) naming;
+      name = "vaultwarden";
+      upstream.port = cfg.config.ROCKET_PORT;
     };
   };
 
@@ -44,7 +30,7 @@ in
     services.vaultwarden = {
       backupDir = "/var/backup/vaultwarden";
       config = {
-        DOMAIN = "https://${cfg.subdomain}.${config.server.domain}";
+        # DOMAIN = "https://${cfg.proxy.computedDomain}";
         ROCKET_ADDRESS = "127.0.0.1";
         ROCKET_PORT = 8222;
       };
@@ -52,8 +38,6 @@ in
 
     programs.rust-motd.settings.service_status.Vaultwarden = "vaultwarden";
 
-    services.caddy.virtualHosts = genVirtualHosts {
-      inherit (cfg) subdomain reverse-proxy;
-    };
+    services.caddy.proxies = [ cfg.proxy ];
   };
 }

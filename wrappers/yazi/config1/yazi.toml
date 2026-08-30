@@ -25,8 +25,8 @@ open = [
 image = [
   { run = 'imv %s', block = false, for = "unix", desc = " Imv" },
 ]
-extract = [
-  { run = 'unar %s1', for = "unix", desc = " Unar: Extract here" },
+zathura = [
+  { run = 'zathura %s1', for = "unix", desc = "Zathura" },
 ]
 
 [open]
@@ -34,6 +34,7 @@ prepend_rules = [
   { url = "*.json", use = [ "edit" ] },
   { url = "*.html", use = [ "open", "edit" ] },
   { url = "*.xopp", use = [ "open", "extract", "reveal"] },
+  { url = "*.cbz",  use = [ "open", "extract", "reveal"] },
 ]
 rules = [
   { mime = "text/*", use = [ "edit", "reveal" ] },
@@ -68,3 +69,11 @@ run  = "lsar"
 [[plugin.prepend_previewers]]
 mime = "application/{tar,bzip*,7z*,xz,rar}"
 run  = "lsar"
+
+[[plugin.prepend_previewers]]
+url = '*.cb{z,r}'
+run = 'preview-cbz'
+
+[[plugin.prepend_preloaders]]
+url = '*.cb{z,r}'
+run = 'preview-cbz'

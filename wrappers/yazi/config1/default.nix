@@ -48,5 +48,7 @@ mkIf (config.flavour == "config1") {
     pkgs.imv
     pkgs.mpv
     pkgs.unar
+    pkgs.unzip
+    pkgs.zathura
   ];
 }

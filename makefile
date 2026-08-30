@@ -1,3 +1,4 @@
+user     := $(shell whoami)
 hostname := $(shell hostname)
 
 export NIX_SSHOPTS := -t
@@ -6,7 +7,7 @@ export NIX_SSHOPTS := -t
 default:
 
 command    := switch
-profile    := $(hostname)
+profile    :=
 target     := localhost
 uri        := .
 extra-args :=
@@ -15,13 +16,17 @@ nixos:
 ifeq ($(target), localhost)
 	nixos-rebuild $(command) \
 		--sudo $(extra-args) \
-		--flake $(uri)\#$(profile)
+		--flake $(uri)\#$(or $(profile), $(hostname))
 else
 	nixos-rebuild $(command) \
 		--sudo $(extra-args) \
 		--target-host $(target) \
-		--flake $(uri)\#$(profile)
+		--flake $(uri)\#$(or $(profile), $(hostname))
 endif
+
+nixos-repl:
+	nixos-rebuild repl \
+		--flake $(shell realpath $(uri))\#$(or $(profile), $(hostname))
 
 command    := switch
 extra-args :=
@@ -30,12 +35,19 @@ home-manager:
 ifeq ($(target), localhost)
 	home-manager $(command) \
 		$(extra-args) \
-		--flake $(uri)\#$(profile)
+		--flake $(uri)\#$(or $(profile),$(user))
 else
 	home-manager $(command) \
 		$(extra-args) \
-		--flake $(uri)\#$(profile)
+		--flake $(uri)\#$(or $(profile), $(user))
 endif
+
+home-repl:
+	home-manager repl \
+		--flake $(shell realpath $(uri))\#$(or $(profile), $(user))
+
+inspect:
+	nix-inspect
 
 .PHONY: test
 test:

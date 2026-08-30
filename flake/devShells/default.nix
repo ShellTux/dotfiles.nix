@@ -42,6 +42,7 @@ _: {
           # pkgs.guestfs-tools
           pkgs.just
           pkgs.nix-index
+          pkgs.nix-inspect
           pkgs.nixos-rebuild
           pkgs.openssl
           pkgs.ripsecrets

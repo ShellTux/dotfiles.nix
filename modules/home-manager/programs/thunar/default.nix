@@ -50,6 +50,8 @@ in
       })
     ];
 
+    xdg.mimeApps.defaultApplications."inode/directory" = [ "thunar.desktop" ];
+
     wayland.windowManager.hyprland.settings.window_rule = map mkWindowRuleFloat [
       { match.initial_title = "(Rename:.*)"; }
       { match.initial_title = "(Renomear:.*)"; }

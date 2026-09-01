@@ -65,7 +65,7 @@ in
     services.caddy = {
       package = pkgs.caddy.withPlugins {
         plugins = [ "github.com/caddy-dns/duckdns@v0.5.0" ];
-        hash = "sha256-BI72FyEpCKTyQ9lRlVcRsPLSyXlfwdOae57KhVTH/M8=";
+        hash = "sha256-1nx8y8vrE3MubRMqviM5mYqCK3d0SLkXI0Ts8eWBmdc=";
       };
 
       environmentFile = config.sops.secrets."services/caddy/environmentFile".path;

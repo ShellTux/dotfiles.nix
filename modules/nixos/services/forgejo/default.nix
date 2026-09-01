@@ -85,6 +85,19 @@ in
             SHOW_FOOTER_VERSION = mkDefault true;
           };
         };
+
+        proxy.authelia.settings.access_control.rules = [
+          {
+            resources = [
+              "^.*\\.git.*$"
+              "^/info/refs.*$"
+              "^/git-upload-pack.*$"
+              "^/git-receive-pack.*$"
+            ];
+
+            policy = "bypass";
+          }
+        ];
       };
 
       openssh.settings.AcceptEnv = [ "GIT_PROTOCOL" ];

@@ -10,7 +10,9 @@ let
     ;
   inherit (lib.strings) toSentenceCase;
   inherit (lib.types)
+    attrsOf
     bool
+    either
     enum
     listOf
     nullOr
@@ -306,6 +308,7 @@ let
                 }
                 // optionalAttrs (defaultAutheliaBackendPort != null) { default = defaultAutheliaBackendPort; }
               );
+
             };
             # backendUrl = mkOption {
             #   type = str;
@@ -332,6 +335,107 @@ let
               ];
               default = "two_factor";
               description = "The authentication level required to pass this proxy.";
+            };
+
+            settings.access_control.rules = mkOption {
+              type = listOf (submodule {
+                options = {
+                  domain = mkOption {
+                    type = nullOr (either str (listOf str));
+                    example = "*.example.com";
+                    default = config.computedFqdn;
+                  };
+
+                  domain_regex = mkOption {
+                    type = nullOr str;
+                    default = null;
+                  };
+
+                  policy = mkOption {
+                    type = enum [
+                      "deny"
+                      "bypass"
+                      "one_factor"
+                      "two_factor"
+                    ];
+
+                    example = "one_factor";
+                  };
+
+                  networks = mkOption {
+                    type = listOf str;
+                    default = [ ];
+                    example = [
+                      "internal"
+                      "1.1.1.1"
+                    ];
+                  };
+
+                  subject = mkOption {
+                    # Authelia expects: list of lists of strings
+                    # Example: [ ["user:adam"] ["group:admins"] ]
+                    type = listOf (either str (listOf str));
+                    default = [ ];
+                    example = [
+                      "user:adam"
+                      [ "group:admins" ]
+                      [
+                        "group:admins1"
+                        "group:admins2"
+                      ]
+                    ];
+                  };
+
+                  methods = mkOption {
+                    type =
+                      pipe
+                        [
+                          "GET"
+                          "POST"
+                          "PUT"
+                          "DELETE"
+                          "QUERY"
+                          "PATCH"
+                          "HEAD"
+                        ]
+                        [
+                          enum
+                          listOf
+                        ];
+                    default = [ ];
+                    example = [
+                      "GET"
+                      "HEAD"
+                    ];
+                  };
+
+                  resources = mkOption {
+                    type = listOf str;
+                    default = [ ];
+                    example = [ "^/api.*" ];
+                  };
+
+                  query = mkOption {
+                    # Authelia: list of lists of objects
+                    # Each object: { operator = "..."; key = "..."; value = optional string; }
+                    type = listOf (
+                      listOf (
+                        attrsOf (submodule {
+                          options = {
+                            operator = mkOption { type = str; };
+                            key = mkOption { type = str; };
+                            value = mkOption {
+                              type = nullOr str;
+                              default = null;
+                            };
+                          };
+                        })
+                      )
+                    );
+                    default = [ ];
+                  };
+                };
+              });
             };
           };
 

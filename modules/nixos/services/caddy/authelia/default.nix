@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  lib',
+  config,
+  ...
+}:
 let
   inherit (builtins)
     any
@@ -9,13 +14,15 @@ let
     mapAttrs
     ;
   inherit (lib)
+    filterAttrs
     flatten
+    groupBy
     mkIf
     nameValuePair
     pipe
     splitString
-    unique
     ;
+  inherit (lib'.flake.authelia) sortRules;
   inherit (config.services.authelia.proxy.host) subdomain;
   inherit (config.sops) secrets;
 
@@ -24,12 +31,12 @@ in
 {
   config = mkIf (cfg.enable && !cfg.disableModule) {
     services.authelia.instances = pipe cfg.proxies [
-      (map (proxy: proxy.host.fqdn))
-      unique
-      (map (
-        fqdn:
+      (groupBy (proxy: proxy.host.fqdn))
+      (filterAttrs (fqdn: proxies: true))
+      (mapAttrs (
+        fqdn: proxies:
         let
-          enable = pipe cfg.proxies [
+          enable = pipe proxies [
             (filter (proxy: proxy.host.fqdn == fqdn))
             (map (proxy: proxy.enable && proxy.authelia.enable && proxy.access.isPublic))
             (any (enable: enable))
@@ -40,7 +47,7 @@ in
             head
           ];
         in
-        nameValuePair fqdn {
+        {
           inherit enable name;
 
           secrets = {
@@ -73,10 +80,12 @@ in
                   domain = "${subdomain}.${fqdn}";
                   policy = "bypass";
                 }
-                {
-                  domain = "*.${fqdn}";
-                  policy = "one_factor";
-                }
+              ]
+              ++ pipe proxies [
+                (map (proxy: proxy.authelia.settings.access_control.rules))
+                (flatten)
+                sortRules
+                (map (filterAttrs (_: rule: rule != null && rule != [ ])))
               ];
             };
             storage.local.path = "/var/lib/authelia-${name}/db.sqlite";

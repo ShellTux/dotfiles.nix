@@ -5,6 +5,7 @@ let
 in
 pipe
   [
+    ./authelia
     ./caddy
     ./dirs
     ./dirsNames

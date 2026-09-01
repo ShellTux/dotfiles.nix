@@ -7,7 +7,12 @@
 }:
 let
   inherit (builtins) toString;
-  inherit (lib) mkOption mkIf mkDefault;
+  inherit (lib)
+    mkOption
+    mkIf
+    mkDefault
+    optional
+    ;
   inherit (lib.types) bool;
   inherit (lib'.flake.caddy) mkProxyOption;
 
@@ -102,7 +107,7 @@ in
         };
       };
 
-      caddy.proxies = [ cfg.proxy ];
+      caddy.proxies = optional cfg.proxy.enable cfg.proxy;
     };
 
     programs.rust-motd.settings.service_status.Grafana = "grafana";

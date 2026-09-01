@@ -6,7 +6,12 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf mkDefault;
+  inherit (lib)
+    mkOption
+    mkIf
+    mkDefault
+    optional
+    ;
   inherit (lib.types) bool path;
   inherit (lib'.flake.caddy) mkProxyOption;
 
@@ -45,7 +50,7 @@ in
       web.enable = true;
     };
 
-    services.caddy.proxies = [ cfg.proxy ];
+    services.caddy.proxies = optional cfg.proxy.enable cfg.proxy;
 
     programs.rust-motd.settings.service_status.Deluge = "delugeweb";
 

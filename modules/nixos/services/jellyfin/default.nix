@@ -10,6 +10,7 @@ let
     mkIf
     mkDefault
     hasPrefix
+    optional
     ;
   inherit (lib.types)
     bool
@@ -65,7 +66,7 @@ in
 
     services.jellyfin = mkDefault { };
 
-    services.caddy.proxies = [ cfg.proxy ];
+    services.caddy.proxies = optional cfg.proxy.enable cfg.proxy;
 
     # TODO: backup jellyfin
     # systemd.services.backup-jellyfin = mkIf (cfg.backupDir != null) {

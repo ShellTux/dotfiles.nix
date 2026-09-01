@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf;
+  inherit (lib) mkOption mkIf optional;
   inherit (lib.types) bool;
   inherit (lib'.flake.caddy) mkProxyOption;
 
@@ -38,6 +38,6 @@ in
 
     programs.rust-motd.settings.service_status.Vaultwarden = "vaultwarden";
 
-    services.caddy.proxies = [ cfg.proxy ];
+    services.caddy.proxies = optional cfg.proxy.enable cfg.proxy;
   };
 }

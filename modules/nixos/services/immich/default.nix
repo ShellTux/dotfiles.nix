@@ -11,6 +11,7 @@ let
     mkIf
     mkForce
     pipe
+    optional
     ;
   inherit (lib.types) bool str listOf;
   inherit (lib'.flake.caddy) mkProxyOption;
@@ -53,7 +54,7 @@ in
       };
     };
 
-    services.caddy.proxies = [ cfg.proxy ];
+    services.caddy.proxies = optional cfg.proxy.enable cfg.proxy;
 
     programs.rust-motd.settings.service_status.Immich = "immich-server";
 

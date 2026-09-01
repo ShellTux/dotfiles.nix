@@ -11,6 +11,7 @@ let
     mkOption
     pipe
     mkDefault
+    optional
     ;
   inherit (lib.types) bool;
   inherit (lib'.flake.caddy) mkProxyOption;
@@ -102,7 +103,7 @@ in
 
       openssh.settings.AcceptEnv = [ "GIT_PROTOCOL" ];
 
-      caddy.proxies = [ cfg.proxy ];
+      caddy.proxies = optional cfg.proxy.enable cfg.proxy;
     };
 
     users = {

@@ -25,6 +25,7 @@
     ./locate
     ./mealie
     ./nginx
+    ./onlyoffice
     ./openssh
     ./photoprism
     ./pipewire

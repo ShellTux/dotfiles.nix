@@ -23,6 +23,7 @@
     ./jellyfin
     ./kavita
     ./locate
+    ./mealie
     ./nginx
     ./openssh
     ./photoprism

@@ -1,5 +1,4 @@
 { ... }: {
   imports = [
-    ./directories.crypt.nix
   ];
 }

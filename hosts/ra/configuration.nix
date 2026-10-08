@@ -15,10 +15,12 @@
     initialPassword = "123456";
   };
 
-  services.openssh.settings = {
-    AllowGroups = [ "ssh-users" ];
-    PermitRootLogin = "no";
-    PasswordAuthentication = true;
+  services.openssh = {
+    settings = {
+      AllowGroups = [ "ssh-users" ];
+      PermitRootLogin = "no";
+      PasswordAuthentication = true;
+    };
   };
 
   environment = {

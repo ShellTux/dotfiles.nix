@@ -27,19 +27,17 @@ in
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
     home.packages = [
-      (pkgs.texlive.combine {
-        inherit (pkgs.texlive)
-          scheme-basic
+      (pkgs.texliveSmall.withPackages (ps: [
+        ps.scheme-basic
 
-          latex
-          pdftex
-          preview
-          scontents
-          standalone
-          varwidth
-          xcolor
-          ;
-      })
+        ps.latex
+        ps.pdftex
+        ps.preview
+        ps.scontents
+        ps.standalone
+        ps.varwidth
+        ps.xcolor
+      ]))
       pkgs.xournalpp
     ];
 

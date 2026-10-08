@@ -8,7 +8,6 @@ in
     cpu.brand = "intel";
     enableRedistributableFirmware = true;
     graphics.enable = true;
-    logitech.wireless.enableGraphical = true;
     logitech.wireless.enable = true;
     opentabletdriver.enable = true;
   };

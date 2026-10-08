@@ -7,6 +7,9 @@ in
     isNormalUser = true;
     extraGroups = [ "ssh-users" ];
     initialPassword = "123456";
+    openssh.authorizedKeys.keys = [
+      "SHA256:crxWEAM+xIv9r1yxhXRqVobMdW2lDBMOUTwB4MQMGLQ luisgois@ra-portal.duckdns.org"
+    ];
   };
 
   home-manager.users.${username} =

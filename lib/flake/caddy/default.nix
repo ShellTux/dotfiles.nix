@@ -437,6 +437,13 @@ let
                 };
               });
             };
+
+            extraConfig = mkOption {
+              type = nullOr str;
+              default = null;
+              example = "";
+              description = "Extra Config for Authelia";
+            };
           };
 
           computedAutheliaBackendUrl = mkOption {

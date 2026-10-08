@@ -43,6 +43,7 @@
         notify-music = callPackage ./notify-music { inherit fetch-music-data; };
         open = callPackage ./open { };
         pentaho-data-integration = callPackage ./pentaho-data-integration { };
+        pipepass = callPackage ./pipepass { };
         prismlauncher = callPackage ./prismlauncher { };
         repl = callPackage ./repl { };
         sddm-lain-wired-theme = callPackage ./sddm-lain-wired-theme { };

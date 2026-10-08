@@ -15,11 +15,13 @@ extra-args :=
 nixos:
 ifeq ($(target), localhost)
 	nixos-rebuild $(command) \
-		--sudo $(extra-args) \
+		$(extra-args) \
+		--sudo \
 		--flake $(uri)\#$(or $(profile), $(hostname))
 else
 	nixos-rebuild $(command) \
-		--sudo $(extra-args) \
+		$(extra-args) \
+		--sudo \
 		--target-host $(target) \
 		--flake $(uri)\#$(or $(profile), $(hostname))
 endif

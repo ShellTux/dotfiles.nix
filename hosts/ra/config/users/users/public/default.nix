@@ -1,4 +1,4 @@
-{ config, ... }:
+{ ... }:
 let
   username = "public";
 in

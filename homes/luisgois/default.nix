@@ -31,6 +31,7 @@
       pkgs.progress
       pkgs.qbittorrent
       pkgs.qiv
+      pkgs.qrrs
       pkgs.ripgrep
       pkgs.ripgrep-all
       pkgs.rmpc
@@ -39,6 +40,7 @@
       pkgs.speedtest-cli
       pkgs.supersonic
       pkgs.tealdeer
+      pkgs.trilium-desktop
       pkgs.unar
       pkgs.vimv
       pkgs.virt-viewer
@@ -55,6 +57,7 @@
       self'.packages.nix-out-paths
       self'.packages.notify-music
       self'.packages.open
+      self'.packages.pipepass
       self'.packages.repl
       self'.packages.swap
       self'.packages.umounts
@@ -95,6 +98,7 @@
     fzf.enable = true;
     ghostty.enable = true;
     jellyfin.enable = true;
+    joplin-desktop.enable = true;
     jq.enable = true;
     ncmpcpp.enable = true;
     neovide.enable = true;
@@ -124,6 +128,7 @@
     emacs.enable = true;
     gammastep.enable = true;
     jellyfin-mpv-shim.enable = true;
+    kdeconnect.enable = true;
     mpd.enable = true;
     mpd-mpris.enable = true;
     mpd-notification.enable = true;

@@ -112,6 +112,10 @@ in
 
     programs.rust-motd.settings.service_status.Grafana = "grafana";
 
-    sops.secrets."grafana/secret-key" = { };
+    sops.secrets."grafana/secret-key" = {
+      owner = "grafana";
+      group = "grafana";
+      restartUnits = [ "grafana.service" ];
+    };
   };
 }

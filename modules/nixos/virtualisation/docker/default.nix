@@ -25,10 +25,10 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    virtualisation.docker = mkDefault {
-      enableOnBoot = false;
+    virtualisation.docker = {
+      enableOnBoot = mkDefault false;
 
-      autoPrune = {
+      autoPrune = mkDefault {
         enable = true;
         dates = "quarterly";
       };

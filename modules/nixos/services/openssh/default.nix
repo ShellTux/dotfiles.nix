@@ -24,11 +24,14 @@ in
       ports = [ 22 ];
 
       settings = {
-        PasswordAuthentication = mkDefault false;
         AllowUsers = mkDefault null;
-        X11Forwarding = mkDefault false;
+        MaxAuthTries = mkDefault 3;
+        PasswordAuthentication = mkDefault false;
         PermitRootLogin = mkDefault "no";
+        PerSourcePenalties = mkDefault "crash:3600s authfail:3600s max:86400s";
         PrintMotd = mkDefault true;
+        PubkeyAuthentication = mkDefault "yes";
+        X11Forwarding = mkDefault false;
       };
     };
 

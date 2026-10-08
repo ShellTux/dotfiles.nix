@@ -33,7 +33,12 @@ in
         import tls-local
         encode zstd gzip
 
-        reverse_proxy {args[0]}
+        reverse_proxy {args[0]} {
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            header_up X-Forwarded-Host {host}
+        }
       }
 
       (subpath-local) {
@@ -47,7 +52,15 @@ in
               }
           }
 
-          reverse_proxy {args[1]}
+          handle_path /{args[0]}* {
+            reverse_proxy {args[1]} {
+                header_up X-Real-IP {remote_host}
+                header_up X-Forwarded-For {remote_host}
+                header_up X-Forwarded-Proto {scheme}
+                header_up X-Forwarded-Host {host}
+                header_up X-Forwarded-Prefix /{args[0]}
+            }
+          }
       }
 
       (protected-endpoint) {
@@ -72,21 +85,28 @@ in
         import tls-duckdns
         encode zstd gzip
 
-        reverse_proxy {args[0]}
+        reverse_proxy {args[0]} {
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            header_up X-Forwarded-Host {host}
+        }
       }
 
       (subpath-public) {
           @{args[0]}-public path /{args[0]} /{args[0]}/*
           handle @{args[0]}-public {
-              @{args[0]}-public-blocked not remote_ip private_ranges
-              header @{args[0]}-public-blocked Content-Type "text/html"
-
-              respond @{args[0]}-public-blocked 403 {
-                  import blocked-html
-              }
           }
 
-          reverse_proxy {args[1]}
+          handle_path /{args[0]}* {
+            reverse_proxy {args[1]} {
+                header_up X-Real-IP {remote_host}
+                header_up X-Forwarded-For {remote_host}
+                header_up X-Forwarded-Proto {scheme}
+                header_up X-Forwarded-Host {host}
+                header_up X-Forwarded-Prefix /{args[0]}
+            }
+          }
       }
     '';
   };

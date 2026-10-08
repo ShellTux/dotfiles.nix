@@ -20,6 +20,7 @@
     luisgois = {
       isNormalUser = true;
       extraGroups = [
+        "docker"
         "libvirtd"
         "lp"
         "wheel"
@@ -71,6 +72,7 @@
   programs = {
     htop.enable = true;
     hyprland.enable = true;
+    kdeconnect.enable = true;
     less.enable = true;
     nh.enable = true;
     obs-studio.enable = true;
@@ -101,7 +103,10 @@
 
   stylix.enable = true;
 
-  virtualisation.libvirtd.enable = true;
+  virtualisation = {
+    docker.enable = true;
+    libvirtd.enable = true;
+  };
 
   system.stateVersion = "25.05";
 }

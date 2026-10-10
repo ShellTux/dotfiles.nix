@@ -26,6 +26,7 @@
     ./kavita
     ./locate
     ./mealie
+    ./nextcloud
     ./nginx
     ./onlyoffice
     ./openssh

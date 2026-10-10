@@ -6,6 +6,7 @@
     ./caddy
     ./changedetection-io
     ./cksfv
+    ./collabora-online
     ./dashy
     ./deluge
     ./desktopManager

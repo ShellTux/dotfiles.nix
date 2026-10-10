@@ -2,7 +2,7 @@
 {
   imports = [
     ./config
-    ./services.crypt.nix
+    ./services
   ];
 
   users.users.admin = {

@@ -7,6 +7,7 @@
     ./changedetection-io
     ./cksfv
     ./collabora-online
+    ./crowdsec
     ./dashy
     ./deluge
     ./desktopManager

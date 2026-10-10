@@ -64,9 +64,16 @@ in
   config = mkIf (cfg.enable && !cfg.disableModule) {
     services.caddy = {
       package = pkgs.caddy.withPlugins {
-        plugins = [ "github.com/caddy-dns/duckdns@v0.5.0" ];
-        hash = "sha256-1nx8y8vrE3MubRMqviM5mYqCK3d0SLkXI0Ts8eWBmdc=";
+        plugins = [
+          "github.com/caddy-dns/duckdns@v0.5.0"
+          "github.com/corazawaf/coraza-caddy/v2@v2.6.1"
+        ];
+        hash = "sha256-mQnH8pcJO3+2BSUrxQYLXbj6UwzW4SqYM7yyOTHaDiQ=";
       };
+
+      globalConfig = ''
+        order coraza_waf first
+      '';
 
       environmentFile = config.sops.secrets."services/caddy/environmentFile".path;
     };

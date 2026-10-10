@@ -70,6 +70,24 @@ in
           copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
         }
       }
+
+      (protected-coraza) {
+        coraza_waf {
+          load_owasp_crs
+
+          directives `
+            Include @coraza.conf-recommended
+            Include @crs-setup.conf.example
+            Include @owasp_crs/*.conf
+
+            SecRuleEngine On
+
+            SecAuditEngine RelevantOnly
+            SecAuditLog /var/log/coraza/audit.log
+            SecAuditLogFormat JSON
+          `
+        }
+      }
     ''
     + optionalString (fqdn != null) ''
 

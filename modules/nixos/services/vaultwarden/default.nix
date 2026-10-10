@@ -23,6 +23,13 @@ in
       inherit (config.networking) naming;
       name = "vaultwarden";
       upstream.port = cfg.config.ROCKET_PORT;
+      coraza.initialConfig = ''
+        SecRule REQUEST_URI "@beginsWith /api/" \
+             "id:1000001,phase:1,pass,log,ctl:ruleRemoveById=911100"
+
+        SecRule REQUEST_URI "@beginsWith /api/" \
+            "id:1000002,phase:1,pass,log,ctl:ruleRemoveById=911101"
+      '';
     };
   };
 

@@ -54,12 +54,15 @@ let
       host ? { },
       upstream ? { },
       authelia ? { },
+      coraza ? { },
     }:
     let
       defaultAutheliaBackendHost = authelia.backend.host or null;
       defaultAutheliaBackendPort = authelia.backend.port or 9091;
       defaultUpstreamPort = upstream.port or null;
       defaultUpstreamHost = upstream.host or null;
+      corazaInitialConfig = coraza.initialConfig or "";
+      corazaExtraConfig = coraza.extraConfig or "";
 
       inherit (naming)
         domain
@@ -284,6 +287,20 @@ let
             };
           };
 
+          coraza = {
+            initialConfig = mkOption {
+              type = str;
+              default = corazaInitialConfig;
+              description = "Coraza initial configuration";
+            };
+
+            extraConfig = mkOption {
+              type = str;
+              default = corazaExtraConfig;
+              description = "Coraza extra configuration";
+            };
+          };
+
           # --- 4. AUTHENTICATION (AUTHELIA) ---
 
           authelia = {
@@ -490,15 +507,40 @@ let
     let
       isPublic = !isLocal;
     in
-    optionalString (isPublic && proxy.authelia.enable) ''
-      import protected-endpoint ${proxy.computedAutheliaBackendUrl}
-    ''
-    + optionalString isLocal ''
-      import subdomain-local ${proxy.computedUpstreamUrl}
-    ''
-    + optionalString isPublic ''
-      import subdomain-public ${proxy.computedUpstreamUrl}
-    '';
+    if isPublic then
+      ''
+        import subdomain-public ${proxy.computedUpstreamUrl}
+      ''
+      + optionalString proxy.authelia.enable ''
+        import protected-endpoint ${proxy.computedAutheliaBackendUrl}
+      ''
+      + ''
+        coraza_waf {
+          load_owasp_crs
+
+          directives `
+            ${proxy.coraza.initialConfig}
+
+            Include @coraza.conf-recommended
+            Include @crs-setup.conf.example
+            Include @owasp_crs/*.conf
+
+            SecRuleEngine On
+
+            # SecAuditEngine RelevantOnly
+            # SecAuditLog /var/log/coraza/audit.log
+            # SecAuditLogFormat JSON
+
+            ${proxy.coraza.extraConfig}
+          `
+        }
+      ''
+    else if isLocal then
+      optionalString isLocal ''
+        import subdomain-local ${proxy.computedUpstreamUrl}
+      ''
+    else
+      null;
 
   mkSubpath =
     isLocal: proxy:

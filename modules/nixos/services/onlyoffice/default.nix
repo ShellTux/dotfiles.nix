@@ -37,6 +37,35 @@ in
       inherit (config.networking) naming;
       name = "onlyoffice";
       upstream.port = cfg.port;
+      coraza.initialConfig = ''
+        SecAction "id:1000009,\
+            phase:1,\
+            log,\
+            pass,\
+            ctl:ruleEngine=DetectionOnly,\
+            ctl:ruleRemoveById=941100"
+
+        SecAction "id:1000010,\
+            phase:1,\
+            log,\
+            pass,\
+            ctl:ruleEngine=DetectionOnly,\
+            ctl:ruleRemoveById=941130"
+
+        SecAction "id:1000011,\
+            phase:1,\
+            log,\
+            pass,\
+            ctl:ruleEngine=DetectionOnly,\
+            ctl:ruleRemoveById=920420"
+
+        SecAction "id:1000012,\
+            phase:1,\
+            log,\
+            pass,\
+            ctl:ruleEngine=DetectionOnly,\
+            ctl:ruleRemoveById=932235"
+      '';
     };
   };
 

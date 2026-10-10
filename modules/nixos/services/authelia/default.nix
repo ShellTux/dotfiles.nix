@@ -5,6 +5,7 @@
   ...
 }:
 let
+  inherit (builtins) attrNames length;
   inherit (lib)
     mapAttrs'
     mkDefault
@@ -20,6 +21,17 @@ let
 in
 {
   options.services.authelia = {
+    enabled = mkOption {
+      internal = true;
+      type = bool;
+      default = pipe cfg.instances [
+        attrNames
+        length
+        (length: length > 0)
+      ];
+      description = "Internal value to access if there is more than 0 instances";
+    };
+
     disableModule = mkOption {
       description = "Whether to disable this module configuration";
       type = bool;

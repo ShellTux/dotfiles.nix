@@ -66,6 +66,7 @@ in
       package = pkgs.caddy.withPlugins {
         plugins = [
           "github.com/caddy-dns/duckdns@v0.5.0"
+          "github.com/porech/caddy-maxmind-geolocation@v1.0.3"
           "github.com/corazawaf/coraza-caddy/v2@v2.6.1"
         ];
         hash = "sha256-mQnH8pcJO3+2BSUrxQYLXbj6UwzW4SqYM7yyOTHaDiQ=";

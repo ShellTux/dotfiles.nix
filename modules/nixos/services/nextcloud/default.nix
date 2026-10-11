@@ -15,6 +15,7 @@ let
     mkOption
     optional
     optionalAttrs
+    licenses
     ;
   inherit (lib.types) bool port;
   inherit (lib'.flake.caddy) mkProxyOption;
@@ -127,9 +128,11 @@ in
           onlyoffice
           richdocuments
           tasks
+          tables
           whiteboard
           ;
       };
+
     };
 
     services = {
@@ -164,5 +167,47 @@ in
     programs.rust-motd.settings.service_status.Nextcloud = "nginx";
 
     environment.etc."nextcloud-admin-pass".text = mkDefault "changeme";
+
+    nixpkgs.overlays = [
+      (final: prev: {
+        extraNextcloudApps = cfg.package.packages.apps // {
+          noteberg = pkgs.fetchNextcloudApp {
+            url = "https://github.com/thomasleuthold/NoteBerg/releases/download/0.5.42/noteberg_nextcloud-0.5.42.4.tar.gz";
+            sha256 = "sha256-KrfCmpTuSY0n/Eg7whbNHReQO0JJV0i2+2TnR+EHQa8=";
+            license = licenses.mit.shortName;
+          };
+
+          shoppingList = pkgs.fetchNextcloudApp {
+            url = "https://github.com/otherworld-dev/Shopping-List/releases/download/v1.10.0/shopping_list.tar.gz";
+            license = licenses.agpl3Plus.shortName;
+            sha256 = "sha256-NHi7Me4YFO6o+SOx8K9wHlETGM1B7ybeq3bAq438bTc=";
+          };
+
+          unixUserBackend = pkgs.fetchNextcloudApp {
+            url = "https://r.mateu.be/user_pwauth-2.9.1.tar.gz";
+            license = licenses.agpl3Plus.shortName;
+            sha256 = "sha256-PO+MeyTrNek4GiTKNMXkcGQ+25WGgurhYvNQiMrENVQ=";
+          };
+
+          countdown = pkgs.fetchNextcloudApp {
+            url = "https://github.com/infinit7even/countdown/releases/download/v1.2.36/countdown.tar.gz";
+            license = licenses.agpl3Plus.shortName;
+            sha256 = "sha256-6WPiKZIzZameBm+vozXwPhjvo275G0M+IeKtjx0tCZI=";
+          };
+
+          analytics = pkgs.fetchNextcloudApp {
+            url = "https://github.com/Rello/analytics/releases/download/6.8.1/analytics.tar.gz";
+            license = licenses.agpl3Plus.shortName;
+            sha256 = "sha256-i3n/2lthGHwM12quithPHkcp0ZvsfYv8i/6QSgaZu7w=";
+          };
+
+          immichIntegration = pkgs.fetchNextcloudApp {
+            url = "https://github.com/xXRoxXeRXx/integration_immich/releases/download/v1.5.1/integration_immich.tar.gz";
+            license = licenses.agpl3Plus.shortName;
+            sha256 = "sha256-BRHNg/hFmFfB21M57yZqVd99+cJswwT4Gxug5JditG0=";
+          };
+        };
+      })
+    ];
   };
 }

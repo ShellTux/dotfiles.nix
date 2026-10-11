@@ -20,7 +20,7 @@ in
       icons = "auto";
       extraOptions = [
         "--across"
-        "--color=automatic"
+        "--color=auto"
         "--color-scale=all"
         "--group-directories-first"
         "--binary"

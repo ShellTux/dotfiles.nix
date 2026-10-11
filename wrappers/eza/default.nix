@@ -20,7 +20,6 @@ in
     icons = mkOption {
       type = enum [
         "always"
-        "automatic"
         "auto"
         "never"
       ];
@@ -32,7 +31,6 @@ in
     color = mkOption {
       type = enum [
         "always"
-        "automatic"
         "auto"
         "never"
       ];

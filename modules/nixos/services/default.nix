@@ -17,6 +17,8 @@
     ./fail2ban
     ./flatpak
     ./forgejo
+    ./geoip-blocking
+    ./geoipupdate
     ./glance
     ./grafana
     ./guix

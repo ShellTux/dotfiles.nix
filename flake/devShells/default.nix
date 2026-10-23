@@ -36,6 +36,7 @@ _: {
 
         packages = [
           pkgs.age
+          pkgs.authelia
           pkgs.git-crypt
           pkgs.gitleaks
           pkgs.git-secrets

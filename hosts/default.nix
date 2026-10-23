@@ -7,7 +7,7 @@
   ...
 }:
 let
-  inherit (builtins) attrValues;
+  inherit (builtins) attrValues pathExists;
   inherit (lib) optional;
   inherit (inputs.nixpkgs.lib) nixosSystem;
   inherit (config.flake) nixosModules homeManagerModules;
@@ -31,6 +31,8 @@ let
       ]
       ++ optional (self.overlays ? ${name}) self.overlays.${name}
       ++ extraOverlays;
+
+      scratch = ./${name}/scratch.nix;
     in
     withSystem system (
       {
@@ -91,7 +93,8 @@ let
             }
 
             path
-          ];
+          ]
+          ++ optional (pathExists scratch) scratch;
 
         specialArgs = {
           inherit

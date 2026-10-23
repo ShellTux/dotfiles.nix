@@ -159,7 +159,8 @@
                   pkgs.cargo-nextest
                   pkgs.cargo-watch
                   pkgs.rust-analyzer
-                ] ++ additionalPackages;
+                ]
+                ++ additionalPackages;
 
                 env = {
                   # Required by rust-analyzer

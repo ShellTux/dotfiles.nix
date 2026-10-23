@@ -30,7 +30,6 @@
         dotfiles-check = callPackage ./dotfiles-check { };
         fetch-music-data = callPackage ./fetch-music-data { };
         gf = callPackage ./gf { };
-        grist-desktop = callPackage ./grist-desktop { };
         help = callPackage ./help { };
         hyprland-power-saver = callPackage ./hyprland-power-saver { };
         ipa = callPackage ./ipa { };

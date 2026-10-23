@@ -16,6 +16,7 @@ let
     optional
     optionalAttrs
     licenses
+    removeSuffix
     ;
   inherit (lib.types) bool port;
   inherit (lib'.flake.caddy) mkProxyOption;
@@ -131,6 +132,8 @@ in
           tables
           whiteboard
           ;
+
+        inherit (pkgs.extraNextcloudApps) shoppingList pantry;
       };
 
     };
@@ -164,7 +167,8 @@ in
       caddy.proxies = optional cfg.proxy.enable cfg.proxy;
     };
 
-    programs.rust-motd.settings.service_status.Nextcloud = "nginx";
+    programs.rust-motd.settings.service_status.Nextcloud =
+      removeSuffix ".service" config.systemd.services.phpfpm-nextcloud.name;
 
     environment.etc."nextcloud-admin-pass".text = mkDefault "changeme";
 
@@ -205,6 +209,12 @@ in
             url = "https://github.com/xXRoxXeRXx/integration_immich/releases/download/v1.5.1/integration_immich.tar.gz";
             license = licenses.agpl3Plus.shortName;
             sha256 = "sha256-BRHNg/hFmFfB21M57yZqVd99+cJswwT4Gxug5JditG0=";
+          };
+
+          pantry = pkgs.fetchNextcloudApp {
+            url = "https://github.com/chenasraf/nextcloud-pantry/releases/download/v0.37.0/pantry-v0.37.0.tar.gz";
+            license = licenses.agpl3Plus.shortName;
+            sha256 = "sha256-PboKBw8IrEDKAiBwqQLE4IvD974d73nnZpZDt5s/b5Y=";
           };
         };
       })

@@ -34,9 +34,7 @@ in
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
     services.mealie = {
-      settings = {
-        listenAdress = mkDefault "127.0.0.1";
-      };
+      listenAddress = mkDefault "127.0.0.1";
     };
 
     services.caddy.proxies = optional cfg.proxy.enable cfg.proxy;

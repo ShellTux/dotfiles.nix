@@ -10,6 +10,7 @@ let
     mkIf
     mkDefault
     optional
+    removeSuffix
     ;
   inherit (lib.types) bool;
   inherit (lib'.flake.caddy) mkProxyOption;
@@ -80,7 +81,8 @@ in
       ];
     };
 
-    programs.rust-motd.settings.service_status.Homepage = "homepage-dashboard";
+    programs.rust-motd.settings.service_status.Homepage =
+      removeSuffix ".service" config.systemd.services.homepage-dashboard.name;
 
     services.caddy.proxies = optional cfg.proxy.enable cfg.proxy;
   };

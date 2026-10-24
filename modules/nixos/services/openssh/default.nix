@@ -4,7 +4,12 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf mkDefault;
+  inherit (lib)
+    mkOption
+    mkIf
+    mkDefault
+    removeSuffix
+    ;
   inherit (lib.types) bool;
 
   cfg = config.services.openssh;
@@ -35,6 +40,8 @@ in
       };
     };
 
-    programs.rust-motd.settings.service_status.Sshd = "sshd";
+    programs.rust-motd.settings.service_status.Sshd =
+      removeSuffix ".service"
+        config.systemd.services."sshd@".name;
   };
 }

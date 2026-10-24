@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf optional;
+  inherit (lib)
+    mkOption
+    mkIf
+    optional
+    removeSuffix
+    ;
   inherit (lib.types) bool;
   inherit (lib'.flake.caddy) mkProxyOption;
 
@@ -43,7 +48,8 @@ in
       };
     };
 
-    programs.rust-motd.settings.service_status.Vaultwarden = "vaultwarden";
+    programs.rust-motd.settings.service_status.Vaultwarden =
+      removeSuffix ".service" config.systemd.services.vaultwarden.name;
 
     services.caddy.proxies = optional cfg.proxy.enable cfg.proxy;
   };

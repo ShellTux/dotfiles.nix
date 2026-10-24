@@ -4,7 +4,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf mkDefault;
+  inherit (lib) mkOption mkIf removeSuffix;
   inherit (lib.types) bool;
 
   cfg = config.services.fail2ban;
@@ -38,6 +38,7 @@ in
       };
     };
 
-    programs.rust-motd.settings.service_status.Fail2Ban = "fail2ban";
+    programs.rust-motd.settings.service_status.Fail2Ban =
+      removeSuffix ".service" config.systemd.services.fail2ban.name;
   };
 }

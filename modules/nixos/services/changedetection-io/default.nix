@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf;
+  inherit (lib) mkOption mkIf removeSuffix;
   inherit (lib.types) bool str port;
   inherit (lib'.flake.caddy) genVirtualHosts;
 
@@ -47,6 +47,7 @@ in
       inherit (cfg) subdomain reverse-proxy;
     };
 
-    programs.rust-motd.settings.service_status.ChangeDetectionIO = "changedetection-io";
+    programs.rust-motd.settings.service_status.ChangeDetectionIO =
+      removeSuffix ".service" config.systemd.services.changedetection-io.name;
   };
 }

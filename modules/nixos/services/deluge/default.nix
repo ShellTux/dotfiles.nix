@@ -11,6 +11,7 @@ let
     mkIf
     mkDefault
     optional
+    removeSuffix
     ;
   inherit (lib.types) bool path;
   inherit (lib'.flake.caddy) mkProxyOption;
@@ -52,7 +53,8 @@ in
 
     services.caddy.proxies = optional cfg.proxy.enable cfg.proxy;
 
-    programs.rust-motd.settings.service_status.Deluge = "delugeweb";
+    programs.rust-motd.settings.service_status.Deluge =
+      removeSuffix ".service" config.systemd.services.delugeweb.name;
 
     systemd.tmpfiles.rules = [
       (mkIf (cfg.downloadPath != null) "d ${cfg.downloadPath} 0755 ${cfg.user} ${cfg.group} - -")

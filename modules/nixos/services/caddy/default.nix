@@ -18,6 +18,7 @@ let
     mkOption
     pipe
     toIntBase10
+    removeSuffix
     ;
   inherit (lib.lists) unique;
   inherit (lib.types) bool attrs;
@@ -81,7 +82,8 @@ in
 
     networking.firewall.allowedTCPPorts = caddyPorts;
 
-    programs.rust-motd.settings.service_status.Caddy = "caddy";
+    programs.rust-motd.settings.service_status.Caddy =
+      removeSuffix ".service" config.systemd.services.caddy.name;
 
     sops.secrets = {
       "tls/crt" = cfg.secrets.options;

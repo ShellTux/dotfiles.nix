@@ -10,6 +10,7 @@ let
     mkIf
     mkDefault
     optional
+    removeSuffix
     ;
   inherit (lib.types) bool;
   inherit (lib'.flake.caddy) mkProxyOption;
@@ -40,6 +41,7 @@ in
 
     services.caddy.proxies = optional cfg.proxy.enable cfg.proxy;
 
-    programs.rust-motd.settings.service_status.Mealie = "mealie";
+    programs.rust-motd.settings.service_status.Mealie =
+      removeSuffix ".service" config.systemd.services.mealie.name;
   };
 }

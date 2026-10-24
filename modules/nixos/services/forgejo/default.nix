@@ -12,6 +12,7 @@ let
     pipe
     mkDefault
     optional
+    removeSuffix
     ;
   inherit (lib.types) bool;
   inherit (lib'.flake.caddy) mkProxyOption;
@@ -111,6 +112,7 @@ in
       users.${cfg.user}.extraGroups = [ "ssh-users" ];
     };
 
-    programs.rust-motd.settings.service_status.Forgejo = "forgejo";
+    programs.rust-motd.settings.service_status.Forgejo =
+      removeSuffix ".service" config.systemd.services.forgejo.name;
   };
 }

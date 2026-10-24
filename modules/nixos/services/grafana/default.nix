@@ -12,6 +12,7 @@ let
     mkIf
     mkDefault
     optional
+    removeSuffix
     ;
   inherit (lib.types) bool;
   inherit (lib'.flake.caddy) mkProxyOption;
@@ -110,7 +111,8 @@ in
       caddy.proxies = optional cfg.proxy.enable cfg.proxy;
     };
 
-    programs.rust-motd.settings.service_status.Grafana = "grafana";
+    programs.rust-motd.settings.service_status.Grafana =
+      removeSuffix ".service" config.systemd.services.grafana.name;
 
     sops.secrets."grafana/secret-key" = {
       owner = "grafana";

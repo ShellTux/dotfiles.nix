@@ -13,6 +13,7 @@ let
     split
     reverseList
     toInt
+    removeSuffix
     ;
   inherit (lib.types) bool str;
   inherit (lib'.flake.caddy) genVirtualHosts;
@@ -60,7 +61,8 @@ in
       listenAddress = ":8183";
     };
 
-    programs.rust-motd.settings.service_status.Echoip = "echoip";
+    programs.rust-motd.settings.service_status.Echoip =
+      removeSuffix ".service" config.systemd.services.echoip.name;
 
     networking.firewall.allowedTCPPorts = [ port ];
 

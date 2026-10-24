@@ -12,6 +12,7 @@ let
     mkForce
     pipe
     optional
+    removeSuffix
     ;
   inherit (lib.types) bool str listOf;
   inherit (lib'.flake.caddy) mkProxyOption;
@@ -56,7 +57,8 @@ in
 
     services.caddy.proxies = optional cfg.proxy.enable cfg.proxy;
 
-    programs.rust-motd.settings.service_status.Immich = "immich-server";
+    programs.rust-motd.settings.service_status.Immich =
+      removeSuffix ".service" config.systemd.services.immich-server.name;
 
     users.users.${cfg.user}.extraGroups = cfg.extraGroups;
 

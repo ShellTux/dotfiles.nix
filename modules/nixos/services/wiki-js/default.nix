@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf mkDefault;
+  inherit (lib)
+    mkOption
+    mkIf
+    mkDefault
+    removeSuffix
+    ;
   inherit (lib.types) bool port str;
   inherit (lib'.flake.caddy) genVirtualHosts;
 
@@ -79,6 +84,7 @@ in
       after = [ "postgresql.service" ];
     };
 
-    programs.rust-motd.settings.service_status.WikiJS = "wiki-js";
+    programs.rust-motd.settings.service_status.WikiJS =
+      removeSuffix ".service" config.systemd.services.wiki-js.name;
   };
 }

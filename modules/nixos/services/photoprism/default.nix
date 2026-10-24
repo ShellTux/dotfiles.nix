@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf mkDefault;
+  inherit (lib)
+    mkOption
+    mkIf
+    mkDefault
+    removeSuffix
+    ;
   inherit (lib.types) bool str port;
   inherit (lib'.flake.caddy) genVirtualHosts;
 
@@ -51,6 +56,7 @@ in
       inherit (cfg) subdomain reverse-proxy;
     };
 
-    programs.rust-motd.settings.service_status.Photoprism = "photoprism";
+    programs.rust-motd.settings.service_status.Photoprism =
+      removeSuffix ".service" config.systemd.services.photoprism.name;
   };
 }

@@ -11,6 +11,7 @@ let
     mkDefault
     hasPrefix
     optional
+    removeSuffix
     ;
   inherit (lib.types)
     bool
@@ -105,7 +106,8 @@ in
     #   };
     # };
 
-    programs.rust-motd.settings.service_status.Jellyfin = "jellyfin";
+    programs.rust-motd.settings.service_status.Jellyfin =
+      removeSuffix ".service" config.systemd.services.jellyfin.name;
 
     users.groups.media = { };
     users.users.jellyfin.extraGroups = [ config.users.groups.media.name ];

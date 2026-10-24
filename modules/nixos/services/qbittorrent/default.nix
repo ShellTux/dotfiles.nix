@@ -6,7 +6,12 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf mkDefault;
+  inherit (lib)
+    mkOption
+    mkIf
+    mkDefault
+    removeSuffix
+    ;
   inherit (lib.types) bool path nullOr;
   inherit (lib'.flake.caddy) mkProxyOption;
 
@@ -61,7 +66,8 @@ in
 
     services.caddy.proxies = [ cfg.proxy ];
 
-    programs.rust-motd.settings.service_status.Qbittorrent = "qbittorrent";
+    programs.rust-motd.settings.service_status.Qbittorrent =
+      removeSuffix ".service" config.systemd.services.qbittorrent.name;
 
     systemd.tmpfiles.rules = [
       (mkIf (cfg.downloadPath != null) "d ${cfg.downloadPath} 0755 ${cfg.user} ${cfg.group} - -")

@@ -4,7 +4,12 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf mkDefault;
+  inherit (lib)
+    mkOption
+    mkIf
+    mkDefault
+    removeSuffix
+    ;
   inherit (lib.types) bool;
 
   cfg = config.services.prometheus;
@@ -23,6 +28,7 @@ in
       listenAddress = mkDefault "127.0.0.1";
     };
 
-    programs.rust-motd.settings.service_status.Prometheus = "prometheus";
+    programs.rust-motd.settings.service_status.Prometheus =
+      removeSuffix ".service" config.systemd.services.prometheus.name;
   };
 }

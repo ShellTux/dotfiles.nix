@@ -36,11 +36,22 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    xdg.userDirs = mkDefault (
-      userDirs.pt
-      // {
-        createDirectories = true;
-      }
-    );
+    xdg.userDirs = {
+      inherit (userDirs.pt)
+        desktop
+        documents
+        download
+        music
+        pictures
+        publicShare
+        templates
+        videos
+        extraConfig
+        ;
+
+      createDirectories = mkDefault true;
+
+      setSessionVariables = mkDefault true;
+    };
   };
 }

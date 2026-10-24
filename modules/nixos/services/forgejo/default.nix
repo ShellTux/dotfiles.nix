@@ -17,6 +17,8 @@ let
   inherit (lib.types) bool;
   inherit (lib'.flake.caddy) mkProxyOption;
 
+  inherit (cfg.proxy.host) fqdn;
+
   cfg = config.services.forgejo;
 in
 {
@@ -105,6 +107,33 @@ in
       openssh.settings.AcceptEnv = [ "GIT_PROTOCOL" ];
 
       caddy.proxies = optional cfg.proxy.enable cfg.proxy;
+
+      authelia.instances."${fqdn}".settings.identity_providers.oidc.clients = [
+        {
+          client_id = "forgejo";
+          client_name = "Forgejo";
+
+          client_secret = ''{{ secret "${
+            config.sops.secrets."services/authelia/${fqdn}/oidc/clients/forgejo/client_secret".path
+          }" }}'';
+
+          authorization_policy = "one_factor";
+
+          redirect_uris = [
+            "${cfg.proxy.computedHref}/user/oauth2/authelia/callback"
+          ];
+
+          scopes = [
+            "openid"
+            "profile"
+            "email"
+          ];
+
+          userinfo_signed_response_alg = "none";
+          grant_types = [ "authorization_code" ];
+          response_types = [ "code" ];
+        }
+      ];
     };
 
     users = {
@@ -114,5 +143,12 @@ in
 
     programs.rust-motd.settings.service_status.Forgejo =
       removeSuffix ".service" config.systemd.services.forgejo.name;
+
+    sops.secrets."services/authelia/${fqdn}/oidc/clients/forgejo/client_secret" = {
+      owner = config.services.authelia.instances."${fqdn}".user;
+      group = config.services.authelia.instances."${fqdn}".group;
+      mode = "0400";
+      reloadUnits = [ config.systemd.services.forgejo.name ];
+    };
   };
 }

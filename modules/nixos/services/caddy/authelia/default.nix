@@ -46,14 +46,18 @@ in
             (splitString ".")
             head
           ];
+
+          autheliaSecret = secret: secrets."services/authelia/${fqdn}/${secret}".path;
         in
         {
           inherit enable name;
 
           secrets = {
-            jwtSecretFile = secrets."services/authelia/${fqdn}/jwtSecretFile".path;
-            sessionSecretFile = secrets."services/authelia/${fqdn}/sessionSecretFile".path;
-            storageEncryptionKeyFile = secrets."services/authelia/${fqdn}/storageEncryptionKeyFile".path;
+            jwtSecretFile = autheliaSecret "jwtSecretFile";
+            oidcHmacSecretFile = autheliaSecret "oidc/hmacSecretFile";
+            oidcIssuerPrivateKeyFile = autheliaSecret "oidc/issuerPrivateKeyFile";
+            sessionSecretFile = autheliaSecret "sessionSecretFile";
+            storageEncryptionKeyFile = autheliaSecret "storageEncryptionKeyFile";
           };
 
           settings = {
@@ -125,6 +129,8 @@ in
         [
           (nameValuePair "services/authelia/${fqdn}/authentication_backend/file/users.yaml" autheliaOpts)
           (nameValuePair "services/authelia/${fqdn}/jwtSecretFile" autheliaOpts)
+          (nameValuePair "services/authelia/${fqdn}/oidc/hmacSecretFile" autheliaOpts)
+          (nameValuePair "services/authelia/${fqdn}/oidc/issuerPrivateKeyFile" autheliaOpts)
           (nameValuePair "services/authelia/${fqdn}/sessionSecretFile" autheliaOpts)
           (nameValuePair "services/authelia/${fqdn}/storageEncryptionKeyFile" autheliaOpts)
         ]

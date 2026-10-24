@@ -52,6 +52,7 @@ _: {
           pkgs.ssh-to-age
           pkgs.tokei
           pkgs.trufflehog
+          pkgs.yaml2nix
           pkgs.yq
         ]
         ++ [

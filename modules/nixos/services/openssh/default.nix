@@ -4,11 +4,12 @@
   ...
 }:
 let
+  inherit (builtins) filter map head;
   inherit (lib)
     mkOption
     mkIf
     mkDefault
-    removeSuffix
+    pipe
     ;
   inherit (lib.types) bool;
 
@@ -41,7 +42,15 @@ in
     };
 
     programs.rust-motd.settings.service_status.Sshd =
-      removeSuffix ".service"
-        config.systemd.services."sshd@".name;
+      pipe
+        [
+          config.systemd.sockets.sshd
+          config.systemd.services."sshd@"
+        ]
+        [
+          (filter ({ enable, ... }: enable))
+          (map ({ name, ... }: name))
+          head
+        ];
   };
 }

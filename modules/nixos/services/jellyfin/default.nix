@@ -109,8 +109,10 @@ in
     programs.rust-motd.settings.service_status.Jellyfin =
       removeSuffix ".service" config.systemd.services.jellyfin.name;
 
-    users.groups.media = { };
-    users.users.jellyfin.extraGroups = [ config.users.groups.media.name ];
+    users = {
+      groups.media = { };
+      users."${cfg.user}".extraGroups = [ config.users.groups.media.name ];
+    };
   };
 
 }

@@ -91,14 +91,12 @@ in
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
     services.nextcloud = {
-      package = pkgs.nextcloud34;
+      package = pkgs.nextcloud35;
       hostName = mkDefault cfg.proxy.computedFqdn;
       enableImagemagick = true;
       https = mkDefault true;
 
       config = {
-        adminuser = "admin";
-        adminpassFile = mkDefault "/etc/nextcloud-admin-pass";
         dbtype = "sqlite";
       };
 
@@ -113,7 +111,7 @@ in
       extraApps = mkDefault {
         inherit (config.services.nextcloud.package.packages.apps)
           calendar
-          polls
+          checksum
           collectives
           contacts
           cookbook
@@ -123,17 +121,25 @@ in
           forms
           mail
           maps
-          memories
+          music
           news
           notes
+          oidc
+          oidc_login
           onlyoffice
+          pantry
+          phonetrack
+          polls
+          previewgenerator
+          quota_warning
           richdocuments
-          tasks
           tables
+          tasks
+          theming_customcss
           whiteboard
           ;
 
-        inherit (pkgs.extraNextcloudApps) shoppingList pantry;
+        inherit (pkgs.extraNextcloudApps) shoppingList;
       };
 
     };
@@ -169,8 +175,6 @@ in
 
     programs.rust-motd.settings.service_status.Nextcloud =
       removeSuffix ".service" config.systemd.services.phpfpm-nextcloud.name;
-
-    environment.etc."nextcloud-admin-pass".text = mkDefault "changeme";
 
     nixpkgs.overlays = [
       (final: prev: {
@@ -209,12 +213,6 @@ in
             url = "https://github.com/xXRoxXeRXx/integration_immich/releases/download/v1.5.1/integration_immich.tar.gz";
             license = licenses.agpl3Plus.shortName;
             sha256 = "sha256-BRHNg/hFmFfB21M57yZqVd99+cJswwT4Gxug5JditG0=";
-          };
-
-          pantry = pkgs.fetchNextcloudApp {
-            url = "https://github.com/chenasraf/nextcloud-pantry/releases/download/v0.37.0/pantry-v0.37.0.tar.gz";
-            license = licenses.agpl3Plus.shortName;
-            sha256 = "sha256-PboKBw8IrEDKAiBwqQLE4IvD974d73nnZpZDt5s/b5Y=";
           };
         };
       })

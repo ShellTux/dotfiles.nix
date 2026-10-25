@@ -58,5 +58,10 @@
     yazi.enable = true;
   };
 
+  boot.loader = {
+    efi.canTouchEfiVariables = true;
+    systemd-boot.enable = true;
+  };
+
   system.stateVersion = "25.05";
 }

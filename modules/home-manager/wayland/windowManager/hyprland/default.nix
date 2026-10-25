@@ -74,11 +74,11 @@ in
         example = pkgs.waybar;
       };
 
-      noctalia-shell = mkOption {
+      noctalia = mkOption {
         description = "Which noctalia-shell package to use. (Leave null to disable)";
         type = nullOr package;
         default = null;
-        example = pkgs.noctalia-shell;
+        example = pkgs.noctalia;
       };
     };
 
@@ -98,7 +98,7 @@ in
     home.packages = filter (pkg: pkg != null) (
       cfg.extraPackages
       ++ [
-        cfg.bar.noctalia-shell
+        cfg.bar.noctalia
         cfg.bar.waybar
       ]
     );

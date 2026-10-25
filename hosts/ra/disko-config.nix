@@ -3,13 +3,6 @@ let
   inherit (lib) mkDefault;
 in
 {
-  boot = {
-    loader.grub = {
-      efiSupport = mkDefault true;
-      efiInstallAsRemovable = mkDefault true;
-    };
-  };
-
   disko.devices.disk = {
     disk1 = {
       device = mkDefault "/dev/sda";

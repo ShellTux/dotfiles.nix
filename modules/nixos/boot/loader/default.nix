@@ -23,8 +23,8 @@ in
   };
 
   config = mkIf (!cfg.disableModule) {
-    boot.loader = mkDefault {
-      timeout = 3;
+    boot.loader = {
+      timeout = mkDefault 3;
     };
   };
 }

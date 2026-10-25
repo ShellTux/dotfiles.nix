@@ -12,7 +12,6 @@
     ./jdtls
     ./lalrpop-vim
     ./lastplace
-    ./lsp
     ./lsp-lines
     ./lualine
     ./luasnip

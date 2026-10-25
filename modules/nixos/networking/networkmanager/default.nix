@@ -28,15 +28,13 @@ in
       # TODO: Maybe don't default enable wifi powersave for desktop machines
       wifi.powersave = true;
       plugins = [
-        pkgs.networkmanager-fortisslvpn
         pkgs.networkmanager-iodine
         pkgs.networkmanager-l2tp
         pkgs.networkmanager-openconnect
         pkgs.networkmanager-openvpn
         pkgs.networkmanager-ssh
-        pkgs.networkmanager-sstp
         pkgs.networkmanager-strongswan
-        pkgs.networkmanager-vpnc
+        pkgs.networkmanager-libreswan
       ];
     };
   };

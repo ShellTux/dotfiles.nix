@@ -15,7 +15,6 @@ let
 in
 {
   imports = [
-    ./cdpath
     ./completionInit
     ./history
     ./initContent

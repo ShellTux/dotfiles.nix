@@ -5,14 +5,8 @@
   ...
 }:
 let
-  inherit (lib)
-    mkOption
-    mkIf
-    mkDefault
-    getExe'
-    ;
+  inherit (lib) mkOption mkIf mkDefault;
   inherit (lib.types) bool;
-  inherit (pkgs) fetchpatch;
 
   cfg = config.boot;
 in

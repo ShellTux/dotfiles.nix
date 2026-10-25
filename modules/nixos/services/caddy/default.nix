@@ -70,7 +70,7 @@ in
           "github.com/porech/caddy-maxmind-geolocation@v1.0.3"
           "github.com/corazawaf/coraza-caddy/v2@v2.6.1"
         ];
-        hash = "sha256-mQnH8pcJO3+2BSUrxQYLXbj6UwzW4SqYM7yyOTHaDiQ=";
+        hash = "sha256-2EB1b6Kzj1x4dtVVM5YSvxa71MmQqNDrARV3Gpjkpzk=";
       };
 
       globalConfig = ''

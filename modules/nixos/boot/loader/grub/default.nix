@@ -25,8 +25,8 @@ in
   };
 
   config = mkIf (cfg.enable) {
-    boot.loader.grub = mkDefault {
-      devices = [ "nodev" ];
+    boot.loader.grub = {
+      devices = mkDefault [ "nodev" ];
       extraEntries = concatStrings [
         (readFile ./40_custom)
       ];

@@ -144,7 +144,7 @@
     hyprland = {
       enable = true;
       pyprland.enable = true;
-      bar.noctalia-shell = self'.packages.noctalia-shell;
+      bar.noctalia = self'.packages.noctalia;
     };
   };
 

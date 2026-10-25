@@ -41,6 +41,7 @@ in
         ./imv
         ./kitty
         ./mpv
+        ./noctalia
         ./noctalia-shell
         ./rofi
         ./vim

@@ -21,7 +21,7 @@ in
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
     programs.obs-studio = mkDefault {
-      enableVirtualCamera = true;
+      # enableVirtualCamera = true; # FIXME: disable to fix NixOS/nixpkgs#576406
       plugins =
         let
           plugin = pkgs.obs-studio-plugins;
@@ -45,7 +45,7 @@ in
           # plugin.obs-media-controls
           # plugin.obs-multi-rtmp
           # plugin.obs-mute-filter
-          plugin.obs-noise
+          # plugin.obs-noise # FIX: Failed to build
           plugin.obs-pipewire-audio-capture
           # plugin.obs-recursion-effect
           # plugin.obs-retro-effects

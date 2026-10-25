@@ -1,7 +1,7 @@
 { config, lib, ... }:
 let
   inherit (lib) mkOption mkIf mkDefault;
-  inherit (lib.types) bool;
+  inherit (lib.types) bool str;
 
   cfg = config.xdg;
 in
@@ -16,6 +16,12 @@ in
       description = "Whether to disable this module configuration";
       type = bool;
       default = false;
+    };
+
+    srcHome = mkOption {
+      description = "Path to own source repos";
+      type = str;
+      default = "${config.home.homeDirectory}/.local/src";
     };
   };
 

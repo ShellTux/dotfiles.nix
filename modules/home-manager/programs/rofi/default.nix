@@ -20,7 +20,7 @@ in
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    programs.rofi = mkDefault {
+    programs.rofi = {
       plugins = [
         pkgs.rofi-bluetooth
         pkgs.rofi-calc
@@ -28,7 +28,6 @@ in
         pkgs.rofimoji
         pkgs.rofi-mpd
         pkgs.rofi-network-manager
-        pkgs.rofi-pass
         pkgs.rofi-power-menu
         pkgs.rofi-rbw
         pkgs.rofi-screenshot

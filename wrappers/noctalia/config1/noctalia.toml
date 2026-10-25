@@ -1,0 +1,411 @@
+[bar]
+order = [ "default", "bottom" ]
+
+    [bar.bottom]
+    background_opacity = 0.69999998435378075
+    center = [ "group:g1", "spacer_2", "clock", "spacer_3", "group:g2" ]
+    enabled = true
+    end = [ "widget", "indicator", "todo" ]
+    position = "bottom"
+    start = [ "cpu", "ram", "temp" ]
+    thickness = 30
+
+        [[bar.bottom.capsule_group]]
+        accordion = true
+        accordion_direction = "end"
+        enabled = true
+        fill = "surface_variant"
+        id = "g1"
+        members = [ "keybinds", "toggle_2", "hypr_submap_2" ]
+        opacity = 1.0
+        padding = 6.0
+
+        [[bar.bottom.capsule_group]]
+        accordion = true
+        accordion_direction = "end"
+        enabled = true
+        fill = "surface_variant"
+        id = "g2"
+        members = [
+            "bar_3",
+            "widget_3",
+            "widget_4",
+            "bar_5",
+            "widget_7",
+            "wallpaper",
+            "wallhaven",
+            "recorder",
+            "mpvpaper",
+            "printer",
+            "widget_5",
+            "nightlight",
+            "theme_mode",
+            "ocr",
+            "rate_2",
+            "bar_2"
+        ]
+        opacity = 1.0
+        padding = 6.0
+
+    [bar.default]
+    background_opacity = 0.89999997988343239
+    capsule_border = "secondary"
+    capsule_foreground = "primary"
+    center = [ "screenshot", "spacer_4", "workspaces", "spacer_5", "bar" ]
+    color = "primary"
+    end = [
+        "group:g3",
+        "bluetooth",
+        "network",
+        "volume",
+        "input_volume",
+        "brightness",
+        "battery",
+        "date",
+        "group:g1",
+        "control-center"
+    ]
+    icon_color = "secondary"
+    margin_ends = 30
+    start = [
+        "session",
+        "launcher",
+        "wallpaper",
+        "caffeine",
+        "active_window",
+        "group:g2",
+        "media",
+        "sysmon",
+        "audio_visualizer"
+    ]
+    thickness = 38
+
+        [[bar.default.capsule_group]]
+        accordion = false
+        accordion_direction = "end"
+        border = "secondary"
+        enabled = true
+        fill = "surface_variant"
+        foreground = "primary"
+        id = "g1"
+        members = [ "tray", "clipboard", "notifications" ]
+        opacity = 1.0
+        padding = 6.0
+
+        [[bar.default.capsule_group]]
+        accordion = false
+        accordion_direction = "end"
+        border = "secondary"
+        enabled = false
+        fill = "surface_variant"
+        foreground = "primary"
+        id = "g2"
+        members = [ "cpu", "ram", "temp" ]
+        opacity = 1.0
+        padding = 6.0
+
+        [[bar.default.capsule_group]]
+        accordion = false
+        accordion_direction = "end"
+        border = "secondary"
+        enabled = true
+        fill = "surface_variant"
+        foreground = "primary"
+        id = "g3"
+        members = [ "keyboard_layout", "lock_keys" ]
+        opacity = 1.0
+        padding = 6.0
+
+[calendar]
+enabled = true
+
+[desktop_widgets]
+schema_version = 2
+widget_order = []
+
+    [desktop_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [desktop_widgets.widget]
+
+[dock]
+enabled = true
+launcher_position = "end"
+layer = "overlay"
+position = "right"
+reserve_space = false
+smart_auto_hide = true
+
+[hot_corners]
+delay_ms = 200
+enabled = true
+
+    [hot_corners.top_left]
+    action = "window_switcher"
+
+[location]
+address = "Coimbra, Portugal"
+
+[lockscreen_widgets]
+enabled = false
+schema_version = 2
+widget_order = [ "lockscreen-login-box@eDP-1" ]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@eDP-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 683.0
+    cy = 586.0
+    output = "eDP-1"
+    placement_height = 768.0
+    placement_width = 1366.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@eDP-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+[nightlight]
+enabled = true
+
+[plugin_settings."mahmoudomiesh/network-monitor"]
+include_udp = true
+
+[plugin_settings."noctalia/bitwarden"]
+clear_clipboard_seconds = 10
+gen_length = 64
+server_url = "https://vaultwarden.ra-portal.duckdns.org"
+
+[plugins]
+enabled = [
+    "yuuto/calculator",
+    "samuelskovbakke/calculator-plus",
+    "oldirtty/color_picker",
+    "vinioli/currency-exchange",
+    "k4n4t4/hypr-submap",
+    "maddingo/hypr-layout-switcher",
+    "kenn/keybind-cheatsheet",
+    "knyrps/nix-search",
+    "neyfua/obs-integration",
+    "fel/ocr",
+    "icefish/phone-connect",
+    "andrewdems/printers",
+    "thepunkoff/pomodoro",
+    "yocraft/qrcode",
+    "abuamar142/qr-share",
+    "noctalia/timer",
+    "noctalia/mpvpaper",
+    "noctalia/wallhaven",
+    "noctalia/screen_recorder",
+    "noctalia/world_clock",
+    "nilsonlinux/world-radio",
+    "nightwatch75/todo",
+    "tordex/processes",
+    "mahmoudomiesh/network-monitor"
+]
+
+[shell]
+font_family = "JetBrainsMono NFP"
+lang = "pt-BR"
+panel_anchor_bar = "default"
+
+    [shell.panel]
+    transparency_mode = "soft"
+
+    [shell.screen_corners]
+    size = 30
+
+[theme]
+community_palette = "Oxocarbon"
+mode = "dark"
+source = "wallpaper"
+wallpaper_scheme = "m3-content"
+
+    [theme.templates]
+    builtin_ids = [ "hyprland", "kitty" ]
+
+[wallpaper]
+directory = "~/Wallpapers/static"
+
+    [wallpaper.automation]
+    enabled = true
+
+    [wallpaper.default]
+    path = "/home/luisgois/Wallpapers/static/wallhaven-9ok3zd.jpg"
+
+    [wallpaper.last]
+    path = "/home/luisgois/Wallpapers/static/wallhaven-9ok3zd.jpg"
+
+    [wallpaper.monitors.eDP-1]
+    path = "/home/luisgois/Wallpapers/static/wallhaven-9ok3zd.jpg"
+
+[widget.active_window]
+capsule = true
+max_length = 170
+title_scroll = "on_hover"
+
+[widget.audio_visualizer]
+color_2 = "secondary"
+
+[widget.bar]
+show_idle_on_horizontal = false
+type = "noctalia/timer:bar"
+
+[widget.bar_2]
+type = "noctalia/world_clock:bar"
+
+[widget.bar_3]
+type = "yuuto/calculator:bar"
+
+[widget.bar_5]
+show_idle_on_horizontal = false
+type = "noctalia/timer:bar"
+
+[widget.battery]
+capsule = true
+
+[widget.bluetooth]
+capsule = true
+
+[widget.brightness]
+capsule = true
+show_label = false
+
+[widget.clock]
+anchor = true
+
+[widget.cpu]
+visualization = "none"
+
+[widget.date]
+capsule = true
+format = "{:%A %H:%M %d/%m/%y}"
+
+[widget.hypr_submap_2]
+type = "k4n4t4/hypr-submap:hypr-submap"
+
+[widget.indicator]
+type = "mahmoudomiesh/network-monitor:indicator"
+
+[widget.input_volume]
+capsule = true
+hide_when_inactive = true
+show_label = false
+
+[widget.keybinds]
+type = "kenn/keybind-cheatsheet:keybinds"
+
+[widget.keyboard_layout]
+capsule = true
+hide_when_single_layout = true
+
+[widget.lock_keys]
+hide_when_off = true
+
+[widget.media]
+art_size = 30
+artist_first = true
+capsule = true
+hide_when_no_media = true
+max_length = 150
+show_progress = true
+title_scroll = "on_hover"
+
+[widget.mpvpaper]
+type = "noctalia/mpvpaper:mpvpaper"
+
+[widget.network]
+capsule = true
+show_label = false
+
+[widget.ocr]
+type = "fel/ocr:ocr"
+
+[widget.printer]
+type = "andrewdems/printers:printer"
+
+[widget.ram]
+visualization = "none"
+
+[widget.rate_2]
+type = "vinioli/currency-exchange:rate"
+
+[widget.recorder]
+type = "noctalia/screen_recorder:recorder"
+
+[widget.spacer_2]
+type = "spacer"
+
+[widget.spacer_3]
+type = "spacer"
+
+[widget.spacer_4]
+type = "spacer"
+
+[widget.spacer_5]
+type = "spacer"
+
+[widget.sysmon]
+enabled = false
+
+[widget.temp]
+visualization = "none"
+
+[widget.todo]
+count_mode = "pending"
+show_label = false
+type = "nightwatch75/todo:todo"
+
+[widget.toggle_2]
+type = "maddingo/hypr-layout-switcher:toggle"
+
+[widget.tray]
+drawer = true
+
+[widget.volume]
+capsule = true
+show_label = false
+
+[widget.wallhaven]
+type = "noctalia/wallhaven:wallhaven"
+
+[widget.widget]
+type = "tordex/processes:widget"
+
+[widget.widget_3]
+type = "samuelskovbakke/calculator-plus:widget"
+
+[widget.widget_4]
+type = "oldirtty/color_picker:widget"
+
+[widget.widget_5]
+type = "mera/localsend:widget"
+
+[widget.widget_7]
+type = "yocraft/qrcode:widget"
+
+[widget.workspaces]
+anchor = true
+empty_color = "tertiary"
+scale = 1.1000000000000001
+style = "focus_hint"

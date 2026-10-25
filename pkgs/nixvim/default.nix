@@ -7,6 +7,7 @@
     ./extraConfigLua
     ./globals
     ./keymaps
+    ./lsp
     ./match
     ./opts
     ./plugins

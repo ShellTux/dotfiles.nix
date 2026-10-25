@@ -7,32 +7,40 @@ host := `hostname`
 help:
     just --list
 
-nixos_cmd(command, profile, target, uri, extra) := if command == "repl" {
+nixos_cmd(command, profile, target, build-host, uri, extra) := if command == "repl" {
     "nixos-rebuild repl --flake $(realpath " + uri + ")#" + profile
   } else if target == "localhost" {
-    "nixos-rebuild " + command + " " + extra + "--sudo --flake " + uri + "#" + profile
+    "nixos-rebuild " + command + " " + extra
+    + (if build-host != "" { "--build-host " + build-host + " " } else { "" })
+    + " --sudo --flake " + uri + "#" + profile
   } else {
-    "nixos-rebuild " + command + " " + extra + "--sudo --target-host " + target + " --flake " + uri + "#" + profile
+    "nixos-rebuild " + command + " " + extra
+    + (if build-host != "" { "--build-host " + build-host + " " } else { "" })
+    + " --sudo --target-host " + target + " --flake " + uri + "#" + profile
   }
 
-home_cmd(command, profile, uri, extra) := if command == "repl" {
+home_cmd(command, profile, build-host, uri, extra) := if command == "repl" {
     "home-manager repl --flake $(realpath " + uri + ")#" + profile
   } else {
-    "home-manager " + command + " " + extra + " --flake " + uri + "#" + profile
+    "home-manager " + command + " " + extra
+    + (if build-host != "" { "--build-host " + build-host + " " } else { "" })
+    + " --flake " + uri + "#" + profile
   }
 
 [arg("profile", long="profile", short)]
 [arg("target", long="target", short)]
+[arg("build-host", long="build-host", short)]
 [arg("uri", long="uri", short)]
 [arg("extra", long="extra", short)]
-nixos command="build" profile=host target="localhost" uri="." extra="":
-    {{ nixos_cmd(command, profile, target, uri, extra) }}
+nixos command="build" profile=host target="localhost" build-host="" uri="." extra="":
+    {{ nixos_cmd(command, profile, target, build-host, uri, extra) }}
 
 [arg("profile", long="profile", short)]
+[arg("build-host", long="build-host", short)]
 [arg("uri", long="uri", short)]
 [arg("extra", long="extra", short)]
-home command="build" profile=user uri="." extra="":
-    {{ home_cmd(command, profile, uri, extra) }}
+home command="build" profile=user build-host="" uri="." extra="":
+    {{ home_cmd(command, profile, build-host, uri, extra) }}
 
 inspect:
     nix-inspect

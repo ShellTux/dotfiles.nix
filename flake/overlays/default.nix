@@ -61,6 +61,7 @@
               temurin-bin.jdk-8
               temurin-bin.jdk-17
               temurin-bin.jdk-21
+              temurin-bin.jdk-25
             ];
         };
 

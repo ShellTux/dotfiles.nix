@@ -33,6 +33,8 @@ in
       upstream.port = cfg.port;
     };
 
+    hardwareAcceleration = mkEnableOption "Whether to enable hardware acceleration";
+
     extraGroups = mkOption {
       description = "immich extra groups";
       type = listOf str;

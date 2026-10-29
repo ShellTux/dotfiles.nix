@@ -42,7 +42,6 @@ in
         ./kitty
         ./mpv
         ./noctalia
-        ./noctalia-shell
         ./rofi
         ./vim
         ./waybar

@@ -25,9 +25,5 @@ in
     };
 
     home.packages = [ pkgs.jellyfin-mpv-shim ];
-
-    xdg.autostart.entries = [
-      "${pkgs.jellyfin-mpv-shim}/share/applications/jellyfin-mpv-shim.desktop"
-    ];
   };
 }

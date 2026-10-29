@@ -27,7 +27,7 @@ in
     };
   };
 
-  config = mkIf (cfg.enable && !cfg.disableModule) (mkDefault {
+  config = mkIf (cfg.enable && !cfg.disableModule) {
     programs.fzf = {
       enableZshIntegration = true;
       defaultCommand = "fd --type f --hidden --follow --exclude .git";
@@ -51,7 +51,7 @@ in
 
     home = {
       shellAliases = {
-        fzf = ''fzf --preview "${bat} --color=always --style=numbers --line-range=:500 {}"'';
+        fzf = mkDefault ''fzf --preview "${bat} --color=always --style=numbers --line-range=:500 {}"'';
         fzfs = concatStringsSep " " [
           "fzf"
           "--style=full"
@@ -60,12 +60,12 @@ in
           "--preview='${bat} --color=always --style=numbers --line-range=:500 {}'"
           ''
             --bind='result:transform-list-label:
-                if [[ -z $FZF_QUERY ]]; then
-                  echo " $FZF_MATCH_COUNT items "
-                else
-                  echo " $FZF_MATCH_COUNT matches for [$FZF_QUERY] "
-                fi
-                '
+            if [[ -z $FZF_QUERY ]]; then
+                echo " $FZF_MATCH_COUNT items "
+            else
+                echo " $FZF_MATCH_COUNT matches for [$FZF_QUERY] "
+            fi
+            '
           ''
           ''--bind="focus:transform-preview-label:[[ -n {} ]] && printf ' Previewing [%s] ' {}"''
           ''--bind="focus:+transform-header:file --brief {} || echo 'No file selected'"''
@@ -85,5 +85,5 @@ in
         '';
       };
     };
-  });
+  };
 }

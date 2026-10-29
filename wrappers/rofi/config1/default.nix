@@ -28,7 +28,6 @@ mkIf (config.flavour == "config1") {
     pkgs.rofimoji
     pkgs.rofi-mpd
     pkgs.rofi-network-manager
-    pkgs.rofi-pass
     pkgs.rofi-power-menu
     pkgs.rofi-rbw
     pkgs.rofi-screenshot

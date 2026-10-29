@@ -60,6 +60,7 @@ in
       ./hyprlock
       ./imv
       ./jellyfin
+      ./keepassxc
       ./khal
       ./kitty
       ./man
@@ -73,6 +74,7 @@ in
       ./nushell
       ./obs-studio
       ./oh-my-posh
+      ./pgtui
       ./rofi
       ./ssh
       ./starship

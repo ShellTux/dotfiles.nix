@@ -11,6 +11,9 @@ let
   curl = getExe pkgs.curl;
   fshow = getExe (callPackage ./fshow.nix { });
   onefetch = getExe pkgs.onefetch;
+  pwd = getExe (callPackage ./pwd.nix { });
+  # safe-checkout = getExe (callPackage ./safe-checkout { });
+  stash-review = getExe (callPackage ./stash-review.nix { });
   xdg-open = getExe' pkgs.xdg-utils "xdg-open";
 
   pager.diff = getExe (callPackage ./diffPager { });
@@ -65,7 +68,7 @@ mkIf (config.flavour == "config1") {
     };
     tag.sort = "version:refname";
 
-    alias = rec {
+    alias = {
       branch-delete = "branch --delete";
       br = "branch --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject) %(color:green)(%(committerdate:relative)) [%(authorname)]' --sort=-committerdate";
       ci = "commit";
@@ -75,7 +78,7 @@ mkIf (config.flavour == "config1") {
       cop = "co --patch";
       cop- = "co- --patch";
       cp = "cherry-pick";
-      d- = "${d}-";
+      d- = "diff-";
       dc = "diff-copy";
       d = "diff";
       diff- = "!git -c pager.diff='less --tabs=4 -RFX' -c interactive.diffFilter='less --tabs=4 -RFX' diff";
@@ -85,7 +88,7 @@ mkIf (config.flavour == "config1") {
       diff-summary = "diff --stat";
       diff-word = "diff --word-diff --color-words";
       dl = "diff-last";
-      dst- = "${dst}-";
+      dst- = "diff-staged-";
       dst = "diff-staged";
       dsu = "diff-summary";
       dw = "diff-word";
@@ -102,12 +105,15 @@ mkIf (config.flavour == "config1") {
       patch = "!git --no-pager diff --no-color";
       project-summary = "summary";
       put = "push --set-upstream origin";
+      pwd = "!${pwd}";
       serve = "daemon --verbose --export-all --base-path=.git --reuseaddr --strict-paths .git/";
       showconfig = "config --list";
       # FIX: Mismatch between input and output. See this: https://github.com/so-fancy/diff-so-fancy/issues/296
       sp- = "!git -c interactive.diffFilter='less --tabs=4 -RFX' sp";
       sp = "stage --patch";
+      sr = "stash-review";
       s = "status --short";
+      stash-review = "!${stash-review}";
       stats = "show --stat";
       st = "status";
       summary = "!which ${onefetch} && ${onefetch}";

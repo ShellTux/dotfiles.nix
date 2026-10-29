@@ -18,6 +18,7 @@ mkIf (config.flavour == "config1") {
     dim_opacity = "0.75";
     disable_ligatures = "cursor";
     enabled_layouts = "splits:split_axis=horizontal,stack,tall";
+    hide_window_decorations = true;
     scrollback_pager = ''
       vim -u NONE -
         \ -c 'w! /tmp/kitty_scrollback'

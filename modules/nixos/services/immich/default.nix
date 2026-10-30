@@ -7,11 +7,13 @@
 let
   inherit (builtins) map listToAttrs;
   inherit (lib)
+    mkEnableOption
     mkOption
     mkIf
     mkForce
     pipe
     optional
+    optionals
     removeSuffix
     ;
   inherit (lib.types) bool str listOf;
@@ -52,6 +54,8 @@ in
     services.immich = {
       host = "127.0.0.1";
 
+      accelerationDevices = mkIf cfg.hardwareAcceleration null;
+
       environment = {
         IMMICH_LOG_LEVEL = "verbose";
       };
@@ -62,7 +66,12 @@ in
     programs.rust-motd.settings.service_status.Immich =
       removeSuffix ".service" config.systemd.services.immich-server.name;
 
-    users.users.${cfg.user}.extraGroups = cfg.extraGroups;
+    users.users.${cfg.user}.extraGroups =
+      cfg.extraGroups
+      ++ optionals cfg.hardwareAcceleration [
+        "video"
+        "render"
+      ];
 
     fileSystems = pipe cfg.externalLibraries [
       (map (

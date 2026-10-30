@@ -11,13 +11,12 @@ let
     mkOption
     pipe
     mkDefault
-    optional
     removeSuffix
     ;
   inherit (lib.types) bool;
-  inherit (lib'.flake.caddy) mkProxyOption;
+  inherit (lib'.flake.networking) mkSiteOptions;
 
-  inherit (cfg.proxy.host) fqdn;
+  inherit (config.networking) fqdnOrHostName;
 
   cfg = config.services.forgejo;
 in
@@ -29,10 +28,10 @@ in
       default = false;
     };
 
-    proxy = mkProxyOption {
-      inherit (config.networking) naming;
-      name = "forgejo";
-      upstream.port = cfg.settings.server.HTTP_PORT;
+    site = mkSiteOptions {
+      subdomain = "forgejo";
+      description = "Forgejo is a self-hosted lightweight software forge.";
+      inherit (config.networking) fqdnOrHostName localFqdn;
     };
   };
 
@@ -81,7 +80,7 @@ in
           };
 
           server = {
-            ROOT_URL = cfg.proxy.homepage-dashboard.href;
+            ROOT_URL = cfg.site.href;
             #   SSH_PORT = head config.services.openssh.ports;
           };
 
@@ -90,8 +89,15 @@ in
           };
         };
 
-        proxy.authelia.settings.access_control.rules = [
+      };
+
+      openssh.settings.AcceptEnv = [ "GIT_PROTOCOL" ];
+
+      authelia.instances."${fqdnOrHostName}".settings = {
+        access_control.rules = [
           {
+            inherit (cfg.site) domain;
+
             resources = [
               "^.*\\.git.*$"
               "^/info/refs.*$"
@@ -102,38 +108,75 @@ in
             policy = "bypass";
           }
         ];
+
+        identity_providers.oidc.clients = [
+          {
+            client_id = "forgejo";
+            client_name = "Forgejo";
+
+            client_secret = ''{{ secret "${
+              config.sops.secrets."services/authelia/${fqdnOrHostName}/oidc/clients/forgejo/client_secret".path
+            }" }}'';
+
+            authorization_policy = "one_factor";
+
+            redirect_uris = [
+              "${cfg.site.href}/user/oauth2/authelia/callback"
+            ];
+
+            scopes = [
+              "openid"
+              "profile"
+              "email"
+            ];
+
+            userinfo_signed_response_alg = "none";
+            grant_types = [ "authorization_code" ];
+            response_types = [ "code" ];
+          }
+        ];
       };
 
-      openssh.settings.AcceptEnv = [ "GIT_PROTOCOL" ];
+      caddy.virtualHosts = {
+        "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
+          extraConfig = ''
+            import tls-public
+            import encoding
+            import coraza
+            import reverse-proxy 127.0.0.1:${toString cfg.settings.server.HTTP_PORT}
+          '';
+        };
 
-      caddy.proxies = optional cfg.proxy.enable cfg.proxy;
+        "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
+          extraConfig = ''
+            import tls-local
+            import encoding
+            import reverse-proxy 127.0.0.1:${toString cfg.settings.server.HTTP_PORT}
+          '';
+        };
+      };
 
-      authelia.instances."${fqdn}".settings.identity_providers.oidc.clients = [
-        {
-          client_id = "forgejo";
-          client_name = "Forgejo";
-
-          client_secret = ''{{ secret "${
-            config.sops.secrets."services/authelia/${fqdn}/oidc/clients/forgejo/client_secret".path
-          }" }}'';
-
-          authorization_policy = "one_factor";
-
-          redirect_uris = [
-            "${cfg.proxy.computedHref}/user/oauth2/authelia/callback"
+      homepage-dashboard.service-templates.forgejo = {
+        display = "Forgejo";
+        inherit (cfg.site)
+          href
+          ping
+          siteMonitor
+          description
+          ;
+        icon = "forgejo.png";
+        widget = {
+          url = cfg.site.href;
+          type = "gitea";
+          key = "{{HOMEPAGE_VAR_FORGEJO_KEY}}";
+          fields = [
+            "repositories"
+            "notifications"
+            "issues"
+            "pulls"
           ];
-
-          scopes = [
-            "openid"
-            "profile"
-            "email"
-          ];
-
-          userinfo_signed_response_alg = "none";
-          grant_types = [ "authorization_code" ];
-          response_types = [ "code" ];
-        }
-      ];
+        };
+      };
     };
 
     users = {
@@ -144,9 +187,9 @@ in
     programs.rust-motd.settings.service_status.Forgejo =
       removeSuffix ".service" config.systemd.services.forgejo.name;
 
-    sops.secrets."services/authelia/${fqdn}/oidc/clients/forgejo/client_secret" = {
-      owner = config.services.authelia.instances."${fqdn}".user;
-      group = config.services.authelia.instances."${fqdn}".group;
+    sops.secrets."services/authelia/${fqdnOrHostName}/oidc/clients/forgejo/client_secret" = {
+      owner = config.services.authelia.instances."${fqdnOrHostName}".user;
+      group = config.services.authelia.instances."${fqdnOrHostName}".group;
       mode = "0400";
       reloadUnits = [ config.systemd.services.forgejo.name ];
     };

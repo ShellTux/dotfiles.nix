@@ -14,6 +14,7 @@ pipe
     ./hyprland
     ./mkFlavourOption
     ./mkIfFlavour
+    ./networking
     ./nginx
     ./restic
     ./sql

@@ -2,7 +2,6 @@
 {
   imports = [
     ./config
-    ./services
   ];
 
   users.users.admin = {

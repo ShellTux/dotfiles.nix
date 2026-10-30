@@ -1,21 +1,20 @@
 {
   config,
   lib,
-  pkgs,
   lib',
+  pkgs,
   ...
 }:
 let
-  inherit (builtins) toString;
+  inherit (builtins) elem toString;
   inherit (lib)
     mkOption
     mkIf
     mkDefault
-    optional
     removeSuffix
     ;
   inherit (lib.types) bool;
-  inherit (lib'.flake.caddy) mkProxyOption;
+  inherit (lib'.flake.networking) mkSiteOptions;
 
   # https://grafana.com/grafana/dashboards/1860
   node-exporter-full = pkgs.fetchurl {
@@ -40,10 +39,10 @@ in
       default = false;
     };
 
-    proxy = mkProxyOption {
-      inherit (config.networking) naming;
-      name = "grafana";
-      upstream.port = cfg.settings.server.http_port;
+    site = mkSiteOptions {
+      subdomain = "grafana";
+      inherit (config.networking) fqdnOrHostName localFqdn;
+      description = "Grafana is a visualization tool for creating real-time monitoring dashboards from various data sources.";
     };
   };
 
@@ -108,7 +107,35 @@ in
         };
       };
 
-      caddy.proxies = optional cfg.proxy.enable cfg.proxy;
+      caddy.virtualHosts = {
+        "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
+          extraConfig = ''
+            import tls-public
+            import encoding
+            import coraza
+            import reverse-proxy 127.0.0.1:${toString cfg.settings.server.http_port}
+          '';
+        };
+
+        "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
+          extraConfig = ''
+            import tls-local
+            import encoding
+            import reverse-proxy 127.0.0.1:${toString cfg.settings.server.http_port}
+          '';
+        };
+      };
+
+      homepage-dashboard.service-templates.grafana = {
+        display = "Grafana";
+        inherit (cfg.site)
+          href
+          ping
+          siteMonitor
+          description
+          ;
+        icon = "grafana.png";
+      };
     };
 
     programs.rust-motd.settings.service_status.Grafana =

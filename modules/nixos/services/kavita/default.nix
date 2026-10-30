@@ -5,15 +5,15 @@
   ...
 }:
 let
+  inherit (builtins) elem;
   inherit (lib)
     mkOption
     mkIf
     mkDefault
-    optional
     removeSuffix
     ;
   inherit (lib.types) bool;
-  inherit (lib'.flake.caddy) mkProxyOption;
+  inherit (lib'.flake.networking) mkSiteOptions;
 
   cfg = config.services.kavita;
 in
@@ -25,10 +25,10 @@ in
       default = false;
     };
 
-    proxy = mkProxyOption {
-      inherit (config.networking) naming;
-      name = "kavita";
-      upstream.port = cfg.settings.Port;
+    site = mkSiteOptions {
+      subdomain = "kavita";
+      inherit (config.networking) fqdnOrHostName localFqdn;
+      description = "Kavita is a fast, feature rich, cross platform reading server. Built with the goal of being a full solution for all your reading needs. Setup your own server and share your reading collection with your friends and family.";
     };
   };
 
@@ -37,7 +37,42 @@ in
       tokenKeyFile = mkDefault config.sops.secrets."services/kavita/TokenKey".path;
     };
 
-    services.caddy.proxies = optional cfg.proxy.enable cfg.proxy;
+    services = {
+      caddy.virtualHosts = mkIf (cfg.site.reverse-proxy == "caddy") {
+        "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
+          extraConfig = ''
+            import tls-public
+            import encoding
+            import coraza
+            import reverse-proxy 127.0.0.1:${toString cfg.settings.Port}
+          '';
+        };
+
+        "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
+          extraConfig = ''
+            import tls-local
+            import encoding
+            import reverse-proxy 127.0.0.1:${toString cfg.port}
+          '';
+        };
+      };
+
+      homepage-dashboard.service-templates.kavita = {
+        display = "Kavita";
+        inherit (cfg.site)
+          href
+          ping
+          siteMonitor
+          description
+          ;
+        icon = "kavita.png";
+        widget = {
+          url = cfg.site.href;
+          type = "kavita";
+          key = "{{HOMEPAGE_VAR_KAVITA_KEY}}";
+        };
+      };
+    };
 
     programs.rust-motd.settings.service_status.Kavita =
       removeSuffix ".service" config.systemd.services.kavita.name;

@@ -1,6 +1,0 @@
-{ ... }:
-{
-  imports = [
-    ./settings.crypt.nix
-  ];
-}

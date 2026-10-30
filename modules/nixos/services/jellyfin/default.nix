@@ -5,12 +5,12 @@
   ...
 }:
 let
+  inherit (builtins) elem;
   inherit (lib)
     mkOption
     mkIf
     mkDefault
     hasPrefix
-    optional
     removeSuffix
     ;
   inherit (lib.types)
@@ -19,8 +19,7 @@ let
     str
     port
     ;
-
-  inherit (lib'.flake.caddy) mkProxyOption;
+  inherit (lib'.flake.networking) mkSiteOptions;
 
   cfg = config.services.jellyfin;
 in
@@ -38,10 +37,10 @@ in
       default = 8096;
     };
 
-    proxy = mkProxyOption {
-      inherit (config.networking) naming;
-      name = "jellyfin";
-      upstream.port = cfg.port;
+    site = mkSiteOptions {
+      subdomain = "jellyfin";
+      inherit (config.networking) fqdnOrHostName localFqdn;
+      description = "Free media server for organizing and streaming your personal media.";
     };
 
     # TODO: add module to readonly bind mount drive
@@ -67,7 +66,50 @@ in
 
     services.jellyfin = mkDefault { };
 
-    services.caddy.proxies = optional cfg.proxy.enable cfg.proxy;
+    services = {
+      caddy.virtualHosts = mkIf (cfg.site.reverse-proxy == "caddy") {
+        "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
+          extraConfig = ''
+            import tls-public
+            import encoding
+            import coraza
+            import reverse-proxy 127.0.0.1:${toString cfg.port}
+          '';
+        };
+
+        "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
+          extraConfig = ''
+            import tls-local
+            import encoding
+            import reverse-proxy 127.0.0.1:${toString cfg.port}
+          '';
+        };
+      };
+
+      homepage-dashboard.service-templates.jellyfin = {
+        display = "Jellyfin";
+        inherit (cfg.site)
+          href
+          ping
+          siteMonitor
+          description
+          ;
+        icon = "jellyfin.png";
+        widget = {
+          url = cfg.site.href;
+
+          enableBlocks = true;
+          enableMediaControl = false;
+          enableNowPlaying = true;
+          enableUser = true;
+          expandOneStreamToTwoRows = false;
+          key = "{{HOMEPAGE_VAR_JELLYFIN_KEY}}";
+          showEpisodeNumber = true;
+          type = "jellyfin";
+          version = 2;
+        };
+      };
+    };
 
     # TODO: backup jellyfin
     # systemd.services.backup-jellyfin = mkIf (cfg.backupDir != null) {

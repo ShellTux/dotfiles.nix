@@ -1,10 +1,9 @@
 { ... }:
 {
   imports = [
-    ./fileSystems.crypt.nix
+    ./fileSystems
     ./networking
     ./programs
-    ./security
     ./services
     ./users
   ];

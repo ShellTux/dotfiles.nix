@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (builtins) concatStringsSep;
+  inherit (builtins) concatStringsSep elem;
   inherit (lib)
     escapeShellArg
     getExe
@@ -17,11 +17,12 @@ let
     mkForce
     mkIf
     mkOption
+    optionalAttrs
     optionalString
     removeSuffix
     types
     ;
-  inherit (lib'.flake.caddy) mkProxyOption;
+  inherit (lib'.flake.networking) mkSiteOptions;
 
   fpm = config.services.phpfpm.pools.nextcloud;
   webserver = config.services."${cfg.webserver}";
@@ -98,66 +99,17 @@ in
       '';
     };
 
-    port = mkOption {
-      description = "port";
-      type = types.port;
-      default = 8080;
-    };
-
-    proxy = mkProxyOption {
-      inherit (config.networking) naming;
-      name = "nextcloud";
-      upstream.port = cfg.port;
-      coraza.initialConfig = ''
-        SecAction "id:1000003,\
-            phase:1,\
-            log,\
-            pass,\
-            ctl:ruleEngine=DetectionOnly,\
-            ctl:ruleRemoveById=911100"
-
-        SecAction "id:1000004,\
-            phase:1,\
-            log,\
-            pass,\
-            ctl:ruleEngine=DetectionOnly,\
-            ctl:ruleRemoveById=911101"
-
-        SecAction "id:1000005,\
-            phase:1,\
-            log,\
-            pass,\
-            ctl:ruleEngine=DetectionOnly,\
-            ctl:ruleRemoveById=941100"
-
-        SecAction "id:1000006,\
-            phase:1,\
-            log,\
-            pass,\
-            ctl:ruleEngine=DetectionOnly,\
-            ctl:ruleRemoveById=941130"
-
-        SecAction "id:1000007,\
-            phase:1,\
-            log,\
-            pass,\
-            ctl:ruleEngine=DetectionOnly,\
-            ctl:ruleRemoveById=920420"
-
-        SecAction "id:1000008,\
-            phase:1,\
-            log,\
-            pass,\
-            ctl:ruleEngine=DetectionOnly,\
-            ctl:ruleRemoveById=932235"
-      '';
+    site = mkSiteOptions {
+      subdomain = "nextcloud";
+      inherit (config.networking) fqdnOrHostName localFqdn;
+      description = "Nextcloud é uma plataforma de colaboração em nuvem de código aberto que possibilita a criação de servidores de hospedagem de arquivos privados ou empresariais.";
     };
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
     services.nextcloud = {
       package = pkgs.nextcloud35;
-      hostName = mkDefault cfg.proxy.computedFqdn;
+      hostName = mkDefault cfg.site.fqdn;
       enableImagemagick = true;
       https = mkDefault true;
 
@@ -240,59 +192,127 @@ in
 
       caddy = mkIf (cfg.webserver == "caddy") {
         enable = mkDefault true;
-        virtualHosts."${if cfg.https then "https" else "http"}://${cfg.hostName}".extraConfig = ''
-          import tls-duckdns
-          encode zstd gzip
 
-          root * ${config.services.nginx.virtualHosts.${cfg.hostName}.root}
+        snippets.coraza-nextcloud = mkDefault ''
+          coraza_waf {
+            load_owasp_crs
 
-          redir /.well-known/carddav /remote.php/dav 301
-          redir /.well-known/caldav /remote.php/dav 301
-          redir /.well-known/* /index.php{uri} 301
-          redir /remote/* /remote.php{uri} 301
+            directives `
+              SecAction "id:1000003,phase:1,log,pass,ctl:ruleEngine=DetectionOnly,ctl:ruleRemoveById=911100"
+              SecAction "id:1000004,phase:1,log,pass,ctl:ruleEngine=DetectionOnly,ctl:ruleRemoveById=911101"
+              SecAction "id:1000005,phase:1,log,pass,ctl:ruleEngine=DetectionOnly,ctl:ruleRemoveById=941100"
+              SecAction "id:1000006,phase:1,log,pass,ctl:ruleEngine=DetectionOnly,ctl:ruleRemoveById=941130"
+              SecAction "id:1000007,phase:1,log,pass,ctl:ruleEngine=DetectionOnly,ctl:ruleRemoveById=920420"
+              SecAction "id:1000008,phase:1,log,pass,ctl:ruleEngine=DetectionOnly,ctl:ruleRemoveById=932235"
 
-          header {
-            Strict-Transport-Security max-age=31536000
-            Permissions-Policy interest-cohort=()
-            X-Content-Type-Options nosniff
-            X-Frame-Options SAMEORIGIN
-            Referrer-Policy no-referrer
-            X-XSS-Protection "1; mode=block"
-            X-Permitted-Cross-Domain-Policies none
-            X-Robots-Tag "noindex, nofollow"
-            -X-Powered-By
+              Include @coraza.conf-recommended
+              Include @crs-setup.conf.example
+              Include @owasp_crs/*.conf
+
+              SecRuleEngine On
+            `
           }
-
-          php_fastcgi unix/${fpm.socket} {
-            root ${config.services.nginx.virtualHosts.${cfg.hostName}.root}
-            env front_controller_active true
-            env modHeadersAvailable true
-          }
-
-          @forbidden {
-            path /build/* /tests/* /config/* /lib/* /3rdparty/* /templates/* /data/*
-            path /.* /autotest* /occ* /issue* /indie* /db_* /console*
-            not path /.well-known/*
-          }
-          error @forbidden 404
-
-          @immutable {
-            path *.css *.js *.mjs *.svg *.gif *.png *.jpg *.ico *.wasm *.tflite
-            query v=*
-          }
-          header @immutable Cache-Control "max-age=15778463, immutable"
-
-          @static {
-            path *.css *.js *.mjs *.svg *.gif *.png *.jpg *.ico *.wasm *.tflite
-            not query v=*
-          }
-          header @static Cache-Control "max-age=15778463"
-
-          @woff2 path *.woff2
-          header @woff2 Cache-Control "max-age=604800"
-
-          file_server
         '';
+
+        virtualHosts =
+          let
+            nextCloudCaddyConfig = ''
+              root * ${config.services.nginx.virtualHosts.${cfg.hostName}.root}
+
+              redir /.well-known/carddav /remote.php/dav 301
+              redir /.well-known/caldav /remote.php/dav 301
+              redir /.well-known/* /index.php{uri} 301
+              redir /remote/* /remote.php{uri} 301
+
+              header {
+                Strict-Transport-Security max-age=31536000
+                Permissions-Policy interest-cohort=()
+                X-Content-Type-Options nosniff
+                X-Frame-Options SAMEORIGIN
+                Referrer-Policy no-referrer
+                X-XSS-Protection "1; mode=block"
+                X-Permitted-Cross-Domain-Policies none
+                X-Robots-Tag "noindex, nofollow"
+                -X-Powered-By
+              }
+
+              php_fastcgi unix/${fpm.socket} {
+                root ${config.services.nginx.virtualHosts.${cfg.hostName}.root}
+                env front_controller_active true
+                env modHeadersAvailable true
+              }
+
+              @forbidden {
+                path /build/* /tests/* /config/* /lib/* /3rdparty/* /templates/* /data/*
+                path /.* /autotest* /occ* /issue* /indie* /db_* /console*
+                not path /.well-known/*
+              }
+              error @forbidden 404
+
+              @immutable {
+                path *.css *.js *.mjs *.svg *.gif *.png *.jpg *.ico *.wasm *.tflite
+                query v=*
+              }
+              header @immutable Cache-Control "max-age=15778463, immutable"
+
+              @static {
+                path *.css *.js *.mjs *.svg *.gif *.png *.jpg *.ico *.wasm *.tflite
+                not query v=*
+              }
+              header @static Cache-Control "max-age=15778463"
+
+              @woff2 path *.woff2
+              header @woff2 Cache-Control "max-age=604800"
+
+              file_server
+            '';
+          in
+          {
+            "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
+              extraConfig = ''
+                import tls-public
+                import encoding
+                import coraza-nextcloud
+
+                ${nextCloudCaddyConfig}
+              '';
+            };
+
+            "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
+              extraConfig = ''
+                import tls-local
+                import encoding
+
+                ${nextCloudCaddyConfig}
+              '';
+            };
+          };
+
+      };
+
+      homepage-dashboard.service-templates.nextcloud = {
+        display = "Nextcloud";
+        inherit (cfg.site)
+          href
+          ping
+          siteMonitor
+          description
+          ;
+        icon = "nextcloud.png";
+
+        widget = mkIf false {
+          url = cfg.site.href;
+          type = "nextcloud";
+          key = "{{HOMEPAGE_VAR_NEXTCLOUD_KEY}}";
+          fields = [
+            "cpuload"
+            "memoryusage"
+            "freespace"
+            "activeusers"
+            "numfiles"
+            "numshares"
+          ];
+        };
       };
 
       phpfpm.pools.nextcloud.settings = {

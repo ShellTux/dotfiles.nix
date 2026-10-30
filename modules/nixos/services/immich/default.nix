@@ -5,19 +5,18 @@
   ...
 }:
 let
-  inherit (builtins) map listToAttrs;
+  inherit (builtins) elem map listToAttrs;
   inherit (lib)
     mkEnableOption
     mkOption
     mkIf
     mkForce
     pipe
-    optional
     optionals
     removeSuffix
     ;
   inherit (lib.types) bool str listOf;
-  inherit (lib'.flake.caddy) mkProxyOption;
+  inherit (lib'.flake.networking) mkSiteOptions;
 
   cfg = config.services.immich;
 in
@@ -29,10 +28,10 @@ in
       default = false;
     };
 
-    proxy = mkProxyOption {
-      inherit (config.networking) naming;
-      name = "immich";
-      upstream.port = cfg.port;
+    site = mkSiteOptions {
+      subdomain = "immich";
+      inherit (config.networking) fqdnOrHostName localFqdn;
+      description = "Self-hosted photo and video management solution. Easily back up, organize, and manage your photos on your own server. Immich helps you browse, search and organize your photos and videos with ease, without sacrificing your privacy.";
     };
 
     hardwareAcceleration = mkEnableOption "Whether to enable hardware acceleration";
@@ -61,7 +60,45 @@ in
       };
     };
 
-    services.caddy.proxies = optional cfg.proxy.enable cfg.proxy;
+    services = {
+      caddy.virtualHosts = {
+        "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
+          extraConfig = ''
+            import tls-public
+            import encoding
+            import coraza
+            import reverse-proxy 127.0.0.1:${toString cfg.port}
+          '';
+        };
+
+        "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
+          extraConfig = ''
+            import tls-local
+            import encoding
+            import reverse-proxy 127.0.0.1:${toString cfg.port}
+          '';
+        };
+      };
+
+      homepage-dashboard.service-templates.immich = {
+        display = "Immich";
+        inherit (cfg.site)
+          href
+          ping
+          siteMonitor
+          description
+          ;
+        icon = "immich.png";
+
+        widget = {
+          url = cfg.site.href;
+
+          type = "immich";
+          key = "{{HOMEPAGE_VAR_IMMICH_KEY}}";
+          version = 2;
+        };
+      };
+    };
 
     programs.rust-motd.settings.service_status.Immich =
       removeSuffix ".service" config.systemd.services.immich-server.name;

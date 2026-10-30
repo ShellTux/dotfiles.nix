@@ -5,15 +5,17 @@
   ...
 }:
 let
+  inherit (builtins) elem;
   inherit (lib)
     mkOption
     mkIf
     mkDefault
-    optional
     removeSuffix
+    types
     ;
   inherit (lib.types) bool;
-  inherit (lib'.flake.caddy) mkProxyOption;
+  inherit (lib'.flake.networking) mkSiteOptions;
+  inherit (config.networking) fqdnOrHostName;
 
   cfg = config.services.homepage-dashboard;
 in
@@ -25,11 +27,16 @@ in
       default = false;
     };
 
-    proxy = mkProxyOption {
-      inherit (config.networking) naming;
-      name = "home";
-      upstream.port = cfg.listenPort;
-      host.rootRedir = true;
+    service-templates = mkOption {
+      description = "Reusable Homepage Dashboard service templates.";
+      type = types.attrsOf types.anything;
+      default = { };
+    };
+
+    site = mkSiteOptions {
+      subdomain = "home";
+      inherit (config.networking) fqdnOrHostName localFqdn;
+      description = "Homepage dashboard";
     };
   };
 
@@ -79,11 +86,79 @@ in
           };
         }
       ];
+
+      service-templates = {
+        noticias = {
+          display = "Notícias ao Minuto - Última Hora";
+          widget = {
+            url = "https://www.noticiasaominuto.com/rss/ultima-hora";
+            type = "feed";
+            layout = "grid";
+            maxItems = 8;
+          };
+        };
+
+        sporting = {
+          display = "Sporting";
+          widget = {
+            url = "https://www.sporting.pt/pt/rss/noticias.xml";
+            type = "feed";
+            layout = "list";
+            maxItems = 8;
+          };
+        };
+
+        nasa-feed = {
+          display = "NASA Image of the Day";
+          widget = {
+            url = "https://www.nasa.gov/feeds/iotd-feed/";
+            type = "feed";
+            layout = "grid";
+            maxItems = 8;
+          };
+        };
+
+        last-cves = {
+          display = "Últimos CVE's graves";
+          widget = {
+            url = "https://cvefeed.io/rssfeed/severity/high.xml";
+            type = "feed";
+            layout = "list";
+            maxItems = 20;
+          };
+        };
+      };
     };
 
     programs.rust-motd.settings.service_status.Homepage =
       removeSuffix ".service" config.systemd.services.homepage-dashboard.name;
 
-    services.caddy.proxies = optional cfg.proxy.enable cfg.proxy;
+    services = {
+      authelia.instances."${fqdnOrHostName}".settings.access_control.rules = [
+        {
+          inherit (cfg.site) domain;
+          policy = "one_factor";
+        }
+      ];
+
+      caddy.virtualHosts = {
+        "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
+          extraConfig = ''
+            import tls-public
+            import encoding
+            import coraza
+            import reverse-proxy 127.0.0.1:${toString cfg.listenPort}
+          '';
+        };
+
+        "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
+          extraConfig = ''
+            import tls-local
+            import encoding
+            import reverse-proxy 127.0.0.1:${toString cfg.listenPort}
+          '';
+        };
+      };
+    };
   };
 }

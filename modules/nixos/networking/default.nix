@@ -23,6 +23,11 @@ in
       default = false;
     };
 
+    localFqdn = mkOption {
+      type = nullOr str;
+      default = null;
+    };
+
     naming = {
       domain = mkOption {
         description = "The root domain name used to access services from the public internet. If null, external public access features will be disabled.";

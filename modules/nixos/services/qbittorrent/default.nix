@@ -64,7 +64,22 @@ in
       webuiPort = 9839;
     };
 
-    services.caddy.proxies = [ cfg.proxy ];
+    services = {
+      homepage-dashboard.service-templates.qbittorrent = {
+        display = "Qbittorrent";
+        description = "Open-source torrent client for downloading and sharing files.";
+        href = cfg.site.href;
+        ping = "${cfg.site.href}/api/health";
+        icon = "qbittorrent.png";
+        widget = {
+          url = cfg.site.href;
+          type = "qbittorrent";
+          enableLeechProgress = true; # optional, defaults to false
+          enableLeechSize = true; # optional, defaults to false
+          key = "{{HOMEPAGE_VAR_QBITORRENT_KEY}}";
+        };
+      };
+    };
 
     programs.rust-motd.settings.service_status.Qbittorrent =
       removeSuffix ".service" config.systemd.services.qbittorrent.name;

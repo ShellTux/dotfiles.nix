@@ -38,9 +38,7 @@ let
 in
 {
   imports = [
-    ./authelia
     ./snippets
-    ./virtualHosts
   ];
 
   options.services.caddy = {

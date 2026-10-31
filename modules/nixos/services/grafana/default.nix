@@ -12,6 +12,8 @@ let
     mkIf
     mkDefault
     removeSuffix
+    getExe
+    pipe
     ;
   inherit (lib.types) bool;
   inherit (lib'.flake.networking) mkSiteOptions;
@@ -32,6 +34,10 @@ let
   cfg = config.services.grafana;
 in
 {
+  imports = [
+    ./speedtest-exporter
+  ];
+
   options.services.grafana = {
     disableModule = mkOption {
       description = "Whether to disable this module configuration";

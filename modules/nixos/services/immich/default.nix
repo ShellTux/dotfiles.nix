@@ -7,12 +7,13 @@
 let
   inherit (builtins) elem map listToAttrs;
   inherit (lib)
+    mkDefault
     mkEnableOption
-    mkOption
-    mkIf
     mkForce
-    pipe
+    mkIf
+    mkOption
     optionals
+    pipe
     removeSuffix
     ;
   inherit (lib.types) bool str listOf;
@@ -91,6 +92,7 @@ in
         icon = "immich.png";
 
         widget = {
+          enable = mkDefault false;
           url = cfg.site.href;
 
           type = "immich";

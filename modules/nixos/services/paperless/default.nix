@@ -82,7 +82,7 @@ in
           description
           ;
         icon = "paperless.png";
-        widget = {
+        widget = mkIf false {
           url = cfg.site.href;
 
           key = "{{HOMEPAGE_VAR_PAPERLESS_KEY}}";

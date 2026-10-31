@@ -1,14 +1,16 @@
-{ ... }:
+{ config, ... }:
 let
+  inherit (config.networking) localFqdn;
+
   username = "luisgois";
 in
 {
   users.users.${username} = {
     isNormalUser = true;
     extraGroups = [ "ssh-users" ];
-    initialPassword = "123456";
+    hashedPassword = "!";
     openssh.authorizedKeys.keys = [
-      "SHA256:crxWEAM+xIv9r1yxhXRqVobMdW2lDBMOUTwB4MQMGLQ luisgois@ra-portal.duckdns.org"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJK+iESNidBhZORlp8E/uLm0pNh2m3UKHbSa1NY7CNYW luisgois@${localFqdn}"
     ];
   };
 

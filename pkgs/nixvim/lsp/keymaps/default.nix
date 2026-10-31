@@ -1,6 +1,42 @@
 { ... }: {
   lsp.keymaps = [
     {
+      key = "<leader>ca";
+      lspBufAction = "code_action";
+      options.desc = "[C]ode [A]ction";
+    }
+    {
+      action.__raw = "vim.diagnostic.open_float";
+      key = "gl";
+      options.desc = "Line diagnostics";
+    }
+    {
+      action.__raw = "require('telescope.builtin').lsp_document_symbols";
+      key = "<leader>ds";
+      options.desc = "[D]ocument [S]ymbols";
+    }
+
+    {
+      action.__raw = "require('telescope.builtin').lsp_dynamic_workspace_symbols";
+      key = "<leader>ws";
+      options.desc = "[W]orkspace [S]ymbols";
+    }
+    {
+      key = "<C-k>";
+      lspBufAction = "signature_help";
+      options.desc = "Signature help";
+    }
+    {
+      key = "<leader>cf";
+      lspBufAction = "format";
+      options.desc = "[C]ode [F]ormat";
+    }
+    {
+      key = "<leader>rn";
+      lspBufAction = "rename";
+      options.desc = "[R]e[n]ame Symbol";
+    }
+    {
       key = "gd";
       lspBufAction = "definition";
       options.desc = "Goto definition";
@@ -64,10 +100,6 @@
       action.__raw = "require('telescope.builtin').lsp_definitions";
       key = "gd";
       options.desc = "[G]oto [D]efinition";
-    }
-    {
-      action = "<CMD>Lspsaga hover_doc<Enter>";
-      key = "K";
     }
   ];
 }

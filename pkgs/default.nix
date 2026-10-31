@@ -33,6 +33,7 @@
         help = callPackage ./help { };
         hyprland-power-saver = callPackage ./hyprland-power-saver { };
         ipa = callPackage ./ipa { };
+        jdownloader2 = callPackage ./jdownloader2 { };
         mknix = callPackage ./mknix { };
         mktouch = callPackage ./mktouch { };
         mounts = callPackage ./mounts { };

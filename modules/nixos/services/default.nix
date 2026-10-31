@@ -25,6 +25,7 @@
     ./guix
     ./homepage-dashboard
     ./immich
+    ./jdownloader2
     ./jellyfin
     ./kavita
     ./locate

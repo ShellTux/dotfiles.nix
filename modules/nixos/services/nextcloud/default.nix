@@ -300,7 +300,8 @@ in
           ;
         icon = "nextcloud.png";
 
-        widget = mkIf false {
+        widget = {
+          enable = mkDefault false;
           url = cfg.site.href;
           type = "nextcloud";
           key = "{{HOMEPAGE_VAR_NEXTCLOUD_KEY}}";

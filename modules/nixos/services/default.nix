@@ -4,6 +4,7 @@
     ./aide
     ./authelia
     ./caddy
+    ./calibre-web
     ./changedetection-io
     ./cksfv
     ./collabora-online

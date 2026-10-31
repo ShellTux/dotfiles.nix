@@ -6,6 +6,7 @@
   ...
 }:
 let
+  inherit (builtins) elem;
   inherit (lib)
     mkOption
     mkIf
@@ -13,7 +14,7 @@ let
     removeSuffix
     ;
   inherit (lib.types) bool path nullOr;
-  inherit (lib'.flake.caddy) mkProxyOption;
+  inherit (lib'.flake.networking) mkSiteOptions;
 
   cfg = config.services.qbittorrent;
 in
@@ -25,53 +26,97 @@ in
       default = false;
     };
 
-    proxy = mkProxyOption {
-      inherit (config.server) domain;
-      name = "qbittorrent";
-      upstream.port = cfg.webuiPort;
-    };
-
-    downloadPath = mkOption {
-      description = "Qbittorrent download path";
-      type = nullOr path;
-      default = null;
-      example = "/srv/downloads/qbittorrent";
+    site = mkSiteOptions {
+      subdomain = "qbittorrent";
+      inherit (config.networking) fqdnOrHostName localFqdn;
+      description = "qBittorrent é um aplicativo cliente P2P multiplataforma, gratuito, livre e de código aberto para a rede BitTorrent.";
     };
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
-    services.qbittorrent = mkDefault {
-      package = pkgs.qbittorrent-nox;
+    services.qbittorrent = {
+      package = mkDefault pkgs.qbittorrent-nox;
       serverConfig = {
         Preferences = {
+          # Alternative speed limits
+          AltGlobalDLLimit = mkDefault 100; # KiB/s
+          AltGlobalUPLimit = mkDefault 100; # KiB/s
+
+          # Scheduler
+          SchedulerEnabled = mkDefault true;
+          SchedulerStartTime = mkDefault 480; # 08:00
+          SchedulerEndTime = mkDefault 1200; # 20:00
+
+          # Ignore slow torrents when applying queue limits
+          QueueingIgnoreSlowTorrents = mkDefault true;
+          SlowTorrentsDownloadRate = mkDefault 10; # KiB/s
+          SlowTorrentsUploadRate = mkDefault 10; # KiB/s
+          SlowTorrentsInactivityTimer = mkDefault 60; # seconds
+
+          # Torrent queueing
+          MaxActiveDownloads = mkDefault 5;
+          MaxActiveUploads = mkDefault 10;
+          MaxActiveTorrents = mkDefault 30;
+
+          Connection = mkIf config.services.i2pd.enable {
+            EnableI2P = true;
+            I2PAddress = mkDefault "127.0.0.1";
+            I2PPort = mkDefault config.services.i2pd.settings.sam.port;
+          };
+
           LegalNotice.Accepted = true;
           WebUI = {
             AlternativeUIEnabled = true;
-            HostHeaderValidation = false;
+            HostHeaderValidation = mkDefault true;
             RootFolder = "${pkgs.vuetorrent}/share/vuetorrent";
+            CSRFProtection = mkDefault true;
+            ClickjackingProtection = mkDefault true;
+            RefreshInterval = mkDefault 1000;
 
             Username = "admin";
             # generate password with:
             # nix run git+https://codeberg.org/feathecutie/qbittorrent_password -- -p "$(read -s PASSWORD; echo $PASSWORD)"
             # Password_PBKDF2 = "<hash password>";
           };
-          Downloads.SavePath = mkIf (cfg.downloadPath != null) cfg.downloadPath;
+
+          BitTorrent.Session.MaxActiveTorrents = 10;
         };
-        BitTorrent.Session = {
-          MaxActiveTorrents = 10;
-        };
+
       };
-      webuiPort = 9839;
+      webuiPort = mkDefault 9839;
     };
 
     services = {
+      caddy.virtualHosts = mkIf (cfg.site.reverse-proxy == "caddy") {
+        "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
+          extraConfig = ''
+            import tls-public
+            import encoding
+            import coraza
+            import reverse-proxy 127.0.0.1:${toString cfg.webuiPort}
+          '';
+        };
+
+        "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
+          extraConfig = ''
+            import tls-local
+            import encoding
+            import reverse-proxy 127.0.0.1:${toString cfg.webuiPort}
+          '';
+        };
+      };
+
       homepage-dashboard.service-templates.qbittorrent = {
         display = "Qbittorrent";
-        description = "Open-source torrent client for downloading and sharing files.";
-        href = cfg.site.href;
-        ping = "${cfg.site.href}/api/health";
+        inherit (cfg.site)
+          description
+          href
+          ping
+          siteMonitor
+          ;
         icon = "qbittorrent.png";
-        widget = {
+
+        widget = mkIf false {
           url = cfg.site.href;
           type = "qbittorrent";
           enableLeechProgress = true; # optional, defaults to false
@@ -83,10 +128,6 @@ in
 
     programs.rust-motd.settings.service_status.Qbittorrent =
       removeSuffix ".service" config.systemd.services.qbittorrent.name;
-
-    systemd.tmpfiles.rules = [
-      (mkIf (cfg.downloadPath != null) "d ${cfg.downloadPath} 0755 ${cfg.user} ${cfg.group} - -")
-    ];
 
   };
 }

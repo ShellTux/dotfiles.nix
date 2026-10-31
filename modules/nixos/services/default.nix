@@ -32,6 +32,7 @@
     ./nginx
     ./onlyoffice
     ./openssh
+    ./paperless
     ./photoprism
     ./pipewire
     ./printing

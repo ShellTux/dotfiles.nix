@@ -30,6 +30,7 @@
     ./kavita
     ./locate
     ./mealie
+    ./minecraft-server
     ./nextcloud
     ./nginx
     ./onlyoffice

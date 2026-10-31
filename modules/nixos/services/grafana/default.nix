@@ -49,7 +49,16 @@ in
   config = mkIf (cfg.enable && !cfg.disableModule) {
     services = {
       grafana = {
-        declarativePlugins = [ pkgs.grafanaPlugins.grafana-piechart-panel ];
+        declarativePlugins = [
+          pkgs.grafanaPlugins.grafana-clock-panel
+          pkgs.grafanaPlugins.grafana-github-datasource
+          pkgs.grafanaPlugins.grafana-piechart-panel
+          pkgs.grafanaPlugins.influxdb
+          pkgs.grafanaPlugins.marcusolsson-calendar-panel
+          pkgs.grafanaPlugins.marcusolsson-csv-datasource
+          pkgs.grafanaPlugins.marcusolsson-json-datasource
+          pkgs.grafanaPlugins.prometheus
+        ];
 
         settings = {
           security.secret_key = "$__file{${config.sops.secrets."grafana/secret-key".path}}";

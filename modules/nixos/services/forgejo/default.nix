@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (builtins) elem concatStringsSep any;
+  inherit (builtins)
+    any
+    concatStringsSep
+    elem
+    head
+    ;
   inherit (lib)
     mkIf
     mkOption
@@ -17,6 +22,8 @@ let
   inherit (lib'.flake.networking) mkSiteOptions;
 
   inherit (config.networking) fqdnOrHostName;
+
+  isPublic = elem "public" cfg.site.exposure;
 
   cfg = config.services.forgejo;
 in
@@ -80,8 +87,13 @@ in
           };
 
           server = {
+            DISABLE_SSH = mkIf isPublic false;
             ROOT_URL = cfg.site.href;
-            #   SSH_PORT = head config.services.openssh.ports;
+            SSH_LISTEN_HOST = mkDefault "0.0.0.0";
+            SSH_LISTEN_PORT = mkDefault 2240;
+            SSH_PORT = if isPublic then 443 else head config.services.openssh.ports;
+            SSH_SERVER_USE_PROXY_PROTOCOL = mkIf isPublic false;
+            START_SSH_SERVER = mkIf isPublic true;
           };
 
           other = {
@@ -137,22 +149,39 @@ in
         ];
       };
 
-      caddy.virtualHosts = {
-        "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
-          extraConfig = ''
-            import tls-public
-            import encoding
-            import coraza
-            import reverse-proxy 127.0.0.1:${toString cfg.settings.server.HTTP_PORT}
-          '';
-        };
+      caddy = {
+        globalConfig = mkIf isPublic ''
+          servers {
+            listener_wrappers {
+              layer4 {
+                @forgejo-ssh ssh
+                route @forgejo-ssh {
+                  proxy 127.0.0.1:${toString cfg.settings.server.SSH_LISTEN_PORT}
+                }
+                route
+              }
+              tls
+            }
+          }
+        '';
 
-        "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
-          extraConfig = ''
-            import tls-local
-            import encoding
-            import reverse-proxy 127.0.0.1:${toString cfg.settings.server.HTTP_PORT}
-          '';
+        virtualHosts = {
+          "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
+            extraConfig = ''
+              import tls-public
+              import encoding
+              import coraza
+              import reverse-proxy 127.0.0.1:${toString cfg.settings.server.HTTP_PORT}
+            '';
+          };
+
+          "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
+            extraConfig = ''
+              import tls-local
+              import encoding
+              import reverse-proxy 127.0.0.1:${toString cfg.settings.server.HTTP_PORT}
+            '';
+          };
         };
       };
 

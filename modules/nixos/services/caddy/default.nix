@@ -65,10 +65,12 @@ in
       package = pkgs.caddy.withPlugins {
         plugins = [
           "github.com/caddy-dns/duckdns@v0.5.0"
-          "github.com/porech/caddy-maxmind-geolocation@v1.0.3"
           "github.com/corazawaf/coraza-caddy/v2@v2.6.1"
+          "github.com/mholt/caddy-l4@v0.1.2"
+          "github.com/mholt/caddy-ratelimit@v0.1.0"
+          "github.com/porech/caddy-maxmind-geolocation@v1.0.3"
         ];
-        hash = "sha256-2EB1b6Kzj1x4dtVVM5YSvxa71MmQqNDrARV3Gpjkpzk=";
+        hash = "sha256-uICsxW8gteJUbvxI4ylTiLWi8BXRP3+V6P4mxJhs9+8=";
       };
 
       globalConfig = ''

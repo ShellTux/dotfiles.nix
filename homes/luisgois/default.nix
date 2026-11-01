@@ -123,7 +123,6 @@
   };
 
   services = {
-    dunst.enable = true;
     easyeffects.enable = true;
     emacs.enable = true;
     gammastep.enable = true;

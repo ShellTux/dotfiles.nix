@@ -43,10 +43,11 @@ in
       sessionVariables = {
         CDPATH = concatStringsSep ":" [
           "."
-          "~/.local/src"
+          config.xdg.srcHome
+          "${config.home.homeDirectory}/.local/src"
           config.xdg.configHome
-          "~"
-          "~/.local"
+          config.home.homeDirectory
+          "${config.home.homeDirectory}/.local"
           "/etc"
         ];
         PROMPT_COMMAND = "__prompt_command";

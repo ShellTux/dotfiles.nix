@@ -19,6 +19,30 @@ set termguicolors
 set wildmenu
 syntax enable
 
+" Create missing parent directories before writing {{{
+function! s:CreateParentDirectories() abort
+  if &buftype !=# '' || empty(expand('%'))
+    return
+  endif
+
+  let l:dir = expand('%:p:h')
+  if empty(l:dir) || isdirectory(l:dir)
+    return
+  endif
+
+  if confirm(printf('Directory "%s" does not exist. Create it?', l:dir), "&Yes\n&No", 1) == 1
+    call mkdir(l:dir, 'p')
+  else
+    throw 'Write cancelled: parent directory does not exist'
+  endif
+endfunction
+
+augroup create_parent_directories
+  autocmd!
+  autocmd BufWritePre * call s:CreateParentDirectories()
+augroup END
+" }}}
+
 nnoremap <C-h> :nohlsearch<CR>
 nnoremap <Down> :resize +2<CR>
 nnoremap J mzJ`z

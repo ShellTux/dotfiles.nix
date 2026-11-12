@@ -17,6 +17,7 @@ in
     imports = [
       inputs.nix-index-database.homeModules.nix-index
       inputs.nixvim.homeModules.nixvim
+      inputs.nur.modules.homeManager.default
       inputs.sops-nix.homeManagerModules.sops
       inputs.stylix.homeModules.stylix
     ]

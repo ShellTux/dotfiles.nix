@@ -16,7 +16,6 @@
       pkgs.calcurse
       pkgs.dua
       pkgs.easyeffects
-      pkgs.ffmpeg
       pkgs.fselect
       pkgs.gimp3-with-plugins
       pkgs.gocryptfs
@@ -94,6 +93,7 @@
     brave.enable = true;
     direnv.enable = true;
     emacs.enable = true;
+    ffmpeg.enable = true;
     floorp.enable = true;
     fzf.enable = true;
     ghostty.enable = true;

@@ -52,6 +52,7 @@ in
       ./eza
       ./fastfetch
       ./fd
+      ./ffmpeg
       ./floorp
       ./fzf
       ./gemini-cli

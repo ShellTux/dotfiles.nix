@@ -83,6 +83,7 @@ in
       ./thunar
       ./thunderbird
       ./tmux
+      ./vesktop
       ./vim
       ./waybar
       ./wezterm

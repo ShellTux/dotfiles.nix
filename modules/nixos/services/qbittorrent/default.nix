@@ -8,13 +8,27 @@
 let
   inherit (builtins) elem;
   inherit (lib)
-    mkOption
-    mkIf
+    mkMerge
+    optionalString
     mkDefault
+    mkEnableOption
+    mkIf
+    mkOption
     removeSuffix
+    types
     ;
-  inherit (lib.types) bool path nullOr;
+  inherit (lib.types) bool;
   inherit (lib'.flake.networking) mkSiteOptions;
+
+  caddyDownloadsPath = exposure: ''
+    redir ${cfg.browser.path} ${cfg.browser.path}/ 308
+
+    handle_path ${cfg.browser.path}* {
+        ${optionalString (exposure == "public") "import authelia"}
+        root * ${cfg.downloadsDir}
+        file_server browse
+    }
+  '';
 
   cfg = config.services.qbittorrent;
 in
@@ -26,10 +40,24 @@ in
       default = false;
     };
 
+    downloadsDir = mkOption {
+      type = types.str;
+      default = "${cfg.profileDir}/qBittorrent/downloads";
+    };
+
     site = mkSiteOptions {
       subdomain = "qbittorrent";
       inherit (config.networking) fqdnOrHostName localFqdn;
       description = "qBittorrent é um aplicativo cliente P2P multiplataforma, gratuito, livre e de código aberto para a rede BitTorrent.";
+    };
+
+    browser = {
+      enable = mkEnableOption "Wether to enable downloads file browser";
+
+      path = mkOption {
+        type = types.str;
+        default = "/navegar";
+      };
     };
   };
 
@@ -87,24 +115,28 @@ in
     };
 
     services = {
-      caddy.virtualHosts = mkIf (cfg.site.reverse-proxy == "caddy") {
-        "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
-          extraConfig = ''
-            import tls-public
-            import encoding
-            import coraza
-            import reverse-proxy 127.0.0.1:${toString cfg.webuiPort}
-          '';
-        };
+      caddy.virtualHosts = mkMerge [
+        (mkIf (cfg.site.reverse-proxy == "caddy") {
+          "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
+            extraConfig = ''
+              import tls-public
+              import encoding
+              import coraza
+              import reverse-proxy 127.0.0.1:${toString cfg.webuiPort}
+            ''
+            + optionalString cfg.browser.enable (caddyDownloadsPath "public");
+          };
 
-        "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
-          extraConfig = ''
-            import tls-local
-            import encoding
-            import reverse-proxy 127.0.0.1:${toString cfg.webuiPort}
-          '';
-        };
-      };
+          "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
+            extraConfig = ''
+              import tls-local
+              import encoding
+              import reverse-proxy 127.0.0.1:${toString cfg.webuiPort}
+            ''
+            + optionalString cfg.browser.enable (caddyDownloadsPath "local");
+          };
+        })
+      ];
 
       homepage-dashboard.service-templates.qbittorrent = {
         display = "Qbittorrent";

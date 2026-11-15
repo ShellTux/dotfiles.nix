@@ -5,15 +5,30 @@
   ...
 }:
 let
-  inherit (builtins) elem;
+  inherit (builtins) elem isString length;
   inherit (lib)
-    mkOption
-    mkIf
+    hasInfix
     mkDefault
+    mkIf
+    mkOption
     removeSuffix
+    types
     ;
   inherit (lib.types) bool;
   inherit (lib'.flake.networking) mkSiteOptions;
+
+  defaultTarget = source: "/srv/kavita/${baseNameOf source}";
+
+  normalizeMount =
+    entry:
+    if isString entry then
+      if hasInfix ":" entry then entry else "${entry}:${defaultTarget entry}"
+    else
+      let
+        source = entry.source;
+        target = if entry.target != null then entry.target else defaultTarget source;
+      in
+      "${source}:${target}";
 
   cfg = config.services.kavita;
 in
@@ -29,6 +44,67 @@ in
       subdomain = "kavita";
       inherit (config.networking) fqdnOrHostName localFqdn;
       description = "Kavita is a fast, feature rich, cross platform reading server. Built with the goal of being a full solution for all your reading needs. Setup your own server and share your reading collection with your friends and family.";
+    };
+
+    readOnlyMediaPaths = mkOption {
+      default = [ ];
+
+      type = types.listOf (
+        types.oneOf [
+          types.str
+          (types.submodule {
+            options = {
+              source = mkOption {
+                type = types.str;
+                description = "Source path on the host.";
+              };
+
+              target = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = ''
+                  Target path exposed inside the kavita
+                  service namespace.
+
+                  Defaults to:
+                  /srv/kavita/<basename(source)>
+                '';
+              };
+            };
+          })
+        ]
+      );
+
+      example = [
+        "/mnt/media/movies"
+
+        "/mnt/media/tvshows:/srv/kavita/tvshows"
+
+        {
+          source = "/mnt/media/music";
+          target = "/srv/kavita/music";
+        }
+
+        {
+          source = "/mnt/media/anime";
+        }
+      ];
+
+      description = ''
+        Read-only media paths exposed to Kavita using
+        systemd's BindReadOnlyPaths.
+
+        Supported formats:
+
+        - /host/path
+        - /host/path:/target/path
+        - { source = "..."; target = "..."; }
+        - { source = "..."; }
+
+        When no target is specified, the path is mounted at:
+
+          /srv/kavita/<basename(source)>
+      '';
     };
   };
 
@@ -77,9 +153,9 @@ in
     programs.rust-motd.settings.service_status.Kavita =
       removeSuffix ".service" config.systemd.services.kavita.name;
 
-    users = {
-      groups.media = { };
-      users."${cfg.user}".extraGroups = [ config.users.groups.media.name ];
+    systemd.services.kavita.serviceConfig = mkIf (length cfg.readOnlyMediaPaths > 0) {
+      ProtectSystem = mkDefault "strict";
+      BindReadOnlyPaths = map normalizeMount cfg.readOnlyMediaPaths;
     };
 
     sops.secrets."services/kavita/TokenKey" = {

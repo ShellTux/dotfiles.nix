@@ -70,10 +70,5 @@ in
         };
       };
     };
-
-    users = {
-      groups.media = { };
-      users."${cfg.user}".extraGroups = [ config.users.groups.media.name ];
-    };
   };
 }

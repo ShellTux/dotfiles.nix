@@ -9,6 +9,7 @@ pipe
     ./caddy
     ./dirs
     ./dirsNames
+    ./fileSystems
     ./firefox
     ./homepage-dashboard
     ./hyprland

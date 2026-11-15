@@ -5,13 +5,15 @@
   ...
 }:
 let
-  inherit (builtins) elem;
+  inherit (builtins) elem isString;
   inherit (lib)
-    mkOption
-    mkIf
-    mkDefault
+    hasInfix
     hasPrefix
+    mkDefault
+    mkIf
+    mkOption
     removeSuffix
+    types
     ;
   inherit (lib.types)
     bool
@@ -20,6 +22,19 @@ let
     port
     ;
   inherit (lib'.flake.networking) mkSiteOptions;
+
+  defaultTarget = source: "/srv/jellyfin/${baseNameOf source}";
+
+  normalizeMount =
+    entry:
+    if isString entry then
+      if hasInfix ":" entry then entry else "${entry}:${defaultTarget entry}"
+    else
+      let
+        source = entry.source;
+        target = if entry.target != null then entry.target else defaultTarget source;
+      in
+      "${source}:${target}";
 
   cfg = config.services.jellyfin;
 in
@@ -52,6 +67,67 @@ in
         The directory under which jellyfin will backup its persistent data.
       '';
       example = "/var/backup/jellyfin";
+    };
+
+    readOnlyMediaPaths = mkOption {
+      default = [ ];
+
+      type = types.listOf (
+        types.oneOf [
+          types.str
+          (types.submodule {
+            options = {
+              source = mkOption {
+                type = types.str;
+                description = "Source path on the host.";
+              };
+
+              target = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+                description = ''
+                  Target path exposed inside the Jellyfin
+                  service namespace.
+
+                  Defaults to:
+                  /srv/jellyfin/<basename(source)>
+                '';
+              };
+            };
+          })
+        ]
+      );
+
+      example = [
+        "/mnt/media/movies"
+
+        "/mnt/media/tvshows:/srv/jellyfin/tvshows"
+
+        {
+          source = "/mnt/media/music";
+          target = "/srv/jellyfin/music";
+        }
+
+        {
+          source = "/mnt/media/anime";
+        }
+      ];
+
+      description = ''
+        Read-only media paths exposed to Jellyfin using
+        systemd's BindReadOnlyPaths.
+
+        Supported formats:
+
+        - /host/path
+        - /host/path:/target/path
+        - { source = "..."; target = "..."; }
+        - { source = "..."; }
+
+        When no target is specified, the path is mounted at:
+
+          /srv/jellyfin/<basename(source)>
+      '';
     };
 
   };
@@ -112,49 +188,50 @@ in
     };
 
     # TODO: backup jellyfin
-    # systemd.services.backup-jellyfin = mkIf (cfg.backupDir != null) {
-    #   description = "Backup jellyfin";
-    #   environment = {
-    #     DATA_FOLDER = cfg.dataDir;
-    #     BACKUP_FOLDER = cfg.backupDir;
-    #   };
-    #   path = [ pkgs.sqlite ];
-    #   # if both services are started at the same time, jellyfin fails with "database is locked"
-    #   before = [ "jellyfin.service" ];
-    #   serviceConfig = {
-    #     SyslogIdentifier = "backup-jellyfin";
-    #     Type = "oneshot";
-    #     User = mkDefault user;
-    #     Group = mkDefault group;
-    #     ExecStart = "${pkgs.bash}/bin/bash ${./backup.sh}";
-    #   };
-    #   wantedBy = [ "multi-user.target" ];
-    # };
-    #
-    # systemd.timers.backup-jellyfin = mkIf (cfg.backupDir != null) {
-    #   description = "Backup jellyfin on time";
-    #   timerConfig = {
-    #     OnCalendar = mkDefault "23:00";
-    #     Persistent = "true";
-    #     Unit = "backup-jellyfin.service";
-    #   };
-    #   wantedBy = [ "multi-user.target" ];
-    # };
-    #
-    # systemd.tmpfiles.settings = mkIf (cfg.backupDir != null) {
-    #   "10-jellyfin".${cfg.backupDir}.d = {
-    #     inherit user group;
-    #     mode = "0770";
-    #   };
-    # };
+    systemd = {
+      services = {
+        jellyfin.serviceConfig.BindReadOnlyPaths = map normalizeMount cfg.readOnlyMediaPaths;
+
+        # backup-jellyfin = mkIf (cfg.backupDir != null) {
+        #   description = "Backup jellyfin";
+        #   environment = {
+        #     DATA_FOLDER = cfg.dataDir;
+        #     BACKUP_FOLDER = cfg.backupDir;
+        #   };
+        #   path = [ pkgs.sqlite ];
+        #   # if both services are started at the same time, jellyfin fails with "database is locked"
+        #   before = [ "jellyfin.service" ];
+        #   serviceConfig = {
+        #     SyslogIdentifier = "backup-jellyfin";
+        #     Type = "oneshot";
+        #     User = mkDefault cfg.user;
+        #     Group = mkDefault cfg.group;
+        #     ExecStart = "${pkgs.bash}/bin/bash ${./backup.sh}";
+        #   };
+        #   wantedBy = [ "multi-user.target" ];
+        # };
+      };
+
+      # timers.backup-jellyfin = mkIf (cfg.backupDir != null) {
+      #   description = "Backup jellyfin on time";
+      #   timerConfig = {
+      #     OnCalendar = mkDefault "23:00";
+      #     Persistent = "true";
+      #     Unit = "backup-jellyfin.service";
+      #   };
+      #   wantedBy = [ "multi-user.target" ];
+      # };
+
+      # tmpfiles.settings = mkIf (cfg.backupDir != null) {
+      #   "10-jellyfin".${cfg.backupDir}.d = {
+      #     inherit (cfg) user group;
+      #     mode = "0770";
+      #   };
+      # };
+    };
 
     programs.rust-motd.settings.service_status.Jellyfin =
       removeSuffix ".service" config.systemd.services.jellyfin.name;
-
-    users = {
-      groups.media = { };
-      users."${cfg.user}".extraGroups = [ config.users.groups.media.name ];
-    };
   };
 
 }

@@ -6,29 +6,64 @@
   ...
 }:
 let
-  inherit (builtins) elem;
+  inherit (builtins)
+    concatStringsSep
+    elem
+    filter
+    isBool
+    ;
   inherit (lib)
-    getExe
+    escapeShellArg
+    escapeShellArgs
     getExe'
+    mapAttrsToList
+    mkDefault
     mkEnableOption
     mkIf
+    mkMerge
     mkOption
-    optional
-    optionalAttrs
-    optionals
+    optionalString
+    pipe
     types
     ;
   inherit (lib.types) bool;
   inherit (lib'.flake.networking) mkSiteOptions;
 
-  novnc = getExe pkgs.small.novnc;
-  openbox = getExe' pkgs.openbox "openbox";
-  x11vnc = getExe pkgs.x11vnc;
-  Xvfb = getExe' pkgs.xorg-server "Xvfb";
+  renderFlag =
+    name: value:
+    if value == null then
+      null
+    else if isBool value then
+      optionalString value "--${name}"
+    else
+      "--${name}=${escapeShellArg (toString value)}";
 
-  display = ":${toString cfg.gui.display}";
+  XpraArgs = pipe cfg.xpra.args [
+    (mapAttrsToList renderFlag)
+    (filter (x: x != null))
+    (filter (x: x != ""))
+    (concatStringsSep " ")
+  ];
+
+  passwordFile = config.sops.secrets."services/jdownloader/Password".path;
 
   cfg = config.services.jdownloader2;
+
+  java = getExe' pkgs.jre "java";
+
+  launcher = pkgs.writeShellScript "jdownloader2" ''
+    exec -a JDownloader ${java} ${escapeShellArgs cfg.javaOpts} -jar ${escapeShellArg "${cfg.dataDir}/JDownloader.jar"}
+  '';
+
+  caddyDownloadsPath = exposure: ''
+    redir ${cfg.browser.path} ${cfg.browser.path}/ 308
+
+    handle_path ${cfg.browser.path}* {
+        ${optionalString (exposure == "public") "import authelia"}
+        root * ${cfg.downloadsDir}
+        file_server browse
+    }
+  '';
 in
 {
   options.services.jdownloader2 = {
@@ -39,12 +74,6 @@ in
     };
 
     enable = mkEnableOption "JDownloader 2";
-
-    package = mkOption {
-      type = types.package;
-      default = pkgs.callPackage ./jdownloader { };
-      description = "JDownloader package.";
-    };
 
     user = mkOption {
       type = types.str;
@@ -57,16 +86,57 @@ in
     };
 
     dataDir = mkOption {
-      type = types.path;
+      type = types.str;
       default = "/var/lib/jdownloader";
     };
 
     downloadsDir = mkOption {
-      type = types.path;
-      default = "/var/lib/jdownloader/downloads";
+      type = types.str;
+      default = "${cfg.dataDir}/Downloads";
     };
 
     openFirewall = mkEnableOption "Whether to open firewall";
+
+    xpra = {
+      port = mkOption {
+        type = types.port;
+        default = 14500;
+      };
+
+      displayNumber = mkOption {
+        type = types.int;
+        default = 100;
+        example = 99;
+      };
+
+      args = mkOption {
+        type = types.attrsOf (
+          types.nullOr (
+            types.oneOf [
+              types.str
+              types.int
+              types.bool
+            ]
+          )
+        );
+
+        default = {
+          bind-tcp = "127.0.0.1:${toString cfg.xpra.port},auth=file,filename=${passwordFile}";
+          daemon = "no";
+          dpi = 192;
+          encoding = "png";
+          html = "on";
+          min-quality = 90;
+          notifications = true;
+          quality = 100;
+          resize-display = "yes";
+          session-name = "JDownloader";
+          speaker = false;
+          speed = 0;
+          webcam = false;
+        };
+      };
+    };
 
     javaOpts = mkOption {
       type = types.listOf types.str;
@@ -76,71 +146,34 @@ in
       ];
     };
 
-    gui = {
-
-      enable = mkOption {
-        type = types.bool;
-        default = true;
-      };
-
-      display = mkOption {
-        type = types.int;
-        default = 99;
-      };
-
-      resolution = {
-
-        width = mkOption {
-          type = types.int;
-          default = 1280;
-        };
-
-        height = mkOption {
-          type = types.int;
-          default = 720;
-        };
-
-        depth = mkOption {
-          type = types.int;
-          default = 24;
-        };
-      };
-
-      vnc = {
-
-        enable = mkOption {
-          type = types.bool;
-          default = true;
-        };
-
-        port = mkOption {
-          type = types.port;
-          default = 5900;
-        };
-      };
-
-      web = {
-
-        enable = mkOption {
-          type = types.bool;
-          default = true;
-        };
-
-        port = mkOption {
-          type = types.port;
-          default = 5800;
-        };
-      };
-    };
-
     site = mkSiteOptions {
       subdomain = "jdownloader";
       inherit (config.networking) fqdnOrHostName localFqdn;
       description = "JDownloader is a free, open-source download management tool with a huge community that makes downloading as easy and fast as it should be.";
     };
+
+    browser = {
+      enable = mkEnableOption "Wether to enable downloads file browser";
+
+      path = mkOption {
+        type = types.str;
+        default = "/navegar";
+      };
+    };
   };
 
   config = mkIf (cfg.enable && !cfg.disableModule) {
+    assertions = [
+      {
+        assertion = cfg.site.reverse-proxy == "caddy";
+        message = "services.jdownloader2 currently only supports Caddy.";
+      }
+      {
+        assertion = cfg.user != "root";
+        message = "JDownloader must not run as root.";
+      }
+    ];
+
     services.jdownloader2 = { };
 
     users.groups.${cfg.group} = { };
@@ -152,25 +185,31 @@ in
       createHome = true;
     };
 
-    services = {
-      caddy.virtualHosts = mkIf (cfg.site.reverse-proxy == "caddy") {
-        "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
-          extraConfig = ''
-            import tls-public
-            import encoding
-            import coraza
-            import reverse-proxy 127.0.0.1:${toString cfg.gui.web.port}
-          '';
-        };
+    users.users.caddy.extraGroups = [ cfg.group ];
 
-        "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
-          extraConfig = ''
-            import tls-local
-            import encoding
-            import reverse-proxy 127.0.0.1:${toString cfg.gui.web.port}
-          '';
-        };
-      };
+    services = {
+      caddy.virtualHosts = mkMerge [
+        (mkIf (cfg.site.reverse-proxy == "caddy") {
+          "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
+            extraConfig = ''
+              import tls-public
+              import encoding
+              import coraza
+              import reverse-proxy 127.0.0.1:${toString cfg.xpra.port}
+            ''
+            + optionalString cfg.browser.enable (caddyDownloadsPath "public");
+          };
+
+          "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
+            extraConfig = ''
+              import tls-local
+              import encoding
+              import reverse-proxy 127.0.0.1:${toString cfg.xpra.port}
+            ''
+            + optionalString cfg.browser.enable (caddyDownloadsPath "local");
+          };
+        })
+      ];
 
       homepage-dashboard.service-templates.jdownloader2 = {
         display = "Jdownloader2";
@@ -181,7 +220,8 @@ in
           description
           ;
         icon = "jdownloader2.png";
-        widget = mkIf false {
+        widget = {
+          enable = mkDefault false;
           url = cfg.site.href;
 
           type = "jdownloader";
@@ -191,83 +231,27 @@ in
       };
     };
 
-    networking.firewall.allowedTCPPorts =
-      optionals (cfg.openFirewall && cfg.gui.web.enable) [ cfg.gui.web.port ]
-      ++ optionals (cfg.openFirewall && cfg.gui.vnc.enable) [ cfg.gui.vnc.port ];
-
     systemd = {
-      services.jdownloader-xvfb = mkIf cfg.gui.enable {
-        description = "JDownloader Xvfb";
-
-        wantedBy = [ "multi-user.target" ];
-
-        serviceConfig = {
-          User = cfg.user;
-          Group = cfg.group;
-          Restart = "always";
-        };
-
-        script = ''
-          exec ${Xvfb} \
-            ${display} \
-            -screen 0 \
-            ${toString cfg.gui.resolution.width}x${toString cfg.gui.resolution.height}x${toString cfg.gui.resolution.depth}
-        '';
-      };
-
-      services.jdownloader-openbox = mkIf cfg.gui.enable {
-        description = "JDownloader Openbox";
-
-        after = [
-          "jdownloader-xvfb.service"
-        ];
-
-        requires = [
-          "jdownloader-xvfb.service"
-        ];
-
-        wantedBy = [ "multi-user.target" ];
-
-        environment = {
-          DISPLAY = display;
-        };
-
-        serviceConfig = {
-          User = cfg.user;
-          Group = cfg.group;
-          Restart = "always";
-        };
-
-        script = ''
-          exec ${openbox}
-        '';
-      };
 
       services.jdownloader2 = {
-        description = "JDownloader 2";
+        description = "JDownloader 2 via Xpra";
 
-        after = [
-          "network-online.target"
-        ]
-        ++ optional cfg.gui.enable "jdownloader-xvfb.service"
-        ++ optional cfg.gui.enable "jdownloader-openbox.service";
-
-        wants = [
-          "network-online.target"
-        ]
-        ++ optional cfg.gui.enable "jdownloader-xvfb.service"
-        ++ optional cfg.gui.enable "jdownloader-openbox.service";
-
-        wantedBy = [ "multi-user.target" ];
+        after = [ "network-online.target" ];
+        # Not enabled at boot; start manually with `systemctl start jdownloader2`.
+        wantedBy = [ ];
+        wants = [ "network-online.target" ];
 
         path = [
           pkgs.coreutils
           pkgs.curl
           pkgs.ffmpeg
+          pkgs.jre
+          pkgs.mpv
           pkgs.p7zip
           pkgs.unrar-free
           pkgs.unzip
           pkgs.wget
+          pkgs.xpra
           pkgs.zip
         ];
 
@@ -275,9 +259,6 @@ in
           HOME = cfg.dataDir;
           JD_HOME = cfg.dataDir;
           JD_DOWNLOAD_DIR = cfg.downloadsDir;
-        }
-        // optionalAttrs cfg.gui.enable {
-          DISPLAY = display;
         };
 
         serviceConfig = {
@@ -286,6 +267,8 @@ in
 
           WorkingDirectory = cfg.dataDir;
           StateDirectory = "jdownloader";
+          RuntimeDirectory = "jdownloader";
+          Environment = [ "XDG_RUNTIME_DIR=%t/jdownloader" ];
 
           Restart = "always";
           RestartSec = "10";
@@ -304,82 +287,14 @@ in
         };
 
         script = ''
-          if [ ! -f ${cfg.dataDir}/.installed ]
-          then
-            cp --archive ${cfg.package}/share/jdownloader/. ${cfg.dataDir}/
-            touch ${cfg.dataDir}/.installed
+          if [ ! -f ${escapeShellArg "${cfg.dataDir}/JDownloader.jar"} ]; then
+            install -m 0644 ${./JDownloader.jar} \
+              ${escapeShellArg "${cfg.dataDir}/JDownloader.jar"}
           fi
 
-          chmod +x ${cfg.dataDir}/JDownloader2
-
-          exec ${cfg.dataDir}/JDownloader2
-        '';
-      };
-
-      services.jdownloader-vnc = mkIf (cfg.gui.enable && cfg.gui.vnc.enable) {
-
-        description = "JDownloader x11vnc";
-
-        after = [
-          "jdownloader-xvfb.service"
-        ];
-
-        requires = [
-          "jdownloader-xvfb.service"
-        ];
-
-        wantedBy = [ "multi-user.target" ];
-
-        environment = {
-          DISPLAY = display;
-        };
-
-        serviceConfig = {
-          User = cfg.user;
-          Group = cfg.group;
-          Restart = "always";
-        };
-
-        script = ''
-          exec ${x11vnc} \
-            -display ${display} \
-            -forever \
-            -shared \
-            -nopw \
-            -rfbport ${toString cfg.gui.vnc.port}
-        '';
-      };
-
-      services.jdownloader-novnc = mkIf (cfg.gui.enable && cfg.gui.web.enable) {
-
-        description = "JDownloader noVNC";
-
-        after = [
-          "jdownloader-vnc.service"
-        ];
-
-        requires = [
-          "jdownloader-vnc.service"
-        ];
-
-        wantedBy = [ "multi-user.target" ];
-
-        path = [
-          pkgs.coreutils
-          pkgs.procps
-          pkgs.small.python314Packages.websockify
-        ];
-
-        serviceConfig = {
-          User = cfg.user;
-          Group = cfg.group;
-          Restart = "always";
-        };
-
-        script = ''
-          exec ${novnc} \
-            --listen ${toString cfg.gui.web.port} \
-            --vnc localhost:${toString cfg.gui.vnc.port}
+          exec -a JDownloader xpra start :${toString cfg.xpra.displayNumber} \
+              ${XpraArgs} \
+              --start-child=${launcher}
         '';
       };
 
@@ -387,6 +302,12 @@ in
         "d ${cfg.dataDir} 0755 ${cfg.user} ${cfg.group} -"
         "d ${cfg.downloadsDir} 0755 ${cfg.user} ${cfg.group} -"
       ];
+    };
+
+    sops.secrets."services/jdownloader/Password" = {
+      owner = cfg.user;
+      group = cfg.group;
+      mode = "0400";
     };
   };
 }

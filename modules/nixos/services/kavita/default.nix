@@ -154,7 +154,6 @@ in
       removeSuffix ".service" config.systemd.services.kavita.name;
 
     systemd.services.kavita.serviceConfig = mkIf (length cfg.readOnlyMediaPaths > 0) {
-      ProtectSystem = mkDefault "strict";
       BindReadOnlyPaths = map normalizeMount cfg.readOnlyMediaPaths;
     };
 

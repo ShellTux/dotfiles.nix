@@ -1,5 +1,2 @@
 { lib, config, ... }:
-let
-  inherit (lib) mkIf;
-in
-mkIf (config.flavour == "none") { }
+lib.mkIf (config.flavour == "none") { }

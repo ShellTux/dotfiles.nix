@@ -1,8 +1,12 @@
 { ... }:
 {
   imports = [
+    ./common
     ./none
-    ./config1
+    ./delta
+    ./diff-so-fancy
+    ./difftastic
+    ./diffr
   ];
 
   options = {

@@ -1,16 +1,43 @@
 { lib, ... }:
 let
-  inherit (builtins) baseNameOf listToAttrs map;
-  inherit (lib) pipe;
+  inherit (builtins)
+    baseNameOf
+    head
+    isPath
+    listToAttrs
+    map
+    ;
+  inherit (lib)
+    pipe
+    nameValuePair
+    types
+    mkOption
+    ;
 
-  wrapper-module-import = path: rec {
-    name = baseNameOf path;
-    value =
+  wrapper-module-import =
+    opts:
+    let
+      path = opts.path or opts;
+      name = baseNameOf path;
+
+      defaultFlavours = [
+        "config1"
+        "none"
+      ];
+
+      flavour = {
+        type = opts.flavour.type or types.enum (
+          opts.flavours or [
+            "config1"
+            "none"
+          ]
+        );
+
+        default = opts.flavour.default or (head defaultFlavours);
+      };
+    in
+    nameValuePair name (
       { wlib, lib, ... }:
-      let
-        inherit (lib) mkOption;
-        inherit (lib.types) enum;
-      in
       {
         imports = [
           path
@@ -18,14 +45,10 @@ let
         ];
 
         options.flavour = mkOption {
-          type = enum [
-            "none"
-            "config1"
-          ];
-          default = "config1";
+          inherit (flavour) type default;
         };
-      };
-  };
+      }
+    );
 in
 {
   flake.wrappers =
@@ -36,7 +59,17 @@ in
         ./eza
         ./fastfetch
         ./fd
-        ./git
+        {
+          path = ./git;
+          flavour.default = "difftastic";
+          flavours = [
+            "none"
+            "delta"
+            "diff-so-fancy"
+            "difftastic"
+            "diffr"
+          ];
+        }
         ./htop
         ./imv
         ./kitty

@@ -1,11 +1,10 @@
 {
   lib,
-  config,
   pkgs,
   ...
 }:
 let
-  inherit (lib) mkIf getExe getExe';
+  inherit (lib) getExe getExe';
   inherit (pkgs) callPackage;
 
   curl = getExe pkgs.curl;
@@ -15,13 +14,9 @@ let
   # safe-checkout = getExe (callPackage ./safe-checkout { });
   stash-review = getExe (callPackage ./stash-review.nix { });
   xdg-open = getExe' pkgs.xdg-utils "xdg-open";
-
-  pager.diff = getExe (callPackage ./diffPager { });
 in
-mkIf (config.flavour == "config1") {
+{
   settings = {
-    inherit pager;
-
     branch.sort = "-committerdate";
     color = {
       ui = true;
@@ -51,7 +46,6 @@ mkIf (config.flavour == "config1") {
     core = {
       editor = "nvim";
       autocrlf = "input";
-      pager = "diff-so-fancy | less --tabs=4 -RF";
     };
     diff = {
       algorithm = "histogram";
@@ -61,7 +55,6 @@ mkIf (config.flavour == "config1") {
     };
     help.autoCorrect = "prompt";
     init.defaultBranch = "main";
-    interactive.diffFilter = "diff-so-fancy --patch";
     rerere = {
       enable = true;
       autoupdate = true;
@@ -125,8 +118,4 @@ mkIf (config.flavour == "config1") {
       yolo = ''!git commit --message="$(curl --silent https://whatthecommit.com/index.txt)"'';
     };
   };
-
-  runtimePkgs = [
-    pkgs.diff-so-fancy
-  ];
 }

@@ -143,22 +143,43 @@ in
     services.jellyfin = mkDefault { };
 
     services = {
-      caddy.virtualHosts = mkIf (cfg.site.reverse-proxy == "caddy") {
-        "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
-          extraConfig = ''
-            import tls-public
-            import encoding
-            import coraza
-            import reverse-proxy 127.0.0.1:${toString cfg.port}
-          '';
-        };
+      caddy = {
+        snippets.coraza-jellyfin = mkDefault ''
+          coraza_waf {
+            load_owasp_crs
 
-        "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
-          extraConfig = ''
-            import tls-local
-            import encoding
-            import reverse-proxy 127.0.0.1:${toString cfg.port}
-          '';
+            directives `
+              SecAction "id:1000009,phase:1,log,pass,ctl:ruleEngine=DetectionOnly,ctl:ruleRemoveById=932260"
+              SecAction "id:1000010,phase:1,log,pass,ctl:ruleEngine=DetectionOnly,ctl:ruleRemoveById=932235"
+              SecAction "id:1000011,phase:1,log,pass,ctl:ruleEngine=DetectionOnly,ctl:ruleRemoveById=930130"
+              SecAction "id:1000012,phase:1,log,pass,ctl:ruleEngine=DetectionOnly,ctl:ruleRemoveById=911100"
+
+              Include @coraza.conf-recommended
+              Include @crs-setup.conf.example
+              Include @owasp_crs/*.conf
+
+              SecRuleEngine On
+            `
+          }
+        '';
+
+        virtualHosts = mkIf (cfg.site.reverse-proxy == "caddy") {
+          "${cfg.site.fqdn}" = mkIf (elem "public" cfg.site.exposure) {
+            extraConfig = ''
+              import tls-public
+              import encoding
+              import coraza-jellyfin
+              import reverse-proxy 127.0.0.1:${toString cfg.port}
+            '';
+          };
+
+          "${cfg.site.localFqdn}" = mkIf (elem "local" cfg.site.exposure) {
+            extraConfig = ''
+              import tls-local
+              import encoding
+              import reverse-proxy 127.0.0.1:${toString cfg.port}
+            '';
+          };
         };
       };
 

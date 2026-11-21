@@ -33,6 +33,7 @@
     ./minecraft-server
     ./nextcloud
     ./nginx
+    ./node-red
     ./onlyoffice
     ./openssh
     ./paperless

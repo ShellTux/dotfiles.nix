@@ -26,6 +26,7 @@
       pkgs.mediainfo
       pkgs.mediainfo-gui
       pkgs.nemo-with-extensions
+      pkgs.opencode
       pkgs.procs
       pkgs.progress
       pkgs.qbittorrent

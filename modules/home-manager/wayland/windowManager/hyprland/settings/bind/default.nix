@@ -15,14 +15,23 @@ let
     pipe
     range
     ;
+  inherit (lib.generators) mkLuaInline;
   inherit (lib'.flake.hyprland.lua) mkBinds mkOptsBinds;
 
   brightness = getExe self'.packages.brightness;
   hyprshot = getExe pkgs.hyprshot;
   mpc = getExe pkgs.mpc;
-  rofi = getExe pkgs.rofi;
+  rofi = getExe (
+    pkgs.rofi.override {
+      plugins = [
+        pkgs.rofi-emoji
+        pkgs.rofi-calc
+      ];
+    }
+  );
   volume = getExe self'.packages.volume;
   wlogout = getExe pkgs.wlogout;
+  wofi = getExe pkgs.wofi;
   woomer = getExe pkgs.woomer;
 
   hyprshot_dir = "${config.xdg.userDirs.pictures}/hyprshot/";
@@ -35,14 +44,59 @@ in
       mkBinds {
         "SUPER + Return".dsp.exec_cmd = [ "\" .. TERMINAL .. \"" ];
         "SUPER + C".dsp.window.close = [ ];
+        "SUPER + SHIFT + C".dsp.window.kill = [ ];
         "SUPER + SHIFT + Q".dsp.exit = [ ];
+        # "SUPER + SHIFT + R".dsp.reload_config = [ ];
+
+        # Show current Hyprland binds
+        # "SUPER + SHIFT + slash".dsp.exec_cmd = [
+        #   ''
+        #     hyprctl -j binds | jq -r '.[] | \"\(.key)  →  \(.dispatcher) \(.arg // \"\")\"' | ${wofi} --dmenu --prompt 'Hyprland shortcuts'
+        #   ''
+        # ];
+
         "SUPER + Space".dsp.window.float = [ { action = "toggle"; } ];
+        "SUPER + SHIFT + Return".dsp.window.fullscreen = [
+          {
+            action = "toggle";
+            mode = "maximized";
+          }
+        ];
+
+        # Focus
         "SUPER + H".dsp.focus = [ { direction = "left"; } ];
         "SUPER + L".dsp.focus = [ { direction = "right"; } ];
         "SUPER + K".dsp.focus = [ { direction = "up"; } ];
         "SUPER + J".dsp.focus = [ { direction = "down"; } ];
+        "ALT + TAB".dsp.window.cycle_next = [ ];
+        "SUPER + TAB".dsp.focus = [ { last = true; } ];
         "SUPER + right".dsp.focus = [ { workspace = "e+1"; } ];
         "SUPER + left".dsp.focus = [ { workspace = "e-1"; } ];
+        "SUPER + CTRL + right".dsp.focus = [ { monitor = "+1"; } ];
+        "SUPER + CTRL + left".dsp.focus = [ { monitor = "-1"; } ];
+
+        # Move and resize windows
+        "SUPER + SHIFT + H".dsp.window.move = [ { direction = "left"; } ];
+        "SUPER + SHIFT + L".dsp.window.move = [ { direction = "right"; } ];
+        "SUPER + SHIFT + K".dsp.window.move = [ { direction = "up"; } ];
+        "SUPER + SHIFT + J".dsp.window.move = [ { direction = "down"; } ];
+        "SUPER + ALT + R".dsp.submap = [ "resize" ];
+        "SUPER + CTRL + SHIFT + right".dsp.window.move = [
+          {
+            monitor = "+1";
+            follow = true;
+          }
+        ];
+        "SUPER + CTRL + SHIFT + left".dsp.window.move = [
+          {
+            monitor = "-1";
+            follow = true;
+          }
+        ];
+
+        # Move the current workspace between monitors
+        "SUPER + ALT + SHIFT + right".dsp.workspace.move = [ { monitor = "+1"; } ];
+        "SUPER + ALT + SHIFT + left".dsp.workspace.move = [ { monitor = "-1"; } ];
 
         # Move active window to a workspace with mainMod + SHIFT + [0-9]
         "SUPER + SHIFT + right".dsp.window.move = [ { workspace = "e+1"; } ];
@@ -64,16 +118,20 @@ in
         # Pin Window (Sticky)
         "SUPER + ALT + S".dsp.window.pin = [ { action = "active"; } ];
 
+        # Named special workspace (scratchpad)
+        "SUPER + SHIFT + S".dsp.workspace.toggle_special = [ "scratchpad" ];
+        "SUPER + SHIFT + ALT + S".dsp.window.move = [
+          {
+            workspace = "special:scratchpad";
+            follow = true;
+          }
+        ];
+
         # Monocle
         "SUPER + SHIFT + M".dsp.window.fullscreen = [ { action = "toggle"; } ];
 
         # Zoom
         "SUPER + Plus".dsp.exec_cmd = [ woomer ];
-
-        # "ALT + TAB".dsp.window = [ ];
-        # "SUPER + F".dsp.window = [ ];
-        # "SUPER + U".dsp.focus = [ { urgent_or_last = true; } ];
-        # "SUPER + TAB".dsp.focus = [ { urgent_or_last = true; } ];
       }
       ++ pipe (range 1 10) [
         (map (number: {
@@ -96,6 +154,7 @@ in
         "XF86AudioPlay".dsp.exec_cmd = [ "${mpc} toggle" ];
         "XF86AudioNext".dsp.exec_cmd = [ "${mpc} next" ];
         "XF86AudioPrev".dsp.exec_cmd = [ "${mpc} prev" ];
+        "XF86AudioMute".dsp.exec_cmd = [ "${volume} toggle" ];
       }
       ++
         mkOptsBinds
@@ -119,5 +178,20 @@ in
         "SUPER + mouse:273".dsp.window.resize = [ ];
         "SUPER + mouse:274".dsp.window.center = [ ];
       };
+
+    wayland.windowManager.hyprland.settings.define_submap = {
+      _args = [
+        "resize"
+        (mkLuaInline ''
+          function()
+              hl.bind("h", hl.dsp.window.resize({ x = -10, y = 0, relative = true }, { repeating = true }))
+              hl.bind("l", hl.dsp.window.resize({ x = 10, y = 0, relative = true }), { repeating = true })
+              hl.bind("k", hl.dsp.window.resize({ x = 0, y = -10, relative = true }), { repeating = true })
+              hl.bind("j", hl.dsp.window.resize({ x = 0, y = 10, relative = true }), { repeating = true })
+              hl.bind("Escape", hl.dsp.submap("reset"))
+          end
+        '')
+      ];
+    };
   };
 }

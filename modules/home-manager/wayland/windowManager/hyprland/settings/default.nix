@@ -23,6 +23,7 @@ in
     ./gestures
     ./input
     ./misc
+    ./on
     ./windowrule
     ./workspace
   ];

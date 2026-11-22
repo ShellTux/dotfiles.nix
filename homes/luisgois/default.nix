@@ -13,6 +13,7 @@
       pkgs.anki
       pkgs.autenticacao-gov-pt-bin
       pkgs.bc
+      pkgs.bitwarden-desktop
       pkgs.calcurse
       pkgs.dua
       pkgs.easyeffects

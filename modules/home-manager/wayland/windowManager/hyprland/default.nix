@@ -16,7 +16,6 @@ let
     nullOr
     str
     ;
-  inherit (lib'.flake.hyprland.lua) mkOnStart;
 
   cfg = config.wayland.windowManager.hyprland;
 in
@@ -91,8 +90,6 @@ in
   config = mkIf (cfg.enable && !cfg.disableModule) {
     wayland.windowManager.hyprland = {
       xwayland.enable = true;
-
-      settings.on = mkOnStart cfg.exec-once;
     };
 
     home.packages = filter (pkg: pkg != null) (

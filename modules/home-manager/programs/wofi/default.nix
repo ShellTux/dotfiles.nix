@@ -2,14 +2,12 @@
   config,
   lib,
   pkgs,
-  lib',
   ...
 }:
 let
   inherit (builtins) elem;
   inherit (lib) mkOption mkIf mkDefault;
   inherit (lib.types) bool;
-  inherit (lib'.flake.hyprland.lua) mkWindowRuleBorderSize;
 
   isInstalled = elem pkgs.wofi config.home.packages;
 
@@ -33,9 +31,5 @@ in
         location = "center";
       };
     };
-
-    wayland.windowManager.hyprland.settings.window_rule = map (mkWindowRuleBorderSize 0) [
-      { match.class = "^wofi$"; }
-    ];
   };
 }

@@ -1,18 +1,12 @@
 {
   config,
   lib,
-  lib',
   pkgs,
   ...
 }:
 let
   inherit (lib) mkOption mkIf;
   inherit (lib.types) bool;
-  inherit (lib'.flake.hyprland.lua)
-    mkWindowRuleIdleInhibit
-    mkWindowRuleFloat
-    mkWindowRuleSize
-    ;
 
   cfg = config.programs.brave;
 in
@@ -49,27 +43,5 @@ in
         pkgs.brave.extensions.zotero-connector
       ];
     };
-
-    wayland.windowManager.hyprland.settings.window_rule =
-      map (mkWindowRuleIdleInhibit "focus") [
-        { match = "title (.*)(YouTube)(.*)"; }
-      ]
-      ++ map (mkWindowRuleIdleInhibit "fullscreen") [
-        { match = "class ^(brave)$"; }
-      ]
-      ++ map mkWindowRuleFloat [
-        { match.initial_title = "^(Save File)$"; }
-        { match.initial_title = "(.*)(wants to save)$"; }
-      ]
-      ++
-        map
-          (mkWindowRuleSize [
-            "<50%"
-            "<50%"
-          ])
-          [
-            { match.initial_title = "^(Save File)$"; }
-            { match.initial_title = "(.*)(wants to save)$"; }
-          ];
   };
 }

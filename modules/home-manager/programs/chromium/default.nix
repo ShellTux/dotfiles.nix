@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  lib',
   ...
 }:
 let
@@ -12,7 +11,6 @@ let
     mapAttrs
     ;
   inherit (lib.types) bool listOf enum;
-  inherit (lib'.flake.hyprland.lua) mkWindowRuleSize mkWindowRuleIdleInhibit mkWindowRuleFloat;
 
   chromium-extensions = mapAttrs (extension: id: { inherit id; }) {
     bitwarden = "nngceckbapebfimnlniiiahkandclblb";
@@ -80,28 +78,5 @@ in
     #     commandLineArgs = "--ozone-platform-hint=auto";
     #   }
     # ) (filter (pkg: pkg.meta.mainProgram != cfg.package.meta.mainProgram) cfg.flavors);
-
-    wayland.windowManager.hyprland.settings.window_rule =
-      map (mkWindowRuleIdleInhibit "focus") [
-        { match.class = "^(brave)$"; }
-        { match.title = "(.*)(Youtube)(.*)"; }
-      ]
-      ++ map (mkWindowRuleIdleInhibit "fullscreen") [
-        { match.class = "^(brave)$"; }
-      ]
-      ++ map mkWindowRuleFloat [
-        { match.initial_title = "^(Save File)$"; }
-        { match.initial_title = "(.*)(wants to save)$"; }
-      ]
-      ++
-        map
-          (mkWindowRuleSize [
-            "<50%"
-            "<50%"
-          ])
-          [
-            { match.initial_title = "^(Save File)$"; }
-            { match.initial_title = "(.*)(wants to save)$"; }
-          ];
   };
 }

@@ -1,16 +1,17 @@
-{
-  lib',
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib'.flake.hyprland.lua) mkWorkspaceRule;
+  inherit (lib) mkIf;
+
+  cfg = config.wayland.windowManager.hyprland;
 in
 {
-  wayland.windowManager.hyprland.settings.workspace_rule = map mkWorkspaceRule [
-    {
-      workspace = "10";
-      monitor = 1;
-      default = true;
-    }
-  ];
+  config = mkIf (cfg.enable && !cfg.disableModule) {
+    wayland.windowManager.hyprland.settings.workspace_rule = [
+      {
+        workspace = "10";
+        monitor = 1;
+        default = true;
+      }
+    ];
+  };
 }

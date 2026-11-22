@@ -9,10 +9,18 @@ let
     isInt
     isList
     isString
+    length
     mapAttrs
+    match
+    readFile
+    split
+    tail
+    typeOf
     ;
   inherit (lib) optional pipe attrsToList;
   inherit (lib.generators) mkLuaInline;
+
+  isValidLuaFile = path: typeOf path == "path" && match ".*\\.lua$" (toString path) != null;
 
   getPathAndValue =
     let
@@ -90,18 +98,10 @@ let
 
 in
 {
-  window-rule-helper = {
-    float = rule: rule // { float = true; };
-    idle_inhibit = focus: rule: rule // { idle_inhibit = focus; };
-    center = rule: rule // { center = true; };
-    fullscreen = rule: rule // { fullscreen = true; };
-    pin = rule: rule // { pin = true; };
-  };
-
   lua = rec {
     mkVar = _var: { inherit _var; };
 
-    mkVars = mapAttrs (name: value: mkVar value);
+    mkVars = mapAttrs (name: mkVar);
 
     mkEnvVars =
       varsAttr:
@@ -155,18 +155,6 @@ in
       ];
     };
 
-    mkWindowRule = rule: { _args = [ (mkLuaInline (toLua rule)) ]; };
-
-    mkWindowRuleCenter = rule: mkWindowRule (rule // { center = true; });
-    mkWindowRuleWorkspace = workspace: rule: mkWindowRule (rule // { workspace = toString workspace; });
-    mkWindowRuleBorderSize = border_size: rule: mkWindowRule (rule // { inherit border_size; });
-    mkWindowRuleFloat = rule: mkWindowRule (rule // { float = true; });
-    mkWindowRuleFullscreen = rule: mkWindowRule (rule // { fullscreen = true; });
-    mkWindowRuleIdleInhibit = idle_inhibit: rule: mkWindowRule (rule // { inherit idle_inhibit; });
-    mkWindowRuleOpaque = rule: mkWindowRule (rule // { opaque = true; });
-    mkWindowRulePin = rule: mkWindowRule (rule // { pin = true; });
-    mkWindowRuleSize = size: rule: mkWindowRule (rule // { inherit size; });
-
     mkWorkspaceRule =
       rule@{ workspace, ... }:
       {
@@ -219,6 +207,36 @@ in
         attrsToList
         (map ({ name, value }: { keys = name; } // value))
         (map (mkOptsBind opts))
+      ];
+
+    mkLuaCall =
+      args:
+      pipe args [
+        (map (
+          arg:
+          if isValidLuaFile arg then
+            (mkLuaInline (readFile arg))
+          else if isString arg then
+            let
+              lines = split "\n" arg;
+
+              value =
+                if match "^-- mkLuaInline\n.*" arg != null then
+                  pipe lines [
+                    tail
+                    (concatStringsSep "\n")
+                    mkLuaInline
+                  ]
+                else if (length lines) > 1 then
+                  mkLuaInline arg
+                else
+                  arg;
+            in
+            value
+          else
+            arg
+        ))
+        (args: { _args = args; })
       ];
   };
 }

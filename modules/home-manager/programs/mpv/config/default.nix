@@ -1,12 +1,10 @@
 {
   config,
   lib,
-  lib',
   ...
 }:
 let
   inherit (lib) mkIf;
-  inherit (lib'.flake.hyprland.lua) mkWindowRuleOpaque mkWindowRuleIdleInhibit;
 
   cfg = config.programs.mpv;
 in
@@ -36,13 +34,5 @@ in
         msg-module = true;
       };
     };
-
-    wayland.windowManager.hyprland.settings.window_rule =
-      map (mkWindowRuleIdleInhibit "focus") [
-        { match.class = "mpv"; }
-      ]
-      ++ map mkWindowRuleOpaque [
-        { match.class = "mpv"; }
-      ];
   };
 }

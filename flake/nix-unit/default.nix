@@ -4,7 +4,7 @@ let
 in
 {
   perSystem =
-    { config, ... }:
+    { ... }:
     {
       nix-unit = {
         inputs = {

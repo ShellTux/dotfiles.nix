@@ -6,7 +6,7 @@
 
   flake.overlays = {
     laptop =
-      final: prev:
+      _final: prev:
       withSystem prev.stdenv.hostPlatform.system (
         { ... }:
         {
@@ -34,7 +34,6 @@
     {
       config,
       pkgs,
-      final,
       ...
     }:
     {

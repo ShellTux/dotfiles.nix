@@ -27,7 +27,6 @@
 
   outputs =
     inputs@{
-      self,
       nixpkgs,
       flake-parts,
       rust-overlay,
@@ -49,8 +48,6 @@
       perSystem =
         {
           config,
-          self',
-          inputs',
           pkgs,
           system,
           ...
@@ -62,7 +59,7 @@
             ;
           inherit (pkgs.lib) getExe filterAttrs fileset;
 
-          additionalPackages = attrValues (filterAttrs (key: value: (elem key [ ])) config.packages);
+          additionalPackages = attrValues (filterAttrs (key: _value: (elem key [ ])) config.packages);
 
           craneLib = crane.mkLib pkgs;
 

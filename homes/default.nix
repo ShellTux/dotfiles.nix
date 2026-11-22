@@ -40,7 +40,7 @@ let
             nixpkgs = {
               inherit overlays;
 
-              config.packageOverrides = pkgs: {
+              config.packageOverrides = _pkgs: {
                 small = import inputs.nixpkgs-small { inherit system overlays; };
                 stable = import inputs.nixpkgs-stable { inherit system overlays; };
               };

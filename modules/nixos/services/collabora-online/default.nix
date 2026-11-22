@@ -30,7 +30,7 @@ in
       name = "collabora";
       upstream = {
         host = "[::1]";
-        port = cfg.port;
+        inherit (cfg) port;
       };
     };
   };

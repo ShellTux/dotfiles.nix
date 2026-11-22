@@ -24,7 +24,7 @@ in
     };
   };
 
-  config = mkIf (cfg.enable) {
+  config = mkIf cfg.enable {
     boot.loader.grub = {
       devices = mkDefault [ "nodev" ];
       extraEntries = concatStrings [

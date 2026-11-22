@@ -30,6 +30,6 @@ in
           "/etc"
         ];
       }
-      |> filterAttrs (key: value: !(elem key cfg.disableVariables));
+      |> filterAttrs (key: _value: !(elem key cfg.disableVariables));
   };
 }

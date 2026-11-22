@@ -1,4 +1,5 @@
 {
+  self',
   inputs,
   system,
   config,
@@ -74,9 +75,9 @@ in
         pkgs.wf-recorder
       ]
       ++ [
-        # ncmpcpp
-        # brightness
-        # volume
+        pkgs.ncmpcpp
+        self'.packages.brightness
+        self'.volume
       ];
       example = [ ];
     };

@@ -4,7 +4,7 @@ let
 in
 {
   nixpkgs.overlays = [
-    (final: prev: {
+    (_final: _prev: {
       flake.wrappers.kitty = self'.packages.kitty.wrap (
         { config, ... }:
         {

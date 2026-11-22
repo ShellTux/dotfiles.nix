@@ -7,7 +7,6 @@
 }:
 let
   inherit (builtins)
-    elemAt
     head
     isAttrs
     isBool
@@ -15,7 +14,6 @@ let
     isList
     isPath
     isString
-    length
     listToAttrs
     readFile
     tail
@@ -23,7 +21,6 @@ let
   inherit (lib)
     attrNames
     attrsToList
-    concatMap
     concatStringsSep
     getExe
     getName
@@ -31,7 +28,6 @@ let
     mkIf
     mkOption
     mod
-    optional
     optionals
     pipe
     range

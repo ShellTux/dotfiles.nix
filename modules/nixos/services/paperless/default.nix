@@ -94,7 +94,7 @@ in
 
     sops.secrets."services/paperless/AdminPassword" = {
       owner = cfg.user;
-      group = cfg.group;
+      inherit (cfg) group;
       reloadUnits = [ config.systemd.services.paperless-web.name ];
     };
   };

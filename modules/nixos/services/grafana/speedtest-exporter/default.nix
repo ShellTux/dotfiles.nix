@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (builtins) toJSON toFile;
+  inherit (builtins) toJSON;
   inherit (lib)
     mkOption
     mkEnableOption

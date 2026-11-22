@@ -44,6 +44,6 @@ in
         upper = "tr \"[:lower:]\" \"[:upper:]\"";
         watch = "watch --color --interval 1";
       }
-      |> filterAttrs (key: value: !(elem key cfg.disableAliases));
+      |> filterAttrs (key: _value: !(elem key cfg.disableAliases));
   };
 }

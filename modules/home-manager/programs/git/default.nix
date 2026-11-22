@@ -7,7 +7,7 @@
   ...
 }:
 let
-  inherit (lib) mkOption mkIf mkDefault;
+  inherit (lib) mkOption mkIf;
   inherit (lib.types) bool;
 
   cfg = config.programs.git;

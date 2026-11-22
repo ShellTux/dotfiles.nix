@@ -2,10 +2,8 @@ _: {
   perSystem =
     {
       config,
-      self',
       inputs',
       pkgs,
-      system,
       lib,
       ...
     }:
@@ -16,7 +14,7 @@ _: {
 
       additionalPackages = pipe config.packages [
         (filterAttrs (
-          key: value:
+          key: _value:
           (elem key [
             "dotfiles-check"
             "mknix"
@@ -37,10 +35,11 @@ _: {
         packages = [
           pkgs.age
           pkgs.authelia
+          pkgs.entr
           pkgs.git-crypt
           pkgs.gitleaks
           pkgs.git-secrets
-          # pkgs.guestfs-tools
+          pkgs.guestfs-tools
           pkgs.just
           pkgs.nix-index
           pkgs.nix-inspect

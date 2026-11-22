@@ -52,10 +52,13 @@ in
 
         forgejo = config.users.users.${cfg.user};
 
-        allowedUser = pipe ([ forgejo.name ]) [
-          (map (u: elem u (if AllowUsers == null then [ forgejo.name ] else AllowUsers)))
-          (any (belongs: belongs))
-        ];
+        allowedUser =
+          pipe
+            [ forgejo.name ]
+            [
+              (map (u: elem u (if AllowUsers == null then [ forgejo.name ] else AllowUsers)))
+              (any (belongs: belongs))
+            ];
         allowedGroup = pipe ([ forgejo.group ] ++ forgejo.extraGroups) [
           (map (g: elem g (if AllowGroups == null then [ forgejo.group ] else AllowGroups)))
           (any (belongs: belongs))

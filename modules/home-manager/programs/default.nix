@@ -3,7 +3,6 @@ let
   home-manager-program-import =
     path:
     {
-      config,
       lib,
       lib',
       ...

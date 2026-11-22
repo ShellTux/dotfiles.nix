@@ -2,11 +2,10 @@
 {
   genVirtualHosts =
     {
-      subdomain,
       reverse-proxy, # AttrSet { .port = { external, internal }; }
     }:
     let
-      inherit (reverse-proxy.port) external internal;
+      inherit (reverse-proxy.port) internal;
     in
     {
       enableACME = true;

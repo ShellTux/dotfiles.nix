@@ -176,16 +176,20 @@ in
 
     services.jdownloader2 = { };
 
-    users.groups.${cfg.group} = { };
+    users = {
+      groups.${cfg.group} = { };
 
-    users.users.${cfg.user} = {
-      isSystemUser = true;
-      group = cfg.group;
-      home = cfg.dataDir;
-      createHome = true;
+      users = {
+        ${cfg.user} = {
+          isSystemUser = true;
+          inherit (cfg) group;
+          home = cfg.dataDir;
+          createHome = true;
+        };
+
+        caddy.extraGroups = [ cfg.group ];
+      };
     };
-
-    users.users.caddy.extraGroups = [ cfg.group ];
 
     services = {
       caddy.virtualHosts = mkMerge [
@@ -306,7 +310,7 @@ in
 
     sops.secrets."services/jdownloader/Password" = {
       owner = cfg.user;
-      group = cfg.group;
+      inherit (cfg) group;
       mode = "0400";
     };
   };

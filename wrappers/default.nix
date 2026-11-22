@@ -3,7 +3,6 @@ let
   inherit (builtins)
     baseNameOf
     head
-    isPath
     listToAttrs
     map
     ;
@@ -37,11 +36,11 @@ let
       };
     in
     nameValuePair name (
-      { wlib, lib, ... }:
+      { wlib, ... }:
       {
         imports = [
           path
-          (if wlib.wrapperModules ? ${name} then wlib.wrapperModules.${name} else wlib.modules.default)
+          (wlib.wrapperModules.${name} or wlib.modules.default)
         ];
 
         options.flavour = mkOption {

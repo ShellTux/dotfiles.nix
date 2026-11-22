@@ -15,7 +15,7 @@ in
   };
 
   home-manager.users.${username} =
-    { pkgs, ... }:
+    { ... }:
     {
       programs = {
         bash.enable = true;

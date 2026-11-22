@@ -101,7 +101,7 @@ in
   lua = rec {
     mkVar = _var: { inherit _var; };
 
-    mkVars = mapAttrs (name: mkVar);
+    mkVars = mapAttrs (_name: mkVar);
 
     mkEnvVars =
       varsAttr:
@@ -137,16 +137,16 @@ in
             throw "Error: program must be either string or list";
 
         functionBody = pipe programs [
-          (map (program: toLua program))
+          (map toLua)
           (map (program: "hl.exec_cmd(${program})"))
           (concatStringsSep "\n")
         ];
       in
-      (mkLuaInline ''
+      mkLuaInline ''
         function()
             ${functionBody}
         end
-      '');
+      '';
 
     mkOnStart = cmds: {
       _args = [
@@ -155,11 +155,9 @@ in
       ];
     };
 
-    mkWorkspaceRule =
-      rule@{ workspace, ... }:
-      {
-        _args = [ (mkLuaInline (toLua rule)) ];
-      };
+    mkWorkspaceRule = rule: {
+      _args = [ (mkLuaInline (toLua rule)) ];
+    };
 
     mkBinds =
       binds:
@@ -199,7 +197,7 @@ in
         ++ optional (opts != { }) (mkLuaInline (toLua opts));
       };
 
-    mkOptsBind = opts: args@{ keys, ... }: mkBind (args // { inherit opts; });
+    mkOptsBind = opts: args: mkBind (args // { inherit opts; });
 
     mkOptsBinds =
       opts: binds:

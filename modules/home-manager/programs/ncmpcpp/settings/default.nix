@@ -20,7 +20,7 @@ in
         ignore_leading_the = "yes";
         ignore_diacritics = "yes";
         default_place_to_search_in = "database";
-        # lyrics_directory = "${musicDirectory}/.lyrics";
+        lyrics_directory = "${musicDirectory}/.lyrics";
 
         ## Display Modes ##
         playlist_editor_display_mode = "columns";

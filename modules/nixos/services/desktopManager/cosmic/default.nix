@@ -53,7 +53,7 @@ in
 
     environment = {
       cosmic.excludePackages = cfg.excludePackages;
-      systemPackages = [ ] ++ cfg.installPackages;
+      systemPackages = cfg.installPackages;
     };
 
   };

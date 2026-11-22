@@ -9,7 +9,7 @@ mkIf cfg.enable {
   home = {
     packages = [ cfg.package ];
 
-    shellAliases = mapAttrs (_name: value: mkDefault value) {
+    shellAliases = mapAttrs (_name: mkDefault) {
       ls = "eza";
       ll = "eza --long";
       la = "eza --all";

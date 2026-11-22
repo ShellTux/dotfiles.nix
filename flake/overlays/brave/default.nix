@@ -6,7 +6,7 @@ let
   extensions = pipe ./extensions.json [
     readFile
     fromJSON
-    (mapAttrs (extension: id: { inherit id; }))
+    (mapAttrs (_extension: id: { inherit id; }))
     (recursiveUpdate (pkgs.brave.extensions or { }))
   ];
 in

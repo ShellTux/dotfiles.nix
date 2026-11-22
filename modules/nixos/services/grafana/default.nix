@@ -12,8 +12,6 @@ let
     mkIf
     mkDefault
     removeSuffix
-    getExe
-    pipe
     ;
   inherit (lib.types) bool;
   inherit (lib'.flake.networking) mkSiteOptions;

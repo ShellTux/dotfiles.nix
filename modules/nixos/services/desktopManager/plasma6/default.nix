@@ -69,7 +69,7 @@ in
 
     environment = {
       plasma6.excludePackages = cfg.excludePackages;
-      systemPackages = [ ] ++ cfg.installPackages;
+      systemPackages = cfg.installPackages;
     };
 
   };

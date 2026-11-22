@@ -1,14 +1,11 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }:
 let
   inherit (lib)
     mkIf
-    mkDefault
-    getExe
     recursiveUpdate
     pipe
     ;

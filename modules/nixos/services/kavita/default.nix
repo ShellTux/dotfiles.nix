@@ -25,7 +25,7 @@ let
       if hasInfix ":" entry then entry else "${entry}:${defaultTarget entry}"
     else
       let
-        source = entry.source;
+        inherit (entry) source;
         target = if entry.target != null then entry.target else defaultTarget source;
       in
       "${source}:${target}";

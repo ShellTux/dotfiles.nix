@@ -4,12 +4,9 @@
   ...
 }:
 let
-  inherit (builtins) attrNames length;
   inherit (lib)
     mkOption
     mkIf
-    mkDefault
-    pipe
     optional
     optionals
     ;

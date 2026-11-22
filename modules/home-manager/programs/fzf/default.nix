@@ -39,15 +39,17 @@ in
       ];
     };
 
-    programs.bash.profileExtra = ''
-      source ${./custom.sh}
-    '';
-
-    programs.zsh.init.extra = [
-      ''
+    programs = {
+      bash.profileExtra = ''
         source ${./custom.sh}
-      ''
-    ];
+      '';
+
+      zsh.init.extra = [
+        ''
+          source ${./custom.sh}
+        ''
+      ];
+    };
 
     home = {
       shellAliases = {

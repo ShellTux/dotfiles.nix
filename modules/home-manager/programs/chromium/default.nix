@@ -12,7 +12,7 @@ let
     ;
   inherit (lib.types) bool listOf enum;
 
-  chromium-extensions = mapAttrs (extension: id: { inherit id; }) {
+  chromium-extensions = mapAttrs (_extension: id: { inherit id; }) {
     bitwarden = "nngceckbapebfimnlniiiahkandclblb";
     dark-reader = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
     ff2mpv = "ephjcajbkgplkjmelpglennepbpmdpjg";

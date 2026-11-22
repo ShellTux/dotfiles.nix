@@ -1,5 +1,4 @@
 {
-  wlib,
   pkgs,
   config,
   lib,

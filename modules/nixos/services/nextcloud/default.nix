@@ -17,7 +17,6 @@ let
     mkForce
     mkIf
     mkOption
-    optionalAttrs
     optionalString
     removeSuffix
     types
@@ -120,9 +119,13 @@ in
       settings = {
         forwarded_for_headers = [ "HTTP_X_FORWARDED_FOR" ];
         maintenance_window_start = 3;
-        memories.exiftool = getExe pkgs.exiftool;
-        memories.vod.ffmpeg = getExe pkgs.ffmpeg-headless;
-        memories.vod.ffprobe = getExe' pkgs.ffmpeg-headless "ffprobe";
+        memories = {
+          exiftool = getExe pkgs.exiftool;
+          vod = {
+            ffmpeg = getExe pkgs.ffmpeg-headless;
+            ffprobe = getExe' pkgs.ffmpeg-headless "ffprobe";
+          };
+        };
         preview_ffmpeg_path = getExe' pkgs.ffmpeg-headless "ffmpeg";
         trusted_proxies = [ "127.0.0.1" ];
       };
@@ -326,7 +329,7 @@ in
       removeSuffix ".service" config.systemd.services.phpfpm-nextcloud.name;
 
     nixpkgs.overlays = [
-      (final: prev: {
+      (_final: _prev: {
         extraNextcloudApps = cfg.package.packages.apps // {
           noteberg = pkgs.fetchNextcloudApp {
             url = "https://github.com/thomasleuthold/NoteBerg/releases/download/0.5.42/noteberg_nextcloud-0.5.42.4.tar.gz";

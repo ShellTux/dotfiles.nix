@@ -5,11 +5,8 @@
 
   outputs =
     inputs@{
-      self,
       flake-parts,
       git-hooks-nix,
-      home-manager,
-      nixos-anywhere,
       nixpkgs,
       nix-unit,
       treefmt-nix,

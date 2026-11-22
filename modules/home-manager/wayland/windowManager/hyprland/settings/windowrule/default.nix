@@ -121,6 +121,20 @@ in
 
         "com.github.iwalton3.jellyfin-mpv-shim" = [ { scroll_touchpad = 0.1; } ];
 
+        "^(org.qbittorrent.qBittorrent)$" = [
+          {
+            float = true;
+            size = [
+              "80%"
+              "80%"
+            ];
+          }
+          {
+            match.title = "^(qbittorrent)$";
+            float = false;
+          }
+        ];
+
         Alacritty = [ { workspace = "1"; } ];
         "Arduino IDE" = [ { workspace = "1"; } ];
         firefox = [ { workspace = "2"; } ];

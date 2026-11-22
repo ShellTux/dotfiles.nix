@@ -13,9 +13,11 @@ let
     isBool
     isInt
     isList
+    isPath
     isString
     length
     listToAttrs
+    readFile
     tail
     ;
   inherit (lib)
@@ -109,13 +111,25 @@ let
         let
           keys = bind.name;
 
-          call = head bind.value;
+          call = pipe bind.value [
+            head
+            (
+              call:
+              if isAttrs call then
+                toLuaCall call
+              else if isPath call then
+                readFile call
+              else
+                call
+            )
+            mkLuaInline
+          ];
           opts = tail bind.value;
         in
         {
           _args = [
             keys
-            (mkLuaInline (toLuaCall call))
+            call
           ]
           ++ optionals (opts != [ ]) opts;
         }
@@ -124,7 +138,15 @@ let
 in
 {
   options.wayland.windowManager.hyprland.binds = mkOption {
-    type = types.attrsOf (types.listOf (types.attrsOf types.anything));
+    type = types.attrsOf (
+      types.listOf (
+        types.oneOf [
+          (types.attrsOf types.anything)
+          types.path
+          types.str
+        ]
+      )
+    );
     description = ''
       Key bindings grouped by key combination. Each key maps to a list whose
       first attribute set describes the `hl.` call (its function path and
@@ -465,6 +487,11 @@ in
           description = "Center Window";
           mouse = true;
         }
+      ];
+
+      "SUPER + U" = [
+        ./toggle-opacity.lua
+        { description = "Toggle opacity"; }
       ];
     };
 

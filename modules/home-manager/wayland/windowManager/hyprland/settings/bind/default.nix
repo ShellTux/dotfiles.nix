@@ -38,7 +38,7 @@ let
   inherit (lib.generators) mkLuaInline;
   inherit (pkgs) callPackage;
 
-  brightness = getExe self'.packages.brightness;
+  brightness = "${getExe self'.packages.brightness} --no-notification";
   hyprshot = getExe pkgs.hyprshot;
   mpc = getExe pkgs.mpc;
   rofi = getExe (
@@ -50,7 +50,7 @@ let
     }
   );
   terminal = getName config.flake.defaultApplications.terminal;
-  volume = getExe self'.packages.volume;
+  volume = "${getExe self'.packages.volume} --no-notification";
   wlogout = getExe pkgs.wlogout;
   woomer = getExe pkgs.woomer;
 

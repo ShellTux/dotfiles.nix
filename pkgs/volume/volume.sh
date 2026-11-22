@@ -1,13 +1,32 @@
 #!/bin/sh
 set -e
 
+notification=true
+
+# Pull notification flags out of the arguments, keeping the rest in order.
+for arg in "$@"; do
+	case "$arg" in
+		-n | --no-notification)
+			notification=false
+			shift
+			;;
+		*)
+			shift
+			set -- "$@" "$arg"
+			;;
+	esac
+done
+
 usage() {
-	echo "Usage: $(basename "$0") [amount] [+/-]"
+	echo "Usage: $(basename "$0") [-n|--no-notification] [amount] [+/-]"
 	echo "The amount is in percentage (do not include %)"
+	echo "Options:"
+	echo "  -n, --no-notification   Disable desktop notification"
 	echo "amount   the amount to increase or decrease volume" \
 		"(integer between 0 and 100)"
 	echo "Example: $(basename "$0") 5 +"
 	echo "Example: $(basename "$0") 5 -"
+	echo "Example: $(basename "$0") 5 + --no-notification"
 	exit 1
 }
 
@@ -60,25 +79,28 @@ else
 	esac
 fi
 
-appName="$(basename "$0")"
-msgTag='volume'
-volume="$(get_volume)"
-muted="$(is_muted)"
-if [ "$muted" = 1 ]
+if [ "$notification" = true ]
 then
-	icon='audio-volume-muted'
-else
-	volume_level="$(echo "$volume" | awk '{ print sprintf("%.0f", $1/100*4) }')"
-	case "$volume_level" in
-		0) icon="audio-volume-low" ;;
-		1) icon="audio-volume-medium" ;;
-		2) icon="audio-volume-medium" ;;
-		3) icon="audio-volume-high" ;;
-		4) icon="audio-volume-high" ;;
-	esac
+	appName="$(basename "$0")"
+	msgTag='volume'
+	volume="$(get_volume)"
+	muted="$(is_muted)"
+	if [ "$muted" = 1 ]
+	then
+		icon='audio-volume-muted'
+	else
+		volume_level="$(echo "$volume" | awk '{ print sprintf("%.0f", $1/100*4) }')"
+		case "$volume_level" in
+			0) icon="audio-volume-low" ;;
+			1) icon="audio-volume-medium" ;;
+			2) icon="audio-volume-medium" ;;
+			3) icon="audio-volume-high" ;;
+			4) icon="audio-volume-high" ;;
+		esac
+	fi
+	notify-send --app-name="$appName" \
+		--urgency=low \
+		--icon="$icon" \
+		--hint=string:x-dunst-stack-tag:"$msgTag" \
+		--hint=int:value:"$volume" "Volume: ${volume}%"
 fi
-notify-send --app-name="$appName" \
-	--urgency=low \
-	--icon="$icon" \
-	--hint=string:x-dunst-stack-tag:"$msgTag" \
-	--hint=int:value:"$volume" "Volume: ${volume}%"

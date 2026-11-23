@@ -7,6 +7,7 @@ set smartcase
 set tabstop=4
 
 colorscheme habamax
+set autoindent
 set encoding=UTF-8
 set foldenable
 set hlsearch
@@ -15,6 +16,7 @@ set linebreak
 set listchars=tab:>-,trail:•,nbsp:~
 set scrolloff=999
 set secure
+set smartindent
 set termguicolors
 set wildmenu
 syntax enable
